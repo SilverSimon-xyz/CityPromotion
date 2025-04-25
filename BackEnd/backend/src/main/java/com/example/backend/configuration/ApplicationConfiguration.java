@@ -2,7 +2,7 @@ package com.example.backend.configuration;
 
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.security.services.Account;
+import com.example.backend.dto.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

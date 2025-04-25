@@ -5,7 +5,7 @@ import com.example.backend.dto.response.AuthResponse;
 import com.example.backend.dto.request.AuthRequest;
 import com.example.backend.entities.User;
 import com.example.backend.security.jwt.JwtService;
-import com.example.backend.security.services.Account;
+import com.example.backend.dto.Account;
 import com.example.backend.service.AuthService;
 import com.example.backend.utility.Mapper;
 import jakarta.validation.Valid;

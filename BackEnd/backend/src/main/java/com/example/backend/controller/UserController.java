@@ -1,7 +1,8 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.UserDto;
+import com.example.backend.entities.RoleType;
 import com.example.backend.entities.User;
+import com.example.backend.dto.Account;
 import com.example.backend.service.UserService;
 import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +23,31 @@ public class UserController {
     private Mapper mapper;
 
     @GetMapping("/all")
-    public List<UserDto> getAllUsers() {
+    public List<Account> getAllUsers() {
         return this.userService.getAllUsers()
                 .stream()
-                .map(mapper::mapToUserDto)
+                .map(mapper::mapUserToAccount)
                 .toList();
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<UserDto> getUserDetails(@PathVariable int id) {
+    public ResponseEntity<Account> getUserDetails(@PathVariable int id) {
         User user = userService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToUserDto(user));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapUserToAccount(user));
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> createUser(@RequestBody User user) {
+    public ResponseEntity<Account> createUser(@RequestBody User user) {
         User newUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToUserDto(newUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapUserToAccount(newUser));
     }
 
     @PutMapping("/edit/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDto> editUserName(@PathVariable int id, @RequestParam String name) {
+    public ResponseEntity<Account> editUserName(@PathVariable int id, @RequestParam String name) {
         User updatedUser = userService.updateUser(id, name);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapToUserDto(updatedUser));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapUserToAccount(updatedUser));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -62,6 +63,13 @@ public class UserController {
     public ResponseEntity<Void> deleteAll() {
         this.userService.deleteAllUsers();
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/add/{id}/roles")
+    public ResponseEntity<Account> addRoleToUser(@PathVariable int id, @RequestParam RoleType name) {
+        User user = this.userService.addRoleToUser(id, name);
+        Account account = mapper.mapUserToAccount(user);
+        return ResponseEntity.ok().body(account);
     }
 
 }

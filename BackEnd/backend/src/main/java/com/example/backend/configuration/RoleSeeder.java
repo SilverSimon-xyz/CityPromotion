@@ -24,10 +24,12 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void loadRoles() {
-        RoleType[] roleNames = new RoleType[] {RoleType.USER, RoleType.MODERATOR, RoleType.ADMIN};
+        RoleType[] roleNames = new RoleType[] {RoleType.TOURIST, RoleType.CONTRIBUTOR, RoleType.ANIMATOR, RoleType.CURATOR, RoleType.ADMIN};
         Map<RoleType, String> roleDescriptionMap = Map.of(
-                RoleType.USER, "Default user role",
-                RoleType.MODERATOR, "Moderator role",
+                RoleType.TOURIST, "Default user role",
+                RoleType.CONTRIBUTOR, "Contributor role",
+                RoleType.ANIMATOR, "Animator role",
+                RoleType.CURATOR, "Curator role",
                 RoleType.ADMIN, "Administrator role"
         );
 

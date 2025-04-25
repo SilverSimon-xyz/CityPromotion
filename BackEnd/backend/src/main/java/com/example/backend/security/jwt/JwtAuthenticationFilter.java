@@ -1,6 +1,6 @@
 package com.example.backend.security.jwt;
 
-import com.example.backend.security.services.Account;
+import com.example.backend.dto.Account;
 import com.example.backend.security.services.AccountService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

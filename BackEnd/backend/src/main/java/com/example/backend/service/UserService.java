@@ -1,7 +1,11 @@
 package com.example.backend.service;
+import com.example.backend.entities.Role;
+import com.example.backend.entities.RoleType;
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.entities.User;
+import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -49,5 +56,14 @@ public class UserService {
 
     public void deleteAllUsers() {
         this.userRepository.deleteAll();
+    }
+
+    public User addRoleToUser(int id, RoleType name) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not Found!"));
+        Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
+        user.getRoles().add(role);
+        user.setUpdatedAt(new Date());
+        this.roleRepository.save(role);
+        return this.userRepository.save(user);
     }
 }

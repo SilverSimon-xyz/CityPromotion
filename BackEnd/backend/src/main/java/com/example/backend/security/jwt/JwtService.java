@@ -1,6 +1,6 @@
 package com.example.backend.security.jwt;
 
-import com.example.backend.security.services.Account;
+import com.example.backend.dto.Account;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

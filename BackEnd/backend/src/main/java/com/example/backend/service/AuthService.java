@@ -30,7 +30,7 @@ public class AuthService {
 
     public User registration(RegistrationRequest registrationRequest) throws Exception {
 
-        Optional<Role> optional = roleRepository.findByName(RoleType.USER);
+        Optional<Role> optional = roleRepository.findByName(RoleType.TOURIST);
         if(optional.isEmpty()) {
             return null;
         }

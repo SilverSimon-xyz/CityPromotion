@@ -36,7 +36,7 @@ public class SecurityConfig {
                         authz
 
                                 .requestMatchers("/api/auth/**", "/api/auth/registration","/api/auth/login").permitAll()
-                                .requestMatchers("/api/users/**", "/api/users/find/**", "/api/users/edit/**", "/api/users/add","/api/users/delete/**").permitAll()
+                                .requestMatchers("/api/users/**", "/api/users/find/**", "/api/users/edit/**", "/api/users/add/","/api/users/delete/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/api/test/admin").hasRole("ADMIN")
                                 .requestMatchers("/api/test/moderator").hasRole("MODERATOR")
@@ -52,21 +52,5 @@ public class SecurityConfig {
     public JwtAuthenticationFilter authenticationJwtTokenFilter() {
         return new JwtAuthenticationFilter();
     }
-/*
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
-        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-        configuration.setAllowedHeaders(List.of("*"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration("/**",configuration);
-
-        return source;
-    }
-*/
 }

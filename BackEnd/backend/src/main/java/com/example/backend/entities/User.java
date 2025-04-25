@@ -31,7 +31,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users-roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -101,6 +101,10 @@ public class User {
 
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt=createdAt;
     }
 
     public Date getUpdatedAt() {

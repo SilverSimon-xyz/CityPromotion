@@ -1,4 +1,4 @@
-package com.example.backend.security.services;
+package com.example.backend.dto;
 
 import com.example.backend.entities.User;
 import org.springframework.security.core.GrantedAuthority;

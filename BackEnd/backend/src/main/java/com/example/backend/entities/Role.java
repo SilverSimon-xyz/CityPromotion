@@ -1,10 +1,8 @@
 package com.example.backend.entities;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name="roles")
@@ -20,13 +18,13 @@ public class Role {
     @Column(nullable = false)
     private String description;
 
-    @CreationTimestamp
-    @Column(updatable = false, name = "created_at")
-    private Date createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users-roles",
+            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name="user_id", referencedColumnName="id")}
+    )
+    private Set<User> users;
 
     public Role() {
 
@@ -34,7 +32,6 @@ public class Role {
 
     public Role(RoleType name) {
         this.name = name;
-        this.createdAt = new Date();
     }
 
     public int getId() {
@@ -61,15 +58,13 @@ public class Role {
         this.description = description;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Set<User> getUsers() {
+        return this.users;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+
 }
