@@ -1,10 +1,13 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.RegistrationRequest;
+import com.example.backend.entities.Privilege;
+import com.example.backend.entities.enums.PrivilegeType;
 import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.entities.Role;
 import com.example.backend.entities.enums.RoleType;
 import com.example.backend.entities.User;
+import com.example.backend.repository.PrivilegeRepository;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.dto.request.AuthRequest;
@@ -27,11 +30,13 @@ public class AuthService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PrivilegeRepository privilegeRepository;
 
     public User registration(RegistrationRequest registrationRequest) throws Exception {
 
-        Optional<Role> optional = roleRepository.findByName(RoleType.TOURIST);
-        if(optional.isEmpty()) {
+        Optional<Role> optionalRole = roleRepository.findByName(RoleType.TOURIST);
+        if(optionalRole.isEmpty()) {
             return null;
         }
 
@@ -43,7 +48,8 @@ public class AuthService {
         user.setName(registrationRequest.getName());
         user.setEmail(registrationRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-        user.getRoles().add(optional.get());
+        Role role = optionalRole.get();
+        user.getRoles().add(role);
 
         return userRepository.save(user);
 

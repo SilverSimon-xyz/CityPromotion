@@ -10,6 +10,7 @@ import java.util.Collection;
 public class Privilege {
 
     @Id
+    @Column(name = "privilege_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 

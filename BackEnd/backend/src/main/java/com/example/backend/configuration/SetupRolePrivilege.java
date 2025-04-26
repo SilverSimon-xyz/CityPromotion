@@ -55,7 +55,7 @@ public class SetupRolePrivilege implements ApplicationListener<ContextRefreshedE
     }
 
     private void loadPrivileges() {
-        PrivilegeType[] privilegeNames = new PrivilegeType[] {PrivilegeType.READ_PRIVILEGE, PrivilegeType.WRITE_PRIVILEGE};
+        PrivilegeType[] privilegeNames = new PrivilegeType[] { PrivilegeType.READ_PRIVILEGE, PrivilegeType.WRITE_PRIVILEGE };
 
         Arrays.stream(privilegeNames).forEach(privilegeName -> {
             Optional<Privilege> optional = privilegeRepository.findByName(privilegeName);
