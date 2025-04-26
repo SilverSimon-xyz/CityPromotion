@@ -18,8 +18,8 @@ import java.util.Set;
 public class User {
 
     @Id
+    @Column(name = "user_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private int id;
 
     @Column(nullable = false)
@@ -31,7 +31,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users-roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},

@@ -5,6 +5,8 @@ import com.example.backend.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -34,12 +36,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authz) ->
                         authz
-
-                                .requestMatchers("/api/auth/**", "/api/auth/registration","/api/auth/login").permitAll()
+                                .requestMatchers("/", "/api/**").permitAll()
+                                .requestMatchers("/api/auth/registration","/api/auth/login").permitAll()
                                 .requestMatchers("/api/users/**", "/api/users/find/**", "/api/users/edit/**", "/api/users/add/","/api/users/delete/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/api/test/admin").hasRole("ADMIN")
-                                .requestMatchers("/api/test/moderator").hasRole("MODERATOR")
                                 .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .authenticationProvider(authenticationProvider)
@@ -51,6 +51,16 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationFilter authenticationJwtTokenFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+                .role("ADMIN").implies("CURATOR")
+                .role("CURATOR").implies("ANIMATOR")
+                .role("ANIMATOR").implies("CONTRIBUTOR")
+                .role("CONTRIBUTOR").implies("TOURIST")
+                .build();
     }
 
 }
