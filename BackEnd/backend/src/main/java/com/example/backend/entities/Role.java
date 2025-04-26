@@ -1,8 +1,9 @@
 package com.example.backend.entities;
 
+import com.example.backend.entities.enums.RoleType;
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.Collection;
 
 @Entity
 @Table(name="roles")
@@ -19,13 +20,16 @@ public class Role {
     @Column(nullable = false)
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles")
+    private Collection<User> users;
+
+    @ManyToMany
     @JoinTable(
-            name = "users-roles",
+            name = "roles_privileges",
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name="user_id", referencedColumnName="id")}
+            inverseJoinColumns = {@JoinColumn(name="privilege_id", referencedColumnName="id")}
     )
-    private Set<User> users;
+    private Collection<Privilege> privileges;
 
     public Role() {
 
@@ -59,12 +63,20 @@ public class Role {
         this.description = description;
     }
 
-    public Set<User> getUsers() {
+    public Collection<User> getUsers() {
         return this.users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(Collection<User> users) {
         this.users = users;
+    }
+
+    public Collection<Privilege> getPrivileges() {
+        return this.privileges;
+    }
+
+    public void setPrivileges(Collection<Privilege> privileges) {
+        this.privileges = privileges;
     }
 
 

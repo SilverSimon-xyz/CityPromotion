@@ -1,15 +1,13 @@
 package com.example.backend.dto;
 
+import com.example.backend.entities.Privilege;
+import com.example.backend.entities.Role;
 import com.example.backend.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Account implements UserDetails {
 
@@ -19,7 +17,6 @@ public class Account implements UserDetails {
     private final String password;
     private final Date createdAt;
     private final Date updatedAt;
-
     private final Collection<? extends GrantedAuthority> authorities;
 
     public Account(int id, String name, String email, String password,
@@ -34,15 +31,12 @@ public class Account implements UserDetails {
     }
 
     public static Account build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
         return new Account(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities,
+                getAuthorities(user.getRoles()),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );
@@ -68,6 +62,30 @@ public class Account implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        return authorities;
+    }
+
+    private static Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
+        return getGrantedAuthorities(getPrivileges(roles));
+    }
+
+    private static List<String> getPrivileges(Collection<Role> roles) {
+        List<String> privileges = new ArrayList<>();
+        List<Privilege> collection = new ArrayList<>();
+        roles.forEach(role -> {
+            privileges.add(role.getName().name());
+            collection.addAll(role.getPrivileges());
+        });
+        collection.forEach(privilege -> privileges.add(privilege.getName().name()));
+        return privileges;
+    }
+
+    private static List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege));
+        }
         return authorities;
     }
 
