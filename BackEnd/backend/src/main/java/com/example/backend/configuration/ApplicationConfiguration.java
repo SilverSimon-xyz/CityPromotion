@@ -1,8 +1,8 @@
 package com.example.backend.configuration;
 
-import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.dto.Account;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class ApplicationConfiguration {
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> Account.build(userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException("User not found")));
+        return username -> Account.build(userRepository.findByEmail(username).orElseThrow(() -> new EntityNotFoundException("User not found")));
     }
 
     @Bean

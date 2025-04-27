@@ -1,9 +1,6 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.RegistrationRequest;
-import com.example.backend.entities.Privilege;
-import com.example.backend.entities.enums.PrivilegeType;
-import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.entities.Role;
 import com.example.backend.entities.enums.RoleType;
 import com.example.backend.entities.User;
@@ -11,6 +8,7 @@ import com.example.backend.repository.PrivilegeRepository;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.dto.request.AuthRequest;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,7 +58,7 @@ public class AuthService {
         authenticationManager.authenticate(
                  new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
-        return this.userRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new UserNotFoundException("User not Found!"));
+        return this.userRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
 
     }
 

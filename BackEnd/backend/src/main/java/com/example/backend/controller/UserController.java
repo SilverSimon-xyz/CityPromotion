@@ -1,6 +1,5 @@
 package com.example.backend.controller;
 
-import com.example.backend.entities.enums.RoleType;
 import com.example.backend.entities.User;
 import com.example.backend.dto.Account;
 import com.example.backend.service.UserService;
@@ -65,19 +64,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/add/{id}/roles")
-    public ResponseEntity<Account> addRoleToUser(@PathVariable int id, @RequestParam RoleType name) {
-        User user = this.userService.addRoleToUser(id, name);
-        Account account = mapper.mapUserToAccount(user);
-        return ResponseEntity.ok().body(account);
-    }
+
     //TODO: Method not tested yet: getCurrentUser()
-/*
-    @GetMapping("/current-user")
-    public ResponseEntity<Account> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(account);
-    }
-*/
+
 }

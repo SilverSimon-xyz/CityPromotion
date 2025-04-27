@@ -1,9 +1,5 @@
 package com.example.backend.service;
-import com.example.backend.entities.Role;
-import com.example.backend.entities.enums.RoleType;
-import com.example.backend.exception.UserNotFoundException;
 import com.example.backend.entities.User;
-import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +18,6 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return this.userRepository.save(user);
@@ -35,11 +28,11 @@ public class UserService {
     }
 
     public User getById(int id) {
-        return this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not Found!"));
+        return this.userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
     }
 
     public User updateUser(int id, String name) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not Found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
         user.setName(name);
         user.setUpdatedAt(new Date());
         return userRepository.save(user);
@@ -58,12 +51,4 @@ public class UserService {
         this.userRepository.deleteAll();
     }
 
-    public User addRoleToUser(int id, RoleType name) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not Found!"));
-        Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
-        user.getRoles().add(role);
-        user.setUpdatedAt(new Date());
-        this.roleRepository.save(role);
-        return this.userRepository.save(user);
-    }
 }
