@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.PointOfInterestDto;
+import com.example.backend.dto.request.PointOfInterestRecordCreate;
 import com.example.backend.entities.PointOfInterest;
 import com.example.backend.service.PointOfInterestService;
 import com.example.backend.utility.Mapper;
@@ -33,8 +34,8 @@ public class PointOfInterestController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<PointOfInterestDto> createPOI(@RequestBody PointOfInterest pointOfInterest) {
-        PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(pointOfInterest);
+    public ResponseEntity<PointOfInterestDto> createPOI(@RequestBody PointOfInterestRecordCreate request) {
+        PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request.toPOI(), request.authorName());
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapPOIToDto(pointOfInterestCreated));
     }
 

@@ -18,23 +18,21 @@ public class PointOfInterest {
     private String name;
     @Column(nullable = false)
     private String description;
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "pois_users",
-            joinColumns = {@JoinColumn(name = "poi_id", referencedColumnName = "poi_id")},
-            inverseJoinColumns = {@JoinColumn(name="user_id", referencedColumnName="user_id")}
-    )
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User author;
-    @Column(nullable = false)
+    @Column(name = "lat", nullable = false)
     private double latitude;
-    @Column(nullable = false)
+    @Column(name = "lon", nullable = false)
     private double longitude;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PointOfInterestType type;
     @Column(nullable = false)
     private LocalTime openTime;
     @Column(nullable = false)
     private LocalTime closeTime;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
 

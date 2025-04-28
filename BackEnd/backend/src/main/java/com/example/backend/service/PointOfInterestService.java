@@ -1,8 +1,11 @@
 package com.example.backend.service;
 
 import com.example.backend.entities.PointOfInterest;
+import com.example.backend.entities.User;
 import com.example.backend.entities.enums.PointOfInterestType;
+import com.example.backend.entities.enums.Status;
 import com.example.backend.repository.PointOfInterestRepository;
+import com.example.backend.repository.UserRepository;
 import com.example.backend.utility.PointOfInterestBuilder;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +20,17 @@ public class PointOfInterestService {
 
     @Autowired
     private PointOfInterestRepository poiRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     public PointOfInterestService() {
     }
 
-    public PointOfInterest createPOI(PointOfInterest pointOfInterest) {
-        return this.poiRepository.save(PointOfInterestBuilder.build(pointOfInterest));
+    public PointOfInterest createPOI(PointOfInterest pointOfInterest, String authorName) {
+        User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        pointOfInterest.setAuthor(author);
+        pointOfInterest.setStatus(Status.PENDING);
+        PointOfInterest newPOI = PointOfInterestBuilder.build(pointOfInterest);
+        return this.poiRepository.save(newPOI);
     }
 
 

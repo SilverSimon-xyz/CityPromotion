@@ -1,0 +1,22 @@
+package com.example.backend.dto.request;
+
+import com.example.backend.entities.PointOfInterest;
+import com.example.backend.entities.enums.PointOfInterestType;
+
+import java.time.LocalTime;
+
+public record PointOfInterestRecordCreate(String name, String description, String authorName, double latitude, double longitude,
+                                          PointOfInterestType type, LocalTime openTime, LocalTime closeTime) {
+
+    public PointOfInterest toPOI() {
+        PointOfInterest pointOfInterest = new PointOfInterest();
+        pointOfInterest.setName(name);
+        pointOfInterest.setDescription(description);
+        pointOfInterest.setLatitude(latitude);
+        pointOfInterest.setLongitude(longitude);
+        pointOfInterest.setType(type);
+        pointOfInterest.setOpenTime(openTime);
+        pointOfInterest.setCloseTime(closeTime);
+        return pointOfInterest;
+    }
+}
