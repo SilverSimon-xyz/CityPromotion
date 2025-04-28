@@ -19,7 +19,7 @@ public class PointOfInterest {
     @Column(nullable = false)
     private String description;
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "author", referencedColumnName = "name")
     private User author;
     @Column(name = "lat", nullable = false)
     private double latitude;

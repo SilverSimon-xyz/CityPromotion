@@ -10,7 +10,7 @@ public class PointOfInterestDto {
     private int id;
     private String name;
     private String description;
-    private User author;
+    private String author;
     private Status status;
     private double latitude;
     private double longitude;
@@ -46,11 +46,11 @@ public class PointOfInterestDto {
         this.description = description;
     }
 
-    public User getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 

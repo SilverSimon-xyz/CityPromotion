@@ -18,7 +18,7 @@ public class Mapper {
         pointOfInterestDTO.setId(pointOfInterest.getId());
         pointOfInterestDTO.setName(pointOfInterest.getName());
         pointOfInterestDTO.setDescription(pointOfInterest.getDescription());
-        pointOfInterestDTO.setAuthor(pointOfInterest.getAuthor());
+        pointOfInterestDTO.setAuthor(pointOfInterest.getAuthor().getName());
         pointOfInterestDTO.setStatus(pointOfInterest.getStatus());
         pointOfInterestDTO.setLatitude(pointOfInterest.getLatitude());
         pointOfInterestDTO.setLongitude(pointOfInterest.getLongitude());
