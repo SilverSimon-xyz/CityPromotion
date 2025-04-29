@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/registration", "/api/auth/login").anonymous()
                                 .requestMatchers("/api/users/**").permitAll()
                                 .requestMatchers("/api/poi/**").permitAll()
+                                .requestMatchers("/api/roles/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)

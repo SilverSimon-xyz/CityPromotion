@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.PointOfInterestDto;
-import com.example.backend.dto.request.PointOfInterestRecordCreate;
+import com.example.backend.dto.record.PointOfInterestRecordCreate;
 import com.example.backend.entities.PointOfInterest;
 import com.example.backend.service.PointOfInterestService;
 import com.example.backend.utility.Mapper;
@@ -40,7 +40,7 @@ public class PointOfInterestController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<PointOfInterestDto> editPOI(@PathVariable int id, @RequestParam PointOfInterest pointOfInterest) {
+    public ResponseEntity<PointOfInterestDto> editPOI(@PathVariable int id, @RequestBody PointOfInterest pointOfInterest) {
         PointOfInterest updatedPOI = pointOfInterestService.updatePOI(id, pointOfInterest);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToDto(updatedPOI));
     }

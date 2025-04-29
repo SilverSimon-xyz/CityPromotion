@@ -14,8 +14,8 @@ public class Privilege {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
+    @Enumerated(EnumType.STRING)
     private PrivilegeType name;
 
     @ManyToMany(mappedBy = "privileges")

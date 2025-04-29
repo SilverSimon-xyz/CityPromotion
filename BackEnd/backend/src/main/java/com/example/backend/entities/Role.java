@@ -13,17 +13,17 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "name", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
     private RoleType name;
 
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "role_privileges",
             joinColumns = {
@@ -37,10 +37,6 @@ public class Role {
 
     public Role() {
 
-    }
-
-    public Role(RoleType name) {
-        this.name = name;
     }
 
     public int getId() {

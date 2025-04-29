@@ -1,7 +1,5 @@
 package com.example.backend.dto;
-import com.example.backend.entities.User;
 import com.example.backend.entities.enums.PointOfInterestType;
-import com.example.backend.entities.enums.Status;
 
 import java.time.LocalTime;
 
@@ -11,7 +9,6 @@ public class PointOfInterestDto {
     private String name;
     private String description;
     private String author;
-    private Status status;
     private double latitude;
     private double longitude;
     private PointOfInterestType type;
@@ -52,14 +49,6 @@ public class PointOfInterestDto {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public double getLatitude() { return latitude; }

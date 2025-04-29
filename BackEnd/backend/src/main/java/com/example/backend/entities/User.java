@@ -34,12 +34,13 @@ public class User {
     @JoinTable(
             name = "users_roles",
             joinColumns = {
-                    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+                    @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+                    @JoinColumn(name = "email", referencedColumnName = "email")
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-            }
-    )
+                    @JoinColumn(name = "role_id", referencedColumnName = "role_id"),
+                    @JoinColumn(name = "role_name", referencedColumnName = "name")
+            })
     private Collection<Role> roles;
 
     @CreationTimestamp

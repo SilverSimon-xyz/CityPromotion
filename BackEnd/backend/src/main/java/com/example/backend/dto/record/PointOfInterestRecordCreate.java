@@ -1,4 +1,4 @@
-package com.example.backend.dto.request;
+package com.example.backend.dto.record;
 
 import com.example.backend.entities.PointOfInterest;
 import com.example.backend.entities.enums.PointOfInterestType;

@@ -10,7 +10,6 @@ public class PointOfInterestBuilder {
                 pointOfInterest.getName(),
                 pointOfInterest.getDescription(),
                 pointOfInterest.getAuthor(),
-                pointOfInterest.getStatus(),
                 pointOfInterest.getLatitude(),
                 pointOfInterest.getLongitude(),
                 pointOfInterest.getOpenTime(),

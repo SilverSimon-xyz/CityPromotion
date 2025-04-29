@@ -1,7 +1,6 @@
 package com.example.backend.entities;
 
 import com.example.backend.entities.enums.PointOfInterestType;
-import com.example.backend.entities.enums.Status;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;
@@ -32,21 +31,17 @@ public class PointOfInterest {
     private LocalTime openTime;
     @Column(nullable = false)
     private LocalTime closeTime;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Status status;
 
     public PointOfInterest() {
 
     }
 
-    public PointOfInterest(Integer id, String name, String description, User author, Status status,
+    public PointOfInterest(Integer id, String name, String description, User author,
                            double lat, double lon, LocalTime openTime, LocalTime closeTime, PointOfInterestType type) {
         this.id = id;
         this.name = (name != null ) ? name : "Senza nome";
         this.description = description;
         this.author = author;
-        this.status = status;
         this.latitude = lat;
         this.longitude = lon;
         this.openTime = openTime;
@@ -87,16 +82,6 @@ public class PointOfInterest {
         this.author = author;
     }
 
-    public boolean isPublished() {
-        return status == Status.APPROVED || status == Status.REPORTED;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-    public void setStatus(Status status) {
-        this.status = status;
-    }
     public double getLatitude() { return latitude; }
 
     public void setLatitude(double latitude) {

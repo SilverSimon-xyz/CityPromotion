@@ -3,7 +3,6 @@ package com.example.backend.service;
 import com.example.backend.entities.PointOfInterest;
 import com.example.backend.entities.User;
 import com.example.backend.entities.enums.PointOfInterestType;
-import com.example.backend.entities.enums.Status;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.utility.PointOfInterestBuilder;
@@ -28,7 +27,6 @@ public class PointOfInterestService {
     public PointOfInterest createPOI(PointOfInterest pointOfInterest, String authorName) {
         User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         pointOfInterest.setAuthor(author);
-        pointOfInterest.setStatus(Status.PENDING);
         PointOfInterest newPOI = PointOfInterestBuilder.build(pointOfInterest);
         return this.poiRepository.save(newPOI);
     }
@@ -37,6 +35,12 @@ public class PointOfInterestService {
     public PointOfInterest updatePOI(int id, PointOfInterest pointOfInterestDetails) {
         PointOfInterest pointOfInterest = poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
         pointOfInterest.setName(pointOfInterestDetails.getName());
+        pointOfInterest.setDescription(pointOfInterestDetails.getDescription());
+        pointOfInterest.setLatitude(pointOfInterestDetails.getLatitude());
+        pointOfInterest.setLongitude(pointOfInterestDetails.getLongitude());
+        pointOfInterest.setType(pointOfInterestDetails.getType());
+        pointOfInterest.setOpenTime(pointOfInterestDetails.getOpenTime());
+        pointOfInterest.setCloseTime(pointOfInterestDetails.getCloseTime());
         return poiRepository.save(pointOfInterest);
     }
 
