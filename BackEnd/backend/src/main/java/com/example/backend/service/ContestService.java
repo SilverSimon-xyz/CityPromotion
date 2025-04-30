@@ -1,22 +1,23 @@
 package com.example.backend.service;
 
-import com.example.backend.entities.User;
+import com.example.backend.entities.users.User;
 import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.contest.Contest;
 import com.example.backend.entities.contest.ContestParticipation;
+import com.example.backend.entities.contest.QuoteCriterion;
 import com.example.backend.repository.ContestParticipationRepository;
 import com.example.backend.repository.ContestRepository;
 import com.example.backend.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class ContestService {
-
 
     @Autowired
     private ContestRepository contestRepository;
@@ -25,16 +26,27 @@ public class ContestService {
     @Autowired
     private ContestParticipationRepository contestParticipationRepository;
 
+    public ContestService() {
 
-
-    public Contest createContest(Contest contest) {
-        //TODO
-        return null;
     }
 
-    public Contest updateContest(int idContest, Contest contest) {
-        //TODO
-        return null;
+    public Contest createContest(Contest contest, String authorName) {
+        User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        contest.setAuthor(author);
+        return contestRepository.save(contest);
+    }
+
+    public Contest updateContest(int id, Contest contestDetails) {
+        Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        contest.setName(contestDetails.getName());
+        contest.setDescription(contestDetails.getDescription());
+        contest.setRules(contestDetails.getRules());
+        contest.setGoal(contestDetails.getGoal());
+        contest.setPrize(contestDetails.getPrize());
+        contest.setDeadline(contestDetails.getDeadline());
+        contest.setActive(contestDetails.getActive());
+        contest.setDataUpdate(new Date());
+        return contestRepository.save(contest);
     }
 
     public List<Contest> getAllContest() {
@@ -42,7 +54,7 @@ public class ContestService {
     }
 
     public Contest getContestById(int id) {
-        return contestRepository.findById(id).get();
+        return contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
     }
 
     public List<Contest> searchContestByName(String name) {
@@ -50,27 +62,66 @@ public class ContestService {
         return contestRepository.searchByName(name);
     }
 
-    public List<Contest> searchContestByDescription(String description) {
-        if(description == null) return List.of();
-        return contestRepository.searchByDescription(description);
+    public void deleteAllContest() {
+        this.contestRepository.deleteAll();
+    }
+
+    public void deleteContest(int id) {
+        this.contestRepository.deleteById(id);
     }
 
     public void participateContest(int idContest, int idUser, List<MultimediaContent> multimediaContentList) {
-        //TODO
+        Optional<Contest> optionalContest = contestRepository.findById(idContest);
+        Optional<User> optionalUser = userRepository.findById(idUser);
+
+        if(optionalContest.isPresent() && optionalUser.isPresent()) {
+            Contest contest = optionalContest.get();
+            User user = optionalUser.get();
+            if(contest.getActive()) {
+                ContestParticipation participation = new ContestParticipation();
+                participation.setContest(contest);
+                participation.setParticipant(user);
+                participation.getMultimediaContentList().addAll(multimediaContentList);
+                contest.getParticipationContestList().add(participation);
+                contestParticipationRepository.save(participation);
+                contestRepository.save(contest);
+            }
+        } else {
+            throw new RuntimeException("Contest o Utente non trovato.");
+        }
     }
 
-    public void deleteParticipationContest(ContestParticipation participation, String reason) {
-        //TODO
+    public void evaluateParticipant(int idParticipant, QuoteCriterion quoteCriterionDetails) {
+        Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
+        if(optionalContestParticipation.isPresent()) {
+            ContestParticipation participation = optionalContestParticipation.get();
+            if (!participation.getQuoteCriterion().getQuote()) {
+                QuoteCriterion quoteCriterion = new QuoteCriterion();
+                quoteCriterion.setVote(quoteCriterionDetails.getVote());
+                quoteCriterion.setDescription(quoteCriterionDetails.getDescription());
+                quoteCriterion.setQuote(true);
+                participation.setQuoteCriterion(quoteCriterion);
+                contestParticipationRepository.save(participation);
+            }
+        } else {
+            throw new RuntimeException("Participant non found.");
+        }
     }
 
-    public void evaluateParticipant(int idParticipant, int vote, String description) {
-        //TODO
+    public List<User> declareWinners(int id) {
+        Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest not Found!"));
+        int maxScore = contest.getParticipationContestList()
+                .stream()
+                .mapToInt(participateContest -> participateContest.getQuoteCriterion().getVote())
+                .max()
+                .orElse(0);
+        List<User> winners = contest.getParticipationContestList()
+                .stream()
+                .filter(participateContest -> participateContest.getQuoteCriterion().getVote()==maxScore)
+                .map(ContestParticipation::getParticipant)
+                .toList();
+        contest.setActive(false);
+        return winners;
     }
-
-    public List<User> declareWinners(int idContest) {
-        //TODO
-        return null;
-    }
-
 
 }

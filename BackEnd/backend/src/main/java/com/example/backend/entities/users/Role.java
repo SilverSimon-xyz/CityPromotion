@@ -1,7 +1,5 @@
-package com.example.backend.entities;
+package com.example.backend.entities.users;
 
-import com.example.backend.entities.enums.RoleType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Collection;

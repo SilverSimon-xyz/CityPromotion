@@ -2,7 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.PointOfInterestDto;
 import com.example.backend.dto.record.PointOfInterestRecordCreate;
-import com.example.backend.entities.PointOfInterest;
+import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.service.PointOfInterestService;
 import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.example.backend.utility;
 
-import com.example.backend.entities.PointOfInterest;
+import com.example.backend.entities.poi.PointOfInterest;
 
 public class PointOfInterestBuilder {
 

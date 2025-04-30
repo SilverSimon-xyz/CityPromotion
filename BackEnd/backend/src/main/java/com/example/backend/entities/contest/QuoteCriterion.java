@@ -1,15 +1,10 @@
 package com.example.backend.entities.contest;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Embeddable;
 
-@Entity
+@Embeddable
 public class QuoteCriterion {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+
     private int vote;
     private String description;
     private boolean isQuote = false;

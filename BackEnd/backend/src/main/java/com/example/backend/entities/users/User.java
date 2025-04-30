@@ -1,6 +1,5 @@
-package com.example.backend.entities;
+package com.example.backend.entities.users;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

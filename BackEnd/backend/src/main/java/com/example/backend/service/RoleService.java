@@ -1,10 +1,10 @@
 package com.example.backend.service;
 
-import com.example.backend.entities.Privilege;
-import com.example.backend.entities.Role;
-import com.example.backend.entities.User;
-import com.example.backend.entities.enums.PrivilegeType;
-import com.example.backend.entities.enums.RoleType;
+import com.example.backend.entities.users.Privilege;
+import com.example.backend.entities.users.Role;
+import com.example.backend.entities.users.User;
+import com.example.backend.entities.users.PrivilegeType;
+import com.example.backend.entities.users.RoleType;
 import com.example.backend.repository.PrivilegeRepository;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;

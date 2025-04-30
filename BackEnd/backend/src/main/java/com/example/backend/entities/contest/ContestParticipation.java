@@ -1,6 +1,6 @@
 package com.example.backend.entities.contest;
 
-import com.example.backend.entities.User;
+import com.example.backend.entities.users.User;
 import com.example.backend.entities.content.MultimediaContent;
 import jakarta.persistence.*;
 
@@ -11,14 +11,18 @@ import java.util.List;
 public class ContestParticipation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(name = "participant_id", referencedColumnName = "name", nullable = false)
     private int id;
     @ManyToOne
+    @JoinColumn(name = "contest", referencedColumnName = "name", nullable = false)
     private Contest contest;
     @ManyToOne
-    private User user;
-    @OneToMany
-    private final List<MultimediaContent> multimediaContentList;
-    @OneToOne
+    @JoinColumn(name = "participant", referencedColumnName = "name", nullable = false)
+    private User participant;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "mc_id")
+    private List<MultimediaContent> multimediaContentList;
+    @Embedded
     private QuoteCriterion quoteCriterion;
 
     public ContestParticipation() {
@@ -41,12 +45,12 @@ public class ContestParticipation {
         this.contest = contest;
     }
 
-    public User getUser() {
-        return user;
+    public User getParticipant() {
+        return participant;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setParticipant(User participant) {
+        this.participant = participant;
     }
 
     public List<MultimediaContent> getMultimediaContentList() {

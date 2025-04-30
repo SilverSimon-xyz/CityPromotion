@@ -1,7 +1,7 @@
 package com.example.backend.dto.record;
 
-import com.example.backend.entities.PointOfInterest;
-import com.example.backend.entities.enums.PointOfInterestType;
+import com.example.backend.entities.poi.PointOfInterest;
+import com.example.backend.entities.poi.PointOfInterestType;
 
 import java.time.LocalTime;
 

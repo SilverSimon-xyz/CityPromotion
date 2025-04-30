@@ -1,61 +1,37 @@
-package com.example.backend.entities.contest;
-
-import com.example.backend.entities.users.User;
-import jakarta.persistence.*;
-import org.hibernate.annotations.UpdateTimestamp;
+package com.example.backend.dto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-public class Contest {
-    @Id
-    @Column(name = "contest_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ContestDto {
+
     private int id;
-    @Column(nullable = false)
+
     private String name;
-    @Column(nullable = false)
+
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "author", referencedColumnName = "name")
-    private User author;
-    @Column(nullable = false)
+
+    private String author;
+
     private String rules;
-    @Column(nullable = false)
+
     private String goal;
-    @Column(nullable = false)
+
     private String prize;
-    @Column(nullable = false)
+
     private LocalDate deadline;
-    @Column(nullable = false)
+
     private boolean active;
-    @Column(name = "data-creation", nullable = false, updatable = false)
+
     private Date dataCreation;
-    @UpdateTimestamp
-    @Column(name = "data-update", nullable = false, updatable = false)
+
     private Date dataUpdate;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<ContestParticipation> participationContestList = new ArrayList<>();
+    private List<String> participationContestList;
 
-    public Contest() {
-        this.dataCreation = new Date();
-    }
+    public ContestDto() {
 
-    public Contest(Integer id, String name, String description, User author, String rules, String goal, String prize, LocalDate deadline, boolean active) {
-        this.id = id;
-        this.name = (name != null ) ? name : "Senza nome";
-        this.description = description;
-        this.author = author;
-        this.rules = rules;
-        this.goal = goal;
-        this.prize = prize;
-        this.deadline = deadline;
-        this.active = active;
-        this.dataCreation = new Date();
     }
 
     public int getId() {
@@ -83,11 +59,11 @@ public class Contest {
         this.description = description;
     }
 
-    public User getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 
@@ -131,8 +107,12 @@ public class Contest {
         this.active = active;
     }
 
-    public List<ContestParticipation> getParticipationContestList() {
+    public List<String> getParticipationContestList() {
         return participationContestList;
+    }
+
+    public void setParticipationContestList(List<String> participationContestList) {
+        this.participationContestList = participationContestList;
     }
 
     public Date getDataCreation() {
@@ -150,5 +130,4 @@ public class Contest {
     public void setDataUpdate(Date dataUpdate) {
         this.dataUpdate = dataUpdate;
     }
-
 }

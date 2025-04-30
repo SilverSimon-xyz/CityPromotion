@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ContestRepository extends JpaRepository<Contest, Integer> {
+
     List<Contest> searchByName(String name);
 
-    List<Contest> searchByDescription(String description);
 }

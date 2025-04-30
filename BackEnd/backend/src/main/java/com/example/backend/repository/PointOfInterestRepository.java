@@ -1,7 +1,7 @@
 package com.example.backend.repository;
 
-import com.example.backend.entities.PointOfInterest;
-import com.example.backend.entities.enums.PointOfInterestType;
+import com.example.backend.entities.poi.PointOfInterest;
+import com.example.backend.entities.poi.PointOfInterestType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

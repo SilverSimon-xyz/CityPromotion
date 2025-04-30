@@ -1,4 +1,4 @@
-package com.example.backend.entities.enums;
+package com.example.backend.entities.content;
 
 public enum Status {
     PENDING,

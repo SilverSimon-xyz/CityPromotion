@@ -1,8 +1,8 @@
 package com.example.backend.service;
 
-import com.example.backend.entities.PointOfInterest;
-import com.example.backend.entities.User;
-import com.example.backend.entities.enums.PointOfInterestType;
+import com.example.backend.entities.poi.PointOfInterest;
+import com.example.backend.entities.users.User;
+import com.example.backend.entities.poi.PointOfInterestType;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.utility.PointOfInterestBuilder;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,6 +42,7 @@ public class PointOfInterestService {
         pointOfInterest.setType(pointOfInterestDetails.getType());
         pointOfInterest.setOpenTime(pointOfInterestDetails.getOpenTime());
         pointOfInterest.setCloseTime(pointOfInterestDetails.getCloseTime());
+        pointOfInterest.setDataUpdate(new Date());
         return poiRepository.save(pointOfInterest);
     }
 

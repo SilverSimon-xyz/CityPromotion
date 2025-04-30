@@ -1,7 +1,7 @@
 package com.example.backend.repository;
 
-import com.example.backend.entities.Privilege;
-import com.example.backend.entities.enums.PrivilegeType;
+import com.example.backend.entities.users.Privilege;
+import com.example.backend.entities.users.PrivilegeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

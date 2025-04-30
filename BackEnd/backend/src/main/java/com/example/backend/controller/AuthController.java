@@ -3,7 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.request.RegistrationRequest;
 import com.example.backend.dto.response.AuthResponse;
 import com.example.backend.dto.request.AuthRequest;
-import com.example.backend.entities.User;
+import com.example.backend.entities.users.User;
 import com.example.backend.security.jwt.JwtService;
 import com.example.backend.dto.Account;
 import com.example.backend.service.AuthService;

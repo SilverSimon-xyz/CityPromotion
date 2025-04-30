@@ -1,6 +1,6 @@
 package com.example.backend.dto;
 
-import com.example.backend.entities.enums.RoleType;
+import com.example.backend.entities.users.RoleType;
 
 import java.util.Collection;
 

@@ -1,8 +1,8 @@
 package com.example.backend.repository;
 
-import com.example.backend.entities.Role;
-import com.example.backend.entities.User;
-import com.example.backend.entities.enums.RoleType;
+import com.example.backend.entities.users.Role;
+import com.example.backend.entities.users.User;
+import com.example.backend.entities.users.RoleType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

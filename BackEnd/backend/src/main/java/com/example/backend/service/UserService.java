@@ -1,5 +1,5 @@
 package com.example.backend.service;
-import com.example.backend.entities.User;
+import com.example.backend.entities.users.User;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

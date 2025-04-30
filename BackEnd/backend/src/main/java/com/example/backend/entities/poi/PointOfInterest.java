@@ -1,9 +1,13 @@
-package com.example.backend.entities;
+package com.example.backend.entities.poi;
 
-import com.example.backend.entities.enums.PointOfInterestType;
+import com.example.backend.entities.users.User;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 
 
 @Entity
@@ -31,9 +35,15 @@ public class PointOfInterest {
     private LocalTime openTime;
     @Column(nullable = false)
     private LocalTime closeTime;
+    @CreationTimestamp
+    @Column(name = "data-creation", nullable = false, updatable = false)
+    private Date dataCreation;
+    @UpdateTimestamp
+    @Column(name = "data-update", nullable = false, updatable = false)
+    private Date dataUpdate;
 
     public PointOfInterest() {
-
+        this.dataCreation = new Date();
     }
 
     public PointOfInterest(Integer id, String name, String description, User author,
@@ -47,6 +57,7 @@ public class PointOfInterest {
         this.openTime = openTime;
         this.closeTime = closeTime;
         this.type = type;
+        this.dataCreation = new Date();
     }
 
     public int getId() {
@@ -110,5 +121,21 @@ public class PointOfInterest {
 
     public void setType(PointOfInterestType type) {
         this.type = type;
+    }
+
+    public Date getDataCreation() {
+        return dataCreation;
+    }
+
+    public void setDataCreation(Date dataCreation) {
+        this.dataCreation = dataCreation;
+    }
+
+    public Date getDataUpdate() {
+        return dataCreation;
+    }
+
+    public void setDataUpdate(Date dataUpdate) {
+        this.dataUpdate = dataUpdate;
     }
 }

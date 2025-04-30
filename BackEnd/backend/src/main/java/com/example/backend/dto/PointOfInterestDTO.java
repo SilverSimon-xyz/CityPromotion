@@ -1,7 +1,8 @@
 package com.example.backend.dto;
-import com.example.backend.entities.enums.PointOfInterestType;
+import com.example.backend.entities.poi.PointOfInterestType;
 
 import java.time.LocalTime;
+import java.util.Date;
 
 public class PointOfInterestDto {
 
@@ -14,6 +15,8 @@ public class PointOfInterestDto {
     private PointOfInterestType type;
     private LocalTime openTime;
     private LocalTime closeTime;
+    private Date dataCreation;
+    private Date dataUpdate;
 
     public PointOfInterestDto() {
 
@@ -87,5 +90,21 @@ public class PointOfInterestDto {
 
     public void setType(PointOfInterestType type) {
         this.type = type;
+    }
+
+    public Date getDataCreation() {
+        return dataCreation;
+    }
+
+    public void setDataCreation(Date dataCreation) {
+        this.dataCreation = dataCreation;
+    }
+
+    public Date getDataUpdate() {
+        return dataCreation;
+    }
+
+    public void setDataUpdate(Date dataUpdate) {
+        this.dataUpdate = dataUpdate;
     }
 }

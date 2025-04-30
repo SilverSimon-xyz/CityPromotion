@@ -1,18 +1,15 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.RoleDto;
-import com.example.backend.entities.Privilege;
-import com.example.backend.entities.Role;
-import com.example.backend.entities.User;
-import com.example.backend.entities.enums.PrivilegeType;
-import com.example.backend.entities.enums.RoleType;
+import com.example.backend.entities.users.Role;
+import com.example.backend.entities.users.User;
+import com.example.backend.entities.users.PrivilegeType;
+import com.example.backend.entities.users.RoleType;
 import com.example.backend.service.RoleService;
 import com.example.backend.utility.Mapper;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

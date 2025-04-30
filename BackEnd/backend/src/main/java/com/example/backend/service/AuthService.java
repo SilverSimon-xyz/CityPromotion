@@ -1,9 +1,9 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.RegistrationRequest;
-import com.example.backend.entities.Role;
-import com.example.backend.entities.enums.RoleType;
-import com.example.backend.entities.User;
+import com.example.backend.entities.users.Role;
+import com.example.backend.entities.users.RoleType;
+import com.example.backend.entities.users.User;
 import com.example.backend.repository.PrivilegeRepository;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
