@@ -1,6 +1,5 @@
 package com.example.backend.dto;
 
-import com.example.backend.entities.enums.PrivilegeType;
 import com.example.backend.entities.enums.RoleType;
 
 import java.util.Collection;
@@ -15,7 +14,7 @@ public class RoleDto {
 
     private Collection<String> users;
 
-    private Collection<PrivilegeType> privileges;
+    private Collection<String> privileges;
 
     public RoleDto() {
 
@@ -53,11 +52,11 @@ public class RoleDto {
         this.users = users;
     }
 
-    public Collection<PrivilegeType> getPrivileges() {
+    public Collection<String> getPrivileges() {
         return this.privileges;
     }
 
-    public void setPrivileges(Collection<PrivilegeType> privileges) {
+    public void setPrivileges(Collection<String> privileges) {
         this.privileges = privileges;
     }
 }

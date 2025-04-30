@@ -1,6 +1,7 @@
 package com.example.backend.entities;
 
 import com.example.backend.entities.enums.RoleType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -20,7 +21,7 @@ public class Role {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Collection<User> users;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})

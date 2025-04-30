@@ -1,6 +1,7 @@
 package com.example.backend.entities;
 
 import com.example.backend.entities.enums.PrivilegeType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -19,6 +20,7 @@ public class Privilege {
     private PrivilegeType name;
 
     @ManyToMany(mappedBy = "privileges")
+    @JsonBackReference
     private Collection<Role> roles;
 
     public Privilege() {

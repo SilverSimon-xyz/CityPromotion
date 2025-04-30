@@ -11,10 +11,11 @@ import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 @Service
 public class RoleService {
 
@@ -45,6 +46,8 @@ public class RoleService {
         Role role = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
         role.setName(roleDetails.getName());
         role.setDescription(roleDetails.getDescription());
+        role.setUsers(roleDetails.getUsers());
+        role.setPrivileges(roleDetails.getPrivileges());
         return roleRepository.save(role);
     }
 
@@ -94,6 +97,11 @@ public class RoleService {
         this.userRepository.save(user);
         this.privilegeRepository.save(privilege);
         this.roleRepository.save(role);
+    }
+
+    @Transactional
+    public List<User> getUsersByRoleName(RoleType roleName) {
+        return roleRepository.findUsersByRoleName(roleName);
     }
 
 }

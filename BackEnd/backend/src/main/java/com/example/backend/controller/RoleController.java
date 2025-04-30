@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.RoleDto;
 import com.example.backend.entities.Privilege;
 import com.example.backend.entities.Role;
+import com.example.backend.entities.User;
 import com.example.backend.entities.enums.PrivilegeType;
 import com.example.backend.entities.enums.RoleType;
 import com.example.backend.service.RoleService;
@@ -25,17 +26,23 @@ public class RoleController {
     @Autowired
     private Mapper mapper;
 
-
     @GetMapping("/all")
     //@PreAuthorize("hasRole('ADMIN')")
     public List<RoleDto> getAllRoles() {
-        return this.roleService.getAllRole().stream().map(role->mapper.mapRoleToDto(role)).toList();
+        List<Role> roles = roleService.getAllRole();
+        roles.forEach(role -> {
+            List<User> users = roleService.getUsersByRoleName(role.getName());
+            role.setUsers(users);
+        });
+        return roles.stream().map(role->mapper.mapRoleToDto(role)).toList();
     }
 
     @GetMapping("/find/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoleDto> getRoleDetails(@PathVariable int id) {
         Role role = roleService.getRoleById(id);
+        List<User> users = roleService.getUsersByRoleName(role.getName());
+        role.setUsers(users);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapRoleToDto(role));
     }
 
