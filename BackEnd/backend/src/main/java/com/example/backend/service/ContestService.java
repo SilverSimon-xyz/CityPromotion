@@ -32,6 +32,7 @@ public class ContestService {
 
     public Contest createContest(Contest contest, String authorName) {
         User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        contest.setCreatedAt(new Date());
         contest.setAuthor(author);
         return contestRepository.save(contest);
     }
@@ -45,7 +46,7 @@ public class ContestService {
         contest.setPrize(contestDetails.getPrize());
         contest.setDeadline(contestDetails.getDeadline());
         contest.setActive(contestDetails.getActive());
-        contest.setDataUpdate(new Date());
+        contest.setUpdatedAt(new Date());
         return contestRepository.save(contest);
     }
 
@@ -70,7 +71,7 @@ public class ContestService {
         this.contestRepository.deleteById(id);
     }
 
-    public void participateContest(int idContest, int idUser, List<MultimediaContent> multimediaContentList) {
+    public void participateContest(int idContest, int idUser, MultimediaContent multimediaContent) {
         Optional<Contest> optionalContest = contestRepository.findById(idContest);
         Optional<User> optionalUser = userRepository.findById(idUser);
 
@@ -81,7 +82,7 @@ public class ContestService {
                 ContestParticipation participation = new ContestParticipation();
                 participation.setContest(contest);
                 participation.setParticipant(user);
-                participation.getMultimediaContentList().addAll(multimediaContentList);
+                participation.setMultimediaContent(multimediaContent);
                 contest.getParticipationContestList().add(participation);
                 contestParticipationRepository.save(participation);
                 contestRepository.save(contest);

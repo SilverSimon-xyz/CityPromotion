@@ -5,51 +5,60 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
-
 
 @Entity
 @Table(name = "pois")
 public class PointOfInterest {
+
     @Id
     @Column(name = "poi_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "author", referencedColumnName = "name")
     private User author;
+
     @Column(name = "lat", nullable = false)
     private double latitude;
+
     @Column(name = "lon", nullable = false)
     private double longitude;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PointOfInterestType type;
-    @Column(nullable = false)
+
+    @Column(name = "open-time", nullable = false)
     private LocalTime openTime;
-    @Column(nullable = false)
+
+    @Column(name = "close-time", nullable = false)
     private LocalTime closeTime;
+
     @CreationTimestamp
-    @Column(name = "data-creation", nullable = false, updatable = false)
-    private Date dataCreation;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
     @UpdateTimestamp
-    @Column(name = "data-update", nullable = false, updatable = false)
-    private Date dataUpdate;
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    private Date updatedAt;
 
     public PointOfInterest() {
-        this.dataCreation = new Date();
+
     }
 
     public PointOfInterest(Integer id, String name, String description, User author,
                            double lat, double lon, LocalTime openTime, LocalTime closeTime, PointOfInterestType type) {
         this.id = id;
-        this.name = (name != null ) ? name : "Senza nome";
+        this.name = name;
         this.description = description;
         this.author = author;
         this.latitude = lat;
@@ -57,7 +66,7 @@ public class PointOfInterest {
         this.openTime = openTime;
         this.closeTime = closeTime;
         this.type = type;
-        this.dataCreation = new Date();
+        this.createdAt = new Date();
     }
 
     public int getId() {
@@ -123,19 +132,19 @@ public class PointOfInterest {
         this.type = type;
     }
 
-    public Date getDataCreation() {
-        return dataCreation;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDataCreation(Date dataCreation) {
-        this.dataCreation = dataCreation;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getDataUpdate() {
-        return dataCreation;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setDataUpdate(Date dataUpdate) {
-        this.dataUpdate = dataUpdate;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

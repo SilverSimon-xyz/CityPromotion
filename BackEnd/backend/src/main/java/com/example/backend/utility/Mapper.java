@@ -1,13 +1,11 @@
 package com.example.backend.utility;
 
-import com.example.backend.dto.ContestDto;
-import com.example.backend.dto.PointOfInterestDto;
-import com.example.backend.dto.RoleDto;
+import com.example.backend.dto.*;
+import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.contest.Contest;
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.users.Role;
 import com.example.backend.entities.users.User;
-import com.example.backend.dto.Account;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,8 +27,8 @@ public class Mapper {
         pointOfInterestDto.setOpenTime(pointOfInterest.getOpenTime());
         pointOfInterestDto.setCloseTime(pointOfInterest.getCloseTime());
         pointOfInterestDto.setType(pointOfInterest.getType());
-        pointOfInterestDto.setDataCreation(pointOfInterest.getDataCreation());
-        pointOfInterestDto.setDataUpdate(pointOfInterest.getDataUpdate());
+        pointOfInterestDto.setCreatedAt(pointOfInterest.getCreatedAt());
+        pointOfInterestDto.setUpdatedAt(pointOfInterest.getUpdatedAt());
 
         return pointOfInterestDto;
     }
@@ -64,14 +62,25 @@ public class Mapper {
         contestDto.setPrize(contest.getPrize());
         contestDto.setDeadline(contest.getDeadline());
         contestDto.setActive(contest.getActive());
+        contestDto.setNumberOfParticipant(contest.getNumberOfParticipant());
+        contestDto.setCreatedAt(contest.getCreatedAt());
+        contestDto.setDataUpdated(contest.getDataUpdated());
 
-        contestDto.setParticipationContestList(contest.getParticipationContestList()
-                .stream()
-                .map(p -> p.getParticipant().getName())
-                .toList());
-
-        contestDto.setDataCreation(contest.getDataCreation());
-        contestDto.setDataUpdate(contest.getDataUpdate());
         return contestDto;
+    }
+
+    public MultimediaContentDto mapContestToDto(MultimediaContent media) {
+        MultimediaContentDto mediaDto = new MultimediaContentDto();
+
+        mediaDto.setId(media.getId());
+        mediaDto.setTitle(media.getTitle());
+        mediaDto.setDescription(media.getDescription());
+        mediaDto.setAuthor(media.getAuthor().getName());
+        mediaDto.setData(media.getData());
+        mediaDto.setCreatedAt(media.getCreatedAt());
+        mediaDto.setUpdatedAt(media.getDataUpdated());
+        mediaDto.setStatus(media.getStatus());
+
+        return mediaDto;
     }
 }

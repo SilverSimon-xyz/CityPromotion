@@ -42,7 +42,7 @@ public class PointOfInterestService {
         pointOfInterest.setType(pointOfInterestDetails.getType());
         pointOfInterest.setOpenTime(pointOfInterestDetails.getOpenTime());
         pointOfInterest.setCloseTime(pointOfInterestDetails.getCloseTime());
-        pointOfInterest.setDataUpdate(new Date());
+        pointOfInterest.setUpdatedAt(new Date());
         return poiRepository.save(pointOfInterest);
     }
 

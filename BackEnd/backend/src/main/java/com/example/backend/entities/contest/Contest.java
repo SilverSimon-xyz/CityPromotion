@@ -10,52 +10,54 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "contest")
 public class Contest {
+
     @Id
     @Column(name = "contest_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "author", referencedColumnName = "name")
     private User author;
+
     @Column(nullable = false)
     private String rules;
+
     @Column(nullable = false)
     private String goal;
+
     @Column(nullable = false)
     private String prize;
+
     @Column(nullable = false)
     private LocalDate deadline;
+
     @Column(nullable = false)
     private boolean active;
-    @Column(name = "data-creation", nullable = false, updatable = false)
-    private Date dataCreation;
-    @UpdateTimestamp
-    @Column(name = "data-update", nullable = false, updatable = false)
-    private Date dataUpdate;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    private Date updatedAt;
+
+    @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(nullable = false)
     private List<ContestParticipation> participationContestList = new ArrayList<>();
 
-    public Contest() {
-        this.dataCreation = new Date();
-    }
+    private int numberOfParticipant = 0;
 
-    public Contest(Integer id, String name, String description, User author, String rules, String goal, String prize, LocalDate deadline, boolean active) {
-        this.id = id;
-        this.name = (name != null ) ? name : "Senza nome";
-        this.description = description;
-        this.author = author;
-        this.rules = rules;
-        this.goal = goal;
-        this.prize = prize;
-        this.deadline = deadline;
-        this.active = active;
-        this.dataCreation = new Date();
+    public Contest() {
+
     }
 
     public int getId() {
@@ -135,20 +137,31 @@ public class Contest {
         return participationContestList;
     }
 
-    public Date getDataCreation() {
-        return dataCreation;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDataCreation(Date dataCreation) {
-        this.dataCreation = dataCreation;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getDataUpdate() {
-        return dataCreation;
+    public Date getDataUpdated() {
+        return updatedAt;
     }
 
-    public void setDataUpdate(Date dataUpdate) {
-        this.dataUpdate = dataUpdate;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
+    public int getNumberOfParticipant() {
+        return numberOfParticipant;
+    }
+
+    public void setNumberOfParticipant(int numberOfParticipant) {
+        this.numberOfParticipant = numberOfParticipant;
+    }
+
+    public void updateParticipantNumber() {
+        this.numberOfParticipant = participationContestList.size();
+    }
 }

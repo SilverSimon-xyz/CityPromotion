@@ -15,8 +15,8 @@ public class PointOfInterestDto {
     private PointOfInterestType type;
     private LocalTime openTime;
     private LocalTime closeTime;
-    private Date dataCreation;
-    private Date dataUpdate;
+    private Date createdAt;
+    private Date updatedAt;
 
     public PointOfInterestDto() {
 
@@ -92,19 +92,19 @@ public class PointOfInterestDto {
         this.type = type;
     }
 
-    public Date getDataCreation() {
-        return dataCreation;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDataCreation(Date dataCreation) {
-        this.dataCreation = dataCreation;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getDataUpdate() {
-        return dataCreation;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setDataUpdate(Date dataUpdate) {
-        this.dataUpdate = dataUpdate;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

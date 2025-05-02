@@ -17,7 +17,6 @@ CREATE TABLE users (
   UNIQUE KEY(name)
 );
 
-
 #-Table for Roles
 CREATE TABLE roles (
     role_id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -57,16 +56,68 @@ CREATE TABLE role_privileges (
 CREATE TABLE pois (
     poi_id INTEGER NOT NULL AUTO_INCREMENT,
 	name VARCHAR(255) NOT NULL,
-	description VARCHAR(255) NOT NULL,
+	description TEXT NOT NULL,
+    author VARCHAR(255) NOT NULL,
 	lat DOUBLE NOT NULL,
     lon DOUBLE NOT NULL,
     type VARCHAR(255) NOT NULL,
 	open_time TIME,
     close_time TIME,
-    author VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP,
     PRIMARY KEY (poi_id),
     FOREIGN KEY (author) REFERENCES users(name) 
 );
+
+#-Table for Contest
+CREATE TABLE contest (
+  contest_id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  author VARCHAR(255) NOT NULL,
+  rules VARCHAR(255) NOT NULL,
+  goal VARCHAR(255) NOT NULL,
+  prize VARCHAR(255) NOT NULL,
+  active BOOLEAN NOT NULL,
+  deadline DATE NOT NULL,
+  number_participants INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  PRIMARY KEY(contest_id),
+  FOREIGN KEY (author) REFERENCES users(name) 
+);
+
+#-Table for MultimediaContent
+CREATE TABLE multimediacontent (
+  mc_id INTEGER NOT NULL AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  type VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  author VARCHAR(255) NOT NULL,
+  data LONGBLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  status VARCHAR(255) NOT NULL,
+  PRIMARY KEY(mc_id),
+  FOREIGN KEY (author) REFERENCES users(name) 
+);
+
+#-Table for Contest-Participation
+CREATE TABLE contest_participation (
+  participant_id INTEGER NOT NULL AUTO_INCREMENT,
+  contest_id INTEGER NOT NULL,
+  participant VARCHAR(255) NOT NULL,
+  mc_id INTEGER NOT NULL,
+  vote INTEGER NOT NULL,
+  description TEXT NOT NULL,
+  is_quote BOOLEAN NOT NULL,
+  PRIMARY KEY(participant_id),
+  FOREIGN KEY(contest_id) REFERENCES contest(contest_id),
+  FOREIGN KEY(mc_id) REFERENCES multimediacontent(mc_id),
+  FOREIGN KEY (participant) REFERENCES users(name) 
+);
+
+
 
 #User for testing DB
 INSERT INTO users (name, email, password) VALUES ('Simone Stacchiotti', 'silver.simon@gmail.com', '$2a$10$HY1BGND6c2pAptwNYZAV5uFZIYHOhT5bqixrOXHubpjuSLxtHzaG2');
@@ -77,5 +128,5 @@ INSERT INTO users (name, email, password) VALUES ('Giacomo Freddi', 'giacomo.fre
 INSERT INTO users (name, email, password) VALUES ('Federico Badiali', 'radius@gmail.com', '$2a$10$dWTI8ezvRUp1R7ziyuO4TOCyIaBoHAHIOVEBOrpfLR8CriSI9mrmO');
 
 #POI for testing DB
-INSERT INTO pois (name, description, lat, lon, type, open_time, close_time, author) 
-VALUES ('nome di prova', 'descrizione di prova', 1.0, 1.0, 'Turismo', '09:00:00', '18:00:00', 'Simone Stacchiotti');
+INSERT INTO pois (name, description, author, lat, lon, type, open_time, close_time) 
+VALUES ('nome di prova', 'descrizione di prova', 'Simone Stacchiotti', 1.0, 1.0, 'Turismo', '09:00:00', '18:00:00');

@@ -9,6 +9,10 @@ public class QuoteCriterion {
     private String description;
     private boolean isQuote = false;
 
+    public QuoteCriterion() {
+
+    }
+
     public int getVote() {
         return vote;
     }

@@ -2,7 +2,6 @@ package com.example.backend.dto;
 
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 public class ContestDto {
 
@@ -24,11 +23,11 @@ public class ContestDto {
 
     private boolean active;
 
-    private Date dataCreation;
+    private Date createdAt;
 
-    private Date dataUpdate;
+    private Date updatedAt;
 
-    private List<String> participationContestList;
+    private int numberOfParticipant;
 
     public ContestDto() {
 
@@ -107,27 +106,27 @@ public class ContestDto {
         this.active = active;
     }
 
-    public List<String> getParticipationContestList() {
-        return participationContestList;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setParticipationContestList(List<String> participationContestList) {
-        this.participationContestList = participationContestList;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getDataCreation() {
-        return dataCreation;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setDataCreation(Date dataCreation) {
-        this.dataCreation = dataCreation;
+    public void setDataUpdated(Date dataUpdate) {
+        this.updatedAt = dataUpdate;
     }
 
-    public Date getDataUpdate() {
-        return dataCreation;
+    public int getNumberOfParticipant() {
+        return numberOfParticipant;
     }
 
-    public void setDataUpdate(Date dataUpdate) {
-        this.dataUpdate = dataUpdate;
+    public void setNumberOfParticipant(int numberOfParticipant) {
+        this.numberOfParticipant = numberOfParticipant;
     }
 }

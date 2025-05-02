@@ -4,29 +4,32 @@ import com.example.backend.entities.users.User;
 import com.example.backend.entities.content.MultimediaContent;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
+@Table(name = "contest_participation")
 public class ContestParticipation {
+
     @Id
+    @JoinColumn(name = "participant_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "participant_id", referencedColumnName = "name", nullable = false)
     private int id;
+
     @ManyToOne
-    @JoinColumn(name = "contest", referencedColumnName = "name", nullable = false)
+    @JoinColumn(name = "contest_id", referencedColumnName = "contest_id", nullable = false)
     private Contest contest;
+
     @ManyToOne
     @JoinColumn(name = "participant", referencedColumnName = "name", nullable = false)
     private User participant;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "mc_id")
-    private List<MultimediaContent> multimediaContentList;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "mc_id", referencedColumnName = "mc_id")
+    private MultimediaContent multimediaContent;
+
     @Embedded
     private QuoteCriterion quoteCriterion;
 
     public ContestParticipation() {
-        this.multimediaContentList = new ArrayList<>();
+
     }
 
     public int getId() {
@@ -53,8 +56,11 @@ public class ContestParticipation {
         this.participant = participant;
     }
 
-    public List<MultimediaContent> getMultimediaContentList() {
-        return multimediaContentList;
+    public MultimediaContent getMultimediaContent() {
+        return multimediaContent;
+    }
+    public void setMultimediaContent(MultimediaContent multimediaContent) {
+        this.multimediaContent = multimediaContent;
     }
 
     public QuoteCriterion getQuoteCriterion() {
@@ -63,5 +69,19 @@ public class ContestParticipation {
 
     public void setQuoteCriterion(QuoteCriterion quoteCriterion) {
         this.quoteCriterion = quoteCriterion;
+    }
+
+    @PostPersist
+    public void addParticipant() {
+        if(contest != null) {
+            contest.updateParticipantNumber();
+        }
+    }
+
+    @PostRemove
+    public void deleteParticipant() {
+        if(contest != null) {
+            contest.updateParticipantNumber();
+        }
     }
 }

@@ -1,50 +1,30 @@
-package com.example.backend.entities.content;
+package com.example.backend.dto;
 
-import com.example.backend.entities.users.User;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import com.example.backend.entities.content.Status;
 
 import java.util.Date;
 
-@Entity
-@Table(name = "multimediacontent")
-public class MultimediaContent {
+public class MultimediaContentDto {
 
-    @Id
-    @Column(name = "mc_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "type", nullable = false)
     private String type;
 
-    @Lob
-    @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "author", referencedColumnName = "name")
-    private User author;
+    private String author;
 
-    @Lob
-    private byte[] data; // Per immagini, audio, video
+    private byte[] data;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
     private Date createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false, updatable = false)
     private Date updatedAt;
 
-    @Column(name = "status", nullable = false)
     private Status status;
 
-    public MultimediaContent() {
+    public MultimediaContentDto() {
 
     }
 
@@ -72,11 +52,11 @@ public class MultimediaContent {
         this.description = description;
     }
 
-    public User getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 
@@ -104,7 +84,7 @@ public class MultimediaContent {
         this.createdAt = createdAt;
     }
 
-    public Date getDataUpdated() {
+    public Date getDataUpdate() {
         return updatedAt;
     }
 
@@ -115,7 +95,6 @@ public class MultimediaContent {
     public Status getStatus() {
         return status;
     }
-
     public void setStatus(Status status) {
         this.status = status;
     }

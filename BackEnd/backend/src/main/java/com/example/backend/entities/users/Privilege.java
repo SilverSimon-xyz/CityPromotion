@@ -26,10 +26,6 @@ public class Privilege {
 
     }
 
-    public Privilege(PrivilegeType name) {
-        this.name = name;
-    }
-
     public int getId() {
         return id;
     }
