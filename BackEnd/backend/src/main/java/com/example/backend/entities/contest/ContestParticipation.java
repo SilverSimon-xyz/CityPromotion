@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class ContestParticipation {
 
     @Id
-    @JoinColumn(name = "participant_id", nullable = false)
+    //@JoinColumn(name = "participant_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 

@@ -6,6 +6,7 @@ import com.example.backend.entities.poi.PointOfInterestType;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.utility.PointOfInterestBuilder;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,11 +24,18 @@ public class PointOfInterestService {
     private PointOfInterestRepository poiRepository;
     @Autowired
     private UserRepository userRepository;
+
     public PointOfInterestService() {
     }
 
     public PointOfInterest createPOI(PointOfInterest pointOfInterest, String authorName) {
         User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        Optional<PointOfInterest> optional = poiRepository.findByNameAndLatitudeAndLongitude(
+                pointOfInterest.getName(), pointOfInterest.getLatitude(), pointOfInterest.getLongitude()
+        );
+        if(optional.isPresent()) {
+            throw new EntityExistsException("Point of Interest already existing!");
+        }
         pointOfInterest.setAuthor(author);
         PointOfInterest newPOI = PointOfInterestBuilder.build(pointOfInterest);
         return this.poiRepository.save(newPOI);
@@ -49,11 +58,6 @@ public class PointOfInterestService {
     public List<PointOfInterest> searchPOIByName(String name) {
         if(name == null) return List.of();
         return poiRepository.searchByName(name);
-    }
-
-    public List<PointOfInterest> searchPOIByDescription(String description) {
-        if(description == null) return List.of();
-        return poiRepository.searchByDescription(description);
     }
 
     public List<PointOfInterest> searchPOIByType(PointOfInterestType type) {

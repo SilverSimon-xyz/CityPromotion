@@ -69,18 +69,24 @@ public class Mapper {
         return contestDto;
     }
 
-    public MultimediaContentDto mapContestToDto(MultimediaContent media) {
-        MultimediaContentDto mediaDto = new MultimediaContentDto();
+    public MultimediaContentDto mapContentToDto(MultimediaContent multimediaContent) {
+        MultimediaContentDto multimediaContentDto = new MultimediaContentDto();
 
-        mediaDto.setId(media.getId());
-        mediaDto.setTitle(media.getTitle());
-        mediaDto.setDescription(media.getDescription());
-        mediaDto.setAuthor(media.getAuthor().getName());
-        mediaDto.setData(media.getData());
-        mediaDto.setCreatedAt(media.getCreatedAt());
-        mediaDto.setUpdatedAt(media.getDataUpdated());
-        mediaDto.setStatus(media.getStatus());
-
-        return mediaDto;
+        multimediaContentDto.setId(multimediaContent.getId());
+        multimediaContentDto.setTitle(multimediaContent.getTitle());
+        multimediaContentDto.setDescription(multimediaContent.getDescription());
+        multimediaContentDto.setAuthor(multimediaContent.getAuthor().getName());
+        multimediaContentDto.setStatus(multimediaContent.getStatus());
+        if(multimediaContent.getMediaFile() != null) {
+            MediaFileDto mediaFileDto = new MediaFileDto();
+            mediaFileDto.setId(multimediaContent.getMediaFile().getId());
+            mediaFileDto.setName(multimediaContent.getMediaFile().getName());
+            mediaFileDto.setType(multimediaContent.getMediaFile().getType());
+            mediaFileDto.setData(multimediaContent.getMediaFile().getData());
+            multimediaContentDto.setMediaFile(mediaFileDto);
+        }
+        return multimediaContentDto;
     }
+
+
 }

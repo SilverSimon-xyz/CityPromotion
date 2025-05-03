@@ -54,6 +54,7 @@ public class Contest {
     @Column(nullable = false)
     private List<ContestParticipation> participationContestList = new ArrayList<>();
 
+    @Column(name = "number_participants", nullable = false, updatable = false)
     private int numberOfParticipant = 0;
 
     public Contest() {

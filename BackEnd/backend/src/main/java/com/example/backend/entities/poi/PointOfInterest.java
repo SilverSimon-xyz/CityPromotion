@@ -37,10 +37,10 @@ public class PointOfInterest {
     @Column(nullable = false)
     private PointOfInterestType type;
 
-    @Column(name = "open-time", nullable = false)
+    @Column(name = "open_time", nullable = false)
     private LocalTime openTime;
 
-    @Column(name = "close-time", nullable = false)
+    @Column(name = "close_time", nullable = false)
     private LocalTime closeTime;
 
     @CreationTimestamp

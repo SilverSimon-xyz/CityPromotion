@@ -19,8 +19,9 @@ public class MultimediaContent {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private String type;
+    private FormatFileType type;
 
     @Lob
     @Column(name = "description", nullable = false)
@@ -29,9 +30,6 @@ public class MultimediaContent {
     @ManyToOne
     @JoinColumn(name = "author", referencedColumnName = "name")
     private User author;
-
-    @Lob
-    private byte[] data; // Per immagini, audio, video
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -43,6 +41,10 @@ public class MultimediaContent {
 
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @OneToOne
+    @JoinColumn(name = "file_id", nullable = false)
+    private MediaFile mediaFile;
 
     public MultimediaContent() {
 
@@ -64,6 +66,14 @@ public class MultimediaContent {
         this.title = title;
     }
 
+    public FormatFileType getType() {
+        return type;
+    }
+
+    public void setType(FormatFileType type) {
+        this.type = type;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -78,22 +88,6 @@ public class MultimediaContent {
 
     public void setAuthor(User author) {
         this.author = author;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
     }
 
     public Date getCreatedAt() {
@@ -118,5 +112,13 @@ public class MultimediaContent {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public MediaFile getMediaFile() {
+        return mediaFile;
+    }
+
+    public void setMediaFile(MediaFile mediaFile) {
+        this.mediaFile = mediaFile;
     }
 }

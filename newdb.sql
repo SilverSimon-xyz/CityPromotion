@@ -12,7 +12,7 @@ CREATE TABLE users (
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(user_id),
   UNIQUE KEY(name)
 );
@@ -60,11 +60,11 @@ CREATE TABLE pois (
     author VARCHAR(255) NOT NULL,
 	lat DOUBLE NOT NULL,
     lon DOUBLE NOT NULL,
-    type VARCHAR(255) NOT NULL,
+    type ENUM('TOURISM', 'ACCOMMODATION', 'SERVICE', 'NATURE', 'OTHER') NOT NULL,
 	open_time TIME,
     close_time TIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (poi_id),
     FOREIGN KEY (author) REFERENCES users(name) 
 );
@@ -82,7 +82,7 @@ CREATE TABLE contest (
   deadline DATE NOT NULL,
   number_participants INTEGER NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(contest_id),
   FOREIGN KEY (author) REFERENCES users(name) 
 );
@@ -96,22 +96,22 @@ CREATE TABLE multimediacontent (
   author VARCHAR(255) NOT NULL,
   data LONGBLOB NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
-  status VARCHAR(255) NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL,
   PRIMARY KEY(mc_id),
   FOREIGN KEY (author) REFERENCES users(name) 
 );
 
 #-Table for Contest-Participation
 CREATE TABLE contest_participation (
-  participant_id INTEGER NOT NULL AUTO_INCREMENT,
+  id INTEGER NOT NULL AUTO_INCREMENT,
   contest_id INTEGER NOT NULL,
   participant VARCHAR(255) NOT NULL,
   mc_id INTEGER NOT NULL,
   vote INTEGER NOT NULL,
   description TEXT NOT NULL,
   is_quote BOOLEAN NOT NULL,
-  PRIMARY KEY(participant_id),
+  PRIMARY KEY(id),
   FOREIGN KEY(contest_id) REFERENCES contest(contest_id),
   FOREIGN KEY(mc_id) REFERENCES multimediacontent(mc_id),
   FOREIGN KEY (participant) REFERENCES users(name) 
@@ -129,4 +129,4 @@ INSERT INTO users (name, email, password) VALUES ('Federico Badiali', 'radius@gm
 
 #POI for testing DB
 INSERT INTO pois (name, description, author, lat, lon, type, open_time, close_time) 
-VALUES ('nome di prova', 'descrizione di prova', 'Simone Stacchiotti', 1.0, 1.0, 'Turismo', '09:00:00', '18:00:00');
+VALUES ('nome di prova', 'descrizione di prova','Simone Stacchiotti', 1.0, 1.0, 'TOURISM', '09:00:00', '18:00:00');

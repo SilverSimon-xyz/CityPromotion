@@ -64,11 +64,18 @@ public class ContestService {
     }
 
     public void deleteAllContest() {
-        this.contestRepository.deleteAll();
+        contestParticipationRepository.deleteAll();
+        contestRepository.deleteAll();
     }
 
     public void deleteContest(int id) {
-        this.contestRepository.deleteById(id);
+        List<Integer> participantsIds = contestParticipationRepository
+                .findByContestId(id)
+                .stream()
+                .map(ContestParticipation::getId)
+                .toList();
+        contestParticipationRepository.deleteAllById(participantsIds);
+        contestRepository.deleteById(id);
     }
 
     public void participateContest(int idContest, int idUser, MultimediaContent multimediaContent) {
@@ -88,7 +95,7 @@ public class ContestService {
                 contestRepository.save(contest);
             }
         } else {
-            throw new RuntimeException("Contest o Utente non trovato.");
+            throw new RuntimeException("Contest or User not Fount.");
         }
     }
 

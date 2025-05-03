@@ -1,10 +1,14 @@
 package com.example.backend.service;
 
+import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.content.Status;
 import com.example.backend.entities.users.User;
+import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.repository.MultimediaContentRepository;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.utility.MultimediaContentBuilder;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -20,27 +24,41 @@ public class MultimediaContentService {
     @Autowired
     private MultimediaContentRepository multimediaContentRepository;
     @Autowired
+    private MediaFileRepository mediaFileRepository;
+    @Autowired
     private UserRepository userRepository;
 
-    public MultimediaContent addMultimediaContent(MultipartFile file, User author, String description) throws IOException {
-        MultimediaContent media = new MultimediaContent();
-        media.setTitle(file.getName());
-        media.setType(file.getContentType());
-        media.setDescription(description);
-        media.setAuthor(author);
-        media.setData(file.getBytes());
-        media.setCreatedAt(new Date());
-        media.setStatus(Status.PENDING);
-        return multimediaContentRepository.save(media);
+    public MultimediaContentService() {
+
     }
 
-    public MultimediaContent updateMultimediaContent(int id, MultipartFile file) {
+    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorName, MultipartFile file) throws IOException {
+
+        User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setName(file.getOriginalFilename());
+        mediaFile.setType(file.getContentType());
+        mediaFile.setData(file.getBytes());
+        mediaFileRepository.save(mediaFile);
+
+        MultimediaContent multimediaContent = MultimediaContentBuilder.build(multimediaContentDetails, author, mediaFile);
+
+        multimediaContent.setCreatedAt(new Date());
+        multimediaContent.setStatus(Status.PENDING);
+
+        return multimediaContentRepository.save(multimediaContent);
+    }
+
+    public MultimediaContent updateMultimediaContent(int id, MultipartFile file) throws IOException {
+        MultimediaContent multimediaContent = multimediaContentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Media not Found!"));
         //TODO
-        return null;
+        return multimediaContentRepository.save(multimediaContent);
     }
 
     public MultimediaContent getMultimediaContentById(int id) {
-        return multimediaContentRepository.findById(id).orElseThrow();
+        //TODO
+        return multimediaContentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Media not Found!"));
     }
 
     public List<MultimediaContent> getAllMultimediaContent() {
@@ -49,10 +67,12 @@ public class MultimediaContentService {
 
     public void deleteMultimediaContentById(int id) {
         //TODO
+        multimediaContentRepository.deleteById(id);
     }
 
     public void deleteAllMultimediaContent() {
         //TODO
+        multimediaContentRepository.deleteAll();
     }
 
 }

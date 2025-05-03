@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.PointOfInterestDto;
 import com.example.backend.dto.record.PointOfInterestRecordCreate;
 import com.example.backend.entities.poi.PointOfInterest;
+import com.example.backend.entities.poi.PointOfInterestType;
 import com.example.backend.service.PointOfInterestService;
 import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/poi")
@@ -23,14 +23,38 @@ public class PointOfInterestController {
     private Mapper mapper;
 
     @GetMapping("/all")
-    public List<PointOfInterestDto> getAllPOIs() {
-        return this.pointOfInterestService.getAllPOIs().stream().map(poi -> mapper.mapPOIToDto(poi)).collect(Collectors.toList());
+    public ResponseEntity<List<PointOfInterestDto>> getAllPOIs() {
+        List<PointOfInterestDto> pointOfInterestDtoList = pointOfInterestService.getAllPOIs()
+                .stream()
+                .map(poi -> mapper.mapPOIToDto(poi))
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestDtoList);
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<PointOfInterestDto> getPOIDetails(@PathVariable int id) {
+    public ResponseEntity<PointOfInterestDto> getPOIDetailsById(@PathVariable int id) {
         PointOfInterest pointOfInterest = pointOfInterestService.getPOIById(id);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToDto(pointOfInterest));
+    }
+
+    @GetMapping("/find/name")
+    public ResponseEntity<List<PointOfInterestDto>> getPOIDetailsByName(@RequestParam String name) {
+        List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByName(name);
+        List<PointOfInterestDto> pointOfInterestDtoList = pointOfInterestList
+                        .stream()
+                        .map(poi -> mapper.mapPOIToDto(poi))
+                        .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestDtoList);
+    }
+
+    @GetMapping("/find/type")
+    public ResponseEntity<List<PointOfInterestDto>> getPOIDetailsByType(@RequestParam PointOfInterestType type) {
+        List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByType(type);
+        List<PointOfInterestDto> pointOfInterestDtoList = pointOfInterestList
+                .stream()
+                .map(poi -> mapper.mapPOIToDto(poi))
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestDtoList);
     }
 
     @PostMapping("/add")

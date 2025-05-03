@@ -1,8 +1,7 @@
 package com.example.backend.dto;
 
+import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.Status;
-
-import java.util.Date;
 
 public class MultimediaContentDto {
 
@@ -16,13 +15,9 @@ public class MultimediaContentDto {
 
     private String author;
 
-    private byte[] data;
-
-    private Date createdAt;
-
-    private Date updatedAt;
-
     private Status status;
+
+    private MediaFileDto mediaFileDto;
 
     public MultimediaContentDto() {
 
@@ -68,34 +63,19 @@ public class MultimediaContentDto {
         this.type = type;
     }
 
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getDataUpdate() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public Status getStatus() {
         return status;
     }
+
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public MediaFileDto getMediaFile() {
+        return mediaFileDto;
+    }
+
+    public void setMediaFile(MediaFileDto mediaFileDto) {
+        this.mediaFileDto = mediaFileDto;
     }
 }

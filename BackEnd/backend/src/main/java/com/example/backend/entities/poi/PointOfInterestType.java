@@ -1,19 +1,19 @@
 package com.example.backend.entities.poi;
 
 public enum PointOfInterestType {
-    Turismo,
-    Alloggio,
-    Servizio,
-    Natura,
-    Altro;
+    TOURISM,
+    ACCOMMODATION,
+    SERVICE,
+    NATURE,
+    OTHER;
 
     public static PointOfInterestType fromString(String type) {
         return switch (type.toLowerCase()) {
-            case "turismo" -> Turismo;
-            case "alloggio" -> Alloggio;
-            case "servizio" -> Servizio;
-            case "natura" -> Natura;
-            default -> Altro;
+            case "tourism" -> TOURISM;
+            case "accommodation" -> ACCOMMODATION;
+            case "service" -> SERVICE;
+            case "nature" -> NATURE;
+            default -> OTHER;
         };
     }
 }
