@@ -23,8 +23,9 @@ public class MultimediaContentController {
     private Mapper mapper;
 
     @PostMapping("/upload")
-    public ResponseEntity<MultimediaContentDto> uploadFile(@RequestBody MultimediaContent content, @RequestParam("file")MultipartFile file) throws IOException {
-        MultimediaContent multimediaContent = multimediaContentService.saveMultimediaContent(content, content.getAuthor().getName(), file);
+    public ResponseEntity<MultimediaContentDto> uploadFile(@RequestBody MultimediaContent content,
+                                                           @RequestParam("file")MultipartFile file, @RequestParam int idPoi) throws IOException {
+        MultimediaContent multimediaContent = multimediaContentService.saveMultimediaContent(content, content.getAuthor().getName(), file, idPoi);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
     }
 
@@ -35,22 +36,28 @@ public class MultimediaContentController {
 
     @GetMapping("/all")
     public ResponseEntity<List<MultimediaContentDto>> getAllContents() {
-        return ResponseEntity.status(HttpStatus.OK).body(multimediaContentService.getAllMultimediaContent()
-                .stream()
+        return ResponseEntity.status(HttpStatus.OK).body(multimediaContentService.getAllMultimediaContent().stream()
                 .map(multimediaContent -> mapper.mapContentToDto(multimediaContent))
-                .toList()
-        );
+                .toList());
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<String> updateFile()  {
-        //TODO: modify return type, add parameters
-        return null;
+    @PutMapping("/edit/{idContent}")
+    public ResponseEntity<MultimediaContentDto> updateFile(@PathVariable int idContent, @RequestParam int idFile,
+                                             @RequestParam("file")MultipartFile file, @RequestBody MultimediaContent multimediaContentDetails) throws IOException {
+
+        MultimediaContent multimediaContent = multimediaContentService.updateMultimediaContent(idContent, idFile, file, multimediaContentDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteFile()  {
-        //TODO: modify return type, add parameters
-        return null;
+    public ResponseEntity<Void> deleteMultimediaContent(@PathVariable int id)  {
+        multimediaContentService.deleteMultimediaContentById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("/delete/all")
+    public ResponseEntity<Void> deleteAllMultimediaContent()  {
+        multimediaContentService.deleteAllMultimediaContent();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

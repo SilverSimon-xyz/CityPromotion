@@ -77,6 +77,7 @@ public class Mapper {
         multimediaContentDto.setDescription(multimediaContent.getDescription());
         multimediaContentDto.setAuthor(multimediaContent.getAuthor().getName());
         multimediaContentDto.setStatus(multimediaContent.getStatus());
+
         if(multimediaContent.getMediaFile() != null) {
             MediaFileDto mediaFileDto = new MediaFileDto();
             mediaFileDto.setId(multimediaContent.getMediaFile().getId());
@@ -85,6 +86,9 @@ public class Mapper {
             mediaFileDto.setData(multimediaContent.getMediaFile().getData());
             multimediaContentDto.setMediaFile(mediaFileDto);
         }
+
+        multimediaContentDto.setPOIName(multimediaContent.getPoi().getName());
+
         return multimediaContentDto;
     }
 

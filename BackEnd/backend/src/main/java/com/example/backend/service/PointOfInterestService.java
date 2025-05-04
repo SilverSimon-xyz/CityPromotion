@@ -1,8 +1,10 @@
 package com.example.backend.service;
 
+import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.users.User;
 import com.example.backend.entities.poi.PointOfInterestType;
+import com.example.backend.repository.MultimediaContentRepository;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.utility.builder.PointOfInterestBuilder;
@@ -24,6 +26,8 @@ public class PointOfInterestService {
     private PointOfInterestRepository poiRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MultimediaContentRepository multimediaContentRepository;
 
     public PointOfInterestService() {
     }
@@ -74,10 +78,17 @@ public class PointOfInterestService {
     }
 
     public void deleteAllPOIs() {
-        this.poiRepository.deleteAll();
+        multimediaContentRepository.deleteAll();
+        poiRepository.deleteAll();
     }
 
     public void deletePOI(int id) {
-        this.poiRepository.deleteById(id);
+
+        PointOfInterest poi = poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
+        List<Integer> mcIds = poi.getMultimediaContents().stream()
+                .map(MultimediaContent::getId)
+                .toList();
+        multimediaContentRepository.deleteAllById(mcIds);
+        poiRepository.delete(poi);
     }
 }

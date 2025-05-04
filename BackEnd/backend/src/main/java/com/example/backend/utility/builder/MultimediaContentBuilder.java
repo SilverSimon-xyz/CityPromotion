@@ -2,11 +2,12 @@ package com.example.backend.utility.builder;
 
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.MultimediaContent;
+import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.users.User;
 
 public class MultimediaContentBuilder {
 
-    public static MultimediaContent build(MultimediaContent multimediaContentDetails, User author, MediaFile mediaFile) {
+    public static MultimediaContent build(MultimediaContent multimediaContentDetails, User author, MediaFile mediaFile, PointOfInterest pointOfInterest) {
         MultimediaContent multimediaContent = new MultimediaContent();
 
         multimediaContent.setId(multimediaContentDetails.getId());
@@ -16,6 +17,7 @@ public class MultimediaContentBuilder {
 
         multimediaContent.setAuthor(author);
         multimediaContent.setMediaFile(mediaFile);
+        multimediaContent.setPoi(pointOfInterest);
 
         return multimediaContent;
     }

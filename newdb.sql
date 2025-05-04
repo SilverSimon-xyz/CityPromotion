@@ -66,7 +66,7 @@ CREATE TABLE pois (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (poi_id),
-    FOREIGN KEY (author) REFERENCES users(name) 
+    FOREIGN KEY (author) REFERENCES users(name)
 );
 
 #-Table for Contest
@@ -111,7 +111,7 @@ CREATE TABLE multimediacontent (
   PRIMARY KEY(mc_id),
   FOREIGN KEY (author) REFERENCES users(name),
   FOREIGN KEY (file_id) REFERENCES media_file(id),
-  CONSTRAINT fk_multimediacontent_poi FOREIGN KEY(poi_id) REFERENCES pois(poi_id) ON DELETE CASCADE
+  CONSTRAINT fk_multimediacontent_poi FOREIGN KEY(poi_id) REFERENCES pois(poi_id)
 );
 
 #-Table for Contest-Participation
@@ -135,7 +135,6 @@ CREATE TRIGGER updates_number_participants_insert
 AFTER INSERT ON contest_participation
 FOR EACH ROW
 UPDATE contest SET number_participants = number_participants + 1 WHERE contest_id = NEW.contest_id;
-
 
 #User for testing DB
 INSERT INTO users (name, email, password) VALUES ('Simone Stacchiotti', 'silver.simon@gmail.com', '$2a$10$HY1BGND6c2pAptwNYZAV5uFZIYHOhT5bqixrOXHubpjuSLxtHzaG2');

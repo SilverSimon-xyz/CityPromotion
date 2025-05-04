@@ -1,6 +1,5 @@
 package com.example.backend.dto;
 
-import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.Status;
 
 public class MultimediaContentDto {
@@ -18,6 +17,8 @@ public class MultimediaContentDto {
     private Status status;
 
     private MediaFileDto mediaFileDto;
+
+    private String poiName;
 
     public MultimediaContentDto() {
 
@@ -77,5 +78,13 @@ public class MultimediaContentDto {
 
     public void setMediaFile(MediaFileDto mediaFileDto) {
         this.mediaFileDto = mediaFileDto;
+    }
+
+    public String getPOIName() {
+        return poiName;
+    }
+
+    public void setPOIName(String poiName) {
+        this.poiName = poiName;
     }
 }

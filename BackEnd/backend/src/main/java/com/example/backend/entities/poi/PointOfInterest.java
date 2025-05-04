@@ -20,10 +20,10 @@ public class PointOfInterest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "description",nullable = false)
     private String description;
 
     @ManyToOne
