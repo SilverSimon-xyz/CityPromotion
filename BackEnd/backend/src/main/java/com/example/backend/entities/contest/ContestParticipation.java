@@ -1,7 +1,7 @@
 package com.example.backend.entities.contest;
 
+import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.users.User;
-import com.example.backend.entities.content.MultimediaContent;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,8 +9,8 @@ import jakarta.persistence.*;
 public class ContestParticipation {
 
     @Id
-    //@JoinColumn(name = "participant_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "participant_id", nullable = false)
     private int id;
 
     @ManyToOne
@@ -21,9 +21,9 @@ public class ContestParticipation {
     @JoinColumn(name = "participant", referencedColumnName = "name", nullable = false)
     private User participant;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "mc_id", referencedColumnName = "mc_id")
-    private MultimediaContent multimediaContent;
+    @OneToOne
+    @JoinColumn(name = "file_id")
+    private MediaFile mediaFile;
 
     @Embedded
     private QuoteCriterion quoteCriterion;
@@ -56,11 +56,12 @@ public class ContestParticipation {
         this.participant = participant;
     }
 
-    public MultimediaContent getMultimediaContent() {
-        return multimediaContent;
+    public MediaFile getMediaFile() {
+        return mediaFile;
     }
-    public void setMultimediaContent(MultimediaContent multimediaContent) {
-        this.multimediaContent = multimediaContent;
+
+    public void setMediaFile(MediaFile mediaFile) {
+        this.mediaFile = mediaFile;
     }
 
     public QuoteCriterion getQuoteCriterion() {
@@ -71,17 +72,5 @@ public class ContestParticipation {
         this.quoteCriterion = quoteCriterion;
     }
 
-    @PostPersist
-    public void addParticipant() {
-        if(contest != null) {
-            contest.updateParticipantNumber();
-        }
-    }
 
-    @PostRemove
-    public void deleteParticipant() {
-        if(contest != null) {
-            contest.updateParticipantNumber();
-        }
-    }
 }

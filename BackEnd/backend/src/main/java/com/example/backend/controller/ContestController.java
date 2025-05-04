@@ -3,8 +3,9 @@ package com.example.backend.controller;
 import com.example.backend.dto.Account;
 import com.example.backend.dto.ContestDto;
 import com.example.backend.dto.record.ContestRecordCreate;
-import com.example.backend.entities.content.MultimediaContent;
+import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.contest.Contest;
+import com.example.backend.entities.contest.ContestParticipation;
 import com.example.backend.entities.contest.QuoteCriterion;
 import com.example.backend.entities.users.User;
 import com.example.backend.service.ContestService;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -75,12 +77,12 @@ public class ContestController {
     }
 
     @PostMapping("/participate/{idContest}/idUser")
-    public ResponseEntity<Void> participateContest(@PathVariable int idContest, @RequestParam int idUser, @RequestBody MultimediaContent multimediaContent) {
-        contestService.participateContest(idContest, idUser, multimediaContent);
+    public ResponseEntity<Void> participateContest(@PathVariable int idContest, @RequestParam int idUser, @RequestBody MediaFile mediaFile) {
+        contestService.participateContest(idContest, idUser, mediaFile);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/validate/{idParticipant}")
+    @PutMapping("/validate/{idParticipant}")
     public ResponseEntity<Void> evaluateParticipant(@PathVariable int idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
         contestService.evaluateParticipant(idParticipant, quoteCriterionDetails);
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -1,5 +1,6 @@
 package com.example.backend.entities.content;
 
+import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.users.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,6 +46,10 @@ public class MultimediaContent {
     @OneToOne
     @JoinColumn(name = "file_id", nullable = false)
     private MediaFile mediaFile;
+
+    @ManyToOne
+    @JoinColumn(name = "poi_id", nullable = false)
+    private PointOfInterest poi;
 
     public MultimediaContent() {
 
@@ -120,5 +125,13 @@ public class MultimediaContent {
 
     public void setMediaFile(MediaFile mediaFile) {
         this.mediaFile = mediaFile;
+    }
+
+    public PointOfInterest getPoi() {
+        return poi;
+    }
+
+    public void setPoi(PointOfInterest poi) {
+        this.poi = poi;
     }
 }

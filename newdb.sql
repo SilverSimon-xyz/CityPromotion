@@ -87,36 +87,54 @@ CREATE TABLE contest (
   FOREIGN KEY (author) REFERENCES users(name) 
 );
 
+#-Table for Media File
+CREATE TABLE media_file (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(255) NOT NULL,
+  data LONGBLOB NOT NULL,
+  PRIMARY KEY(id)
+);
+
 #-Table for MultimediaContent
 CREATE TABLE multimediacontent (
   mc_id INTEGER NOT NULL AUTO_INCREMENT,
   title VARCHAR(255) NOT NULL,
-  type VARCHAR(255) NOT NULL,
+  type ENUM('DOCUMENT', 'IMAGE', 'AUDIO', 'VIDEO', 'OTHER') NOT NULL,
   description TEXT NOT NULL,
   author VARCHAR(255) NOT NULL,
-  data LONGBLOB NOT NULL,
+  file_id INTEGER NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   status ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL,
+  poi_id INTEGER NOT NULL,
   PRIMARY KEY(mc_id),
-  FOREIGN KEY (author) REFERENCES users(name) 
+  FOREIGN KEY (author) REFERENCES users(name),
+  FOREIGN KEY (file_id) REFERENCES media_file(id),
+  CONSTRAINT fk_multimediacontent_poi FOREIGN KEY(poi_id) REFERENCES pois(poi_id) ON DELETE CASCADE
 );
 
 #-Table for Contest-Participation
 CREATE TABLE contest_participation (
-  id INTEGER NOT NULL AUTO_INCREMENT,
+  participant_id INTEGER NOT NULL AUTO_INCREMENT,
   contest_id INTEGER NOT NULL,
   participant VARCHAR(255) NOT NULL,
-  mc_id INTEGER NOT NULL,
+  file_id INTEGER NOT NULL,
   vote INTEGER NOT NULL,
   description TEXT NOT NULL,
   is_quote BOOLEAN NOT NULL,
-  PRIMARY KEY(id),
+  PRIMARY KEY(participant_id),
   FOREIGN KEY(contest_id) REFERENCES contest(contest_id),
-  FOREIGN KEY(mc_id) REFERENCES multimediacontent(mc_id),
-  FOREIGN KEY (participant) REFERENCES users(name) 
+  FOREIGN KEY(file_id) REFERENCES media_file(id),
+  FOREIGN KEY (participant) REFERENCES users(name),
+  CONSTRAINT fk_contest_participation_contest FOREIGN KEY (contest_id) REFERENCES contest(contest_id)
 );
 
+#Trigger per provocare l'aumento di partecipanti:
+CREATE TRIGGER updates_number_participants_insert
+AFTER INSERT ON contest_participation
+FOR EACH ROW
+UPDATE contest SET number_participants = number_participants + 1 WHERE contest_id = NEW.contest_id;
 
 
 #User for testing DB

@@ -1,16 +1,18 @@
 package com.example.backend.service;
 
+import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.users.User;
-import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.contest.Contest;
 import com.example.backend.entities.contest.ContestParticipation;
 import com.example.backend.entities.contest.QuoteCriterion;
 import com.example.backend.repository.ContestParticipationRepository;
 import com.example.backend.repository.ContestRepository;
+import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,8 @@ public class ContestService {
     private UserRepository userRepository;
     @Autowired
     private ContestParticipationRepository contestParticipationRepository;
+    @Autowired
+    private MediaFileRepository mediaFileRepository;
 
     public ContestService() {
 
@@ -78,7 +82,8 @@ public class ContestService {
         contestRepository.deleteById(id);
     }
 
-    public void participateContest(int idContest, int idUser, MultimediaContent multimediaContent) {
+    @Transactional
+    public void participateContest(int idContest, int idUser, MediaFile mediaFile) {
         Optional<Contest> optionalContest = contestRepository.findById(idContest);
         Optional<User> optionalUser = userRepository.findById(idUser);
 
@@ -87,10 +92,14 @@ public class ContestService {
             User user = optionalUser.get();
             if(contest.getActive()) {
                 ContestParticipation participation = new ContestParticipation();
+                QuoteCriterion quoteCriterion = new QuoteCriterion();
                 participation.setContest(contest);
                 participation.setParticipant(user);
-                participation.setMultimediaContent(multimediaContent);
+                participation.setMediaFile(mediaFile);
+                participation.setQuoteCriterion(quoteCriterion);
                 contest.getParticipationContestList().add(participation);
+                contest.setNumberOfParticipant(contest.getNumberOfParticipant()+1);
+                mediaFileRepository.save(mediaFile);
                 contestParticipationRepository.save(participation);
                 contestRepository.save(contest);
             }
@@ -129,6 +138,7 @@ public class ContestService {
                 .map(ContestParticipation::getParticipant)
                 .toList();
         contest.setActive(false);
+        contestRepository.save(contest);
         return winners;
     }
 

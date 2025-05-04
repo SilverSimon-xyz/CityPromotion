@@ -1,4 +1,4 @@
-package com.example.backend.utility;
+package com.example.backend.utility.builder;
 
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.MultimediaContent;

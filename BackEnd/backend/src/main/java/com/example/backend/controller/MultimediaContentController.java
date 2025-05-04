@@ -28,12 +28,12 @@ public class MultimediaContentController {
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
     }
 
-    @GetMapping
+    @GetMapping("/find/{id}")
     public ResponseEntity<MultimediaContentDto> getContentDetails(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContentService.getMultimediaContentById(id)));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<MultimediaContentDto>> getAllContents() {
         return ResponseEntity.status(HttpStatus.OK).body(multimediaContentService.getAllMultimediaContent()
                 .stream()

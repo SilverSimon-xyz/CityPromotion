@@ -1,12 +1,15 @@
 package com.example.backend.entities.poi;
 
+import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.users.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "pois")
@@ -51,6 +54,9 @@ public class PointOfInterest {
     @Column(name = "updated_at", nullable = false, updatable = false)
     private Date updatedAt;
 
+    @OneToMany(mappedBy = "poi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MultimediaContent> multimediaContents = new ArrayList<>();
+
     public PointOfInterest() {
 
     }
@@ -84,7 +90,6 @@ public class PointOfInterest {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public String getDescription() {
         return description;
@@ -146,5 +151,13 @@ public class PointOfInterest {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<MultimediaContent> getMultimediaContents() {
+        return multimediaContents;
+    }
+
+    public void setMultimediaContents(List<MultimediaContent> multimediaContents) {
+        this.multimediaContents = multimediaContents;
     }
 }
