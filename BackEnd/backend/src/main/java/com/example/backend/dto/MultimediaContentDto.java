@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+import com.example.backend.entities.content.FormatFileType;
 import com.example.backend.entities.content.Status;
 
 public class MultimediaContentDto {
@@ -8,7 +9,7 @@ public class MultimediaContentDto {
 
     private String title;
 
-    private String type;
+    private FormatFileType type;
 
     private String description;
 
@@ -18,7 +19,7 @@ public class MultimediaContentDto {
 
     private MediaFileDto mediaFileDto;
 
-    private String poiName;
+    private PointOfInterestDto pointOfInterestDto;
 
     public MultimediaContentDto() {
 
@@ -56,11 +57,11 @@ public class MultimediaContentDto {
         this.author = author;
     }
 
-    public String getType() {
+    public FormatFileType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(FormatFileType type) {
         this.type = type;
     }
 
@@ -80,11 +81,11 @@ public class MultimediaContentDto {
         this.mediaFileDto = mediaFileDto;
     }
 
-    public String getPOIName() {
-        return poiName;
+    public PointOfInterestDto getPOI() {
+        return pointOfInterestDto;
     }
 
-    public void setPOIName(String poiName) {
-        this.poiName = poiName;
+    public void setPOI(PointOfInterestDto pointOfInterestDto) {
+        this.pointOfInterestDto = pointOfInterestDto;
     }
 }

@@ -12,6 +12,7 @@ public class MultimediaContentBuilder {
 
         multimediaContent.setId(multimediaContentDetails.getId());
         multimediaContent.setTitle(multimediaContentDetails.getTitle());
+        multimediaContent.setType(multimediaContentDetails.getType());
         multimediaContent.setDescription(multimediaContentDetails.getDescription());
         multimediaContent.setStatus(multimediaContentDetails.getStatus());
 

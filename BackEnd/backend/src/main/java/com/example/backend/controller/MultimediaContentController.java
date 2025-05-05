@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.MultimediaContentDto;
+import com.example.backend.dto.record.MultimediaContentRecordCreate;
+import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.service.MultimediaContentService;
 import com.example.backend.utility.Mapper;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,9 +24,8 @@ public class MultimediaContentController {
     private Mapper mapper;
 
     @PostMapping("/upload")
-    public ResponseEntity<MultimediaContentDto> uploadFile(@RequestBody MultimediaContent content,
-                                                           @RequestParam("file")MultipartFile file, @RequestParam int idPoi) throws IOException {
-        MultimediaContent multimediaContent = multimediaContentService.saveMultimediaContent(content, content.getAuthor().getName(), file, idPoi);
+    public ResponseEntity<MultimediaContentDto> uploadFile(@RequestBody MultimediaContentRecordCreate request, @RequestParam int idPoi) {
+        MultimediaContent multimediaContent = multimediaContentService.saveMultimediaContent(request.toMultimediaContent(), request.authorName(), request.mediaFile(), idPoi);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
     }
 
@@ -41,11 +41,18 @@ public class MultimediaContentController {
                 .toList());
     }
 
-    @PutMapping("/edit/{idContent}")
-    public ResponseEntity<MultimediaContentDto> updateFile(@PathVariable int idContent, @RequestParam int idFile,
-                                             @RequestParam("file")MultipartFile file, @RequestBody MultimediaContent multimediaContentDetails) throws IOException {
+    @PutMapping("/edit/content/{idContent}")
+    public ResponseEntity<MultimediaContentDto> updateContent(@PathVariable int idContent, @RequestBody MultimediaContent multimediaContentDetails) throws IOException {
 
-        MultimediaContent multimediaContent = multimediaContentService.updateMultimediaContent(idContent, idFile, file, multimediaContentDetails);
+        MultimediaContent multimediaContent = multimediaContentService.updateContent(idContent, multimediaContentDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
+    }
+
+    @PutMapping("/edit/file/{idFile}")
+    public ResponseEntity<MultimediaContentDto> updateFile(@PathVariable int idFile, @RequestParam int idContent,
+                                                              @RequestBody MediaFile mediaFile) throws IOException {
+
+        MultimediaContent multimediaContent = multimediaContentService.updateFile(idContent, idFile, mediaFile);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
     }
 

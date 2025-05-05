@@ -1,6 +1,7 @@
 package com.example.backend.utility;
 
 import com.example.backend.dto.*;
+import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.contest.Contest;
 import com.example.backend.entities.poi.PointOfInterest;
@@ -79,18 +80,27 @@ public class Mapper {
         multimediaContentDto.setStatus(multimediaContent.getStatus());
 
         if(multimediaContent.getMediaFile() != null) {
-            MediaFileDto mediaFileDto = new MediaFileDto();
-            mediaFileDto.setId(multimediaContent.getMediaFile().getId());
-            mediaFileDto.setName(multimediaContent.getMediaFile().getName());
-            mediaFileDto.setType(multimediaContent.getMediaFile().getType());
-            mediaFileDto.setData(multimediaContent.getMediaFile().getData());
+            MediaFileDto mediaFileDto = mapMediaFileToDto(multimediaContent.getMediaFile());
             multimediaContentDto.setMediaFile(mediaFileDto);
         }
-
-        multimediaContentDto.setPOIName(multimediaContent.getPoi().getName());
+        if(multimediaContent.getPoi() != null) {
+            PointOfInterestDto pointOfInterestDto = mapPOIToDto(multimediaContent.getPoi());
+            multimediaContentDto.setPOI(pointOfInterestDto);
+        }
 
         return multimediaContentDto;
     }
 
+    private MediaFileDto mapMediaFileToDto(MediaFile mediaFile) {
+
+        MediaFileDto mediaFileDto = new MediaFileDto();
+        mediaFileDto.setId(mediaFile.getId());
+        mediaFileDto.setName(mediaFile.getName());
+        mediaFileDto.setType(mediaFile.getType());
+        mediaFileDto.setData(mediaFile.getData());
+
+        return mediaFileDto;
+
+    }
 
 }

@@ -14,9 +14,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -36,16 +35,12 @@ public class MultimediaContentService {
 
     }
 
-    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorName, MultipartFile file, int idPoi) throws IOException {
+    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorName, MediaFile mediaFile, int idPoi) {
 
         User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
 
         PointOfInterest poi = poiRepository.findById(idPoi).orElseThrow(() -> new EntityNotFoundException("POI Not Found"));
 
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setName(file.getOriginalFilename());
-        mediaFile.setType(file.getContentType());
-        mediaFile.setData(file.getBytes());
         mediaFileRepository.save(mediaFile);
 
         MultimediaContent multimediaContent = MultimediaContentBuilder.build(multimediaContentDetails, author, mediaFile, poi);
@@ -57,18 +52,28 @@ public class MultimediaContentService {
         return multimediaContentRepository.save(multimediaContent);
     }
 
-    public MultimediaContent updateMultimediaContent(int idContent, int idFile, MultipartFile file, MultimediaContent multimediaContentDetails) throws IOException {
-        MediaFile mediaFile = mediaFileRepository.findById(idFile).orElseThrow(() -> new EntityNotFoundException("Media File not Found!"));
-
-        mediaFile.setName(file.getOriginalFilename());
-        mediaFile.setType(file.getContentType());
-        mediaFile.setData(file.getBytes());
-        mediaFileRepository.save(mediaFile);
+    public MultimediaContent updateContent(int idContent, MultimediaContent multimediaContentDetails) {
 
         MultimediaContent multimediaContent = multimediaContentRepository.findById(idContent).orElseThrow(() -> new EntityNotFoundException("Content not Found!"));
 
         multimediaContent.setTitle(multimediaContentDetails.getTitle());
         multimediaContent.setDescription(multimediaContentDetails.getDescription());
+        multimediaContent.setUpdatedAt(new Date());
+        multimediaContent.setStatus(Status.APPROVED);
+
+        return multimediaContentRepository.save(multimediaContent);
+    }
+
+    public MultimediaContent updateFile(int idContent, int idFile, MediaFile mediaFileDetails) {
+        MediaFile mediaFile = mediaFileRepository.findById(idFile).orElseThrow(() -> new EntityNotFoundException("Media File not Found!"));
+        mediaFile.setName(mediaFileDetails.getName());
+        mediaFile.setType(mediaFileDetails.getType());
+        mediaFile.setData(mediaFileDetails.getData());
+
+        mediaFileRepository.save(mediaFile);
+
+        MultimediaContent multimediaContent = multimediaContentRepository.findById(idContent).orElseThrow(() -> new EntityNotFoundException("Content not Found!"));
+
         multimediaContent.setUpdatedAt(new Date());
         multimediaContent.setMediaFile(mediaFile);
         multimediaContent.setStatus(Status.APPROVED);
@@ -89,13 +94,20 @@ public class MultimediaContentService {
         PointOfInterest pointOfInterest = multimediaContent.getPoi();
         pointOfInterest.getMultimediaContents().remove(multimediaContent);
         poiRepository.save(pointOfInterest);
+        MediaFile mediaFile = multimediaContent.getMediaFile();
+        mediaFileRepository.delete(mediaFile);
         multimediaContentRepository.deleteById(id);
     }
 
     public void deleteAllMultimediaContent() {
+        List<MultimediaContent> multimediaContentList = multimediaContentRepository.findAll();
         List<PointOfInterest> pointOfInterestList = poiRepository.findAll();
         pointOfInterestList.forEach(poi -> poi.getMultimediaContents().clear());
         poiRepository.saveAll(pointOfInterestList);
+        multimediaContentList.forEach(multimediaContent -> {
+            MediaFile mediaFile = multimediaContent.getMediaFile();
+            mediaFileRepository.delete(mediaFile);
+        });
         multimediaContentRepository.deleteAll();
     }
 
