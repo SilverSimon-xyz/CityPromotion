@@ -2,7 +2,7 @@ package com.example.backend.entities.users;
 
 import jakarta.persistence.*;
 
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name="roles")
@@ -20,10 +20,10 @@ public class Role {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Collection<User> users;
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    private List<User> users;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_privileges",
             joinColumns = {
@@ -33,7 +33,7 @@ public class Role {
                     @JoinColumn(name = "privilege_id", referencedColumnName = "privilege_id")
             }
     )
-    private Collection<Privilege> privileges;
+    private List<Privilege> privileges;
 
     public Role() {
 
@@ -63,19 +63,19 @@ public class Role {
         this.description = description;
     }
 
-    public Collection<User> getUsers() {
+    public List<User> getUsers() {
         return this.users;
     }
 
-    public void setUsers(Collection<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
-    public Collection<Privilege> getPrivileges() {
+    public List<Privilege> getPrivileges() {
         return this.privileges;
     }
 
-    public void setPrivileges(Collection<Privilege> privileges) {
+    public void setPrivileges(List<Privilege> privileges) {
         this.privileges = privileges;
     }
 

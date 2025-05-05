@@ -5,8 +5,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -30,7 +31,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = {
@@ -41,7 +42,7 @@ public class User {
                     @JoinColumn(name = "role_id", referencedColumnName = "role_id"),
                     @JoinColumn(name = "role_name", referencedColumnName = "name")
             })
-    private Collection<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -54,7 +55,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, String email, String password, Collection<Role> roles) {
+    public User(int id, String name, String email, String password, List<Role> roles) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -95,11 +96,11 @@ public class User {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
+    public List<Role> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

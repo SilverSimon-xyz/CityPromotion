@@ -21,7 +21,7 @@ public class ApplicationConfiguration {
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> Account.build(userRepository.findByEmail(username).orElseThrow(() -> new EntityNotFoundException("User not found")));
+        return username -> new Account(userRepository.findByEmail(username).orElseThrow(() -> new EntityNotFoundException("User not found")));
     }
 
     @Bean

@@ -22,6 +22,7 @@ public class UserController {
     private Mapper mapper;
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public List<Account> getAllUsers() {
         return this.userService.getAllUsers()
                 .stream()
@@ -30,27 +31,28 @@ public class UserController {
     }
 
     @GetMapping("/find/{id}")
+    @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Account> getUserDetails(@PathVariable int id) {
         User user = userService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapUserToAccount(user));
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Account> createUser(@RequestBody User user) {
         User newUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapUserToAccount(newUser));
     }
 
     @PutMapping("/edit/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Account> editUserName(@PathVariable int id, @RequestParam String name) {
         User updatedUser = userService.updateUser(id, name);
         return ResponseEntity.status(HttpStatus.OK).body(mapper.mapUserToAccount(updatedUser));
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         boolean isDeleted = userService.deleteUser(id);
         return isDeleted ? ResponseEntity.noContent().build()
@@ -58,13 +60,10 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Void> deleteAll() {
         this.userService.deleteAllUsers();
         return ResponseEntity.noContent().build();
     }
-
-
-    //TODO: Method not tested yet: getCurrentUser()
 
 }

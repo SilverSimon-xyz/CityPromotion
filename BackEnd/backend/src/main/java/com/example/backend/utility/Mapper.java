@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
     public Account mapUserToAccount(User user) {
-        return Account.build(user);
+        return new Account(user);
     }
 
     public PointOfInterestDto mapPOIToDto(PointOfInterest pointOfInterest) {

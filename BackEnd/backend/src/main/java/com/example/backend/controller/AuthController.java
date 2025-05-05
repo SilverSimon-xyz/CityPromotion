@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,7 +40,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> loginHandler(@RequestBody AuthRequest authRequest) {
+    //@PreAuthorize("hasAuthority('PRIVILEGE_LOGIN')")
+    public ResponseEntity<AuthResponse> loginHandler(@Valid @RequestBody AuthRequest authRequest) {
 
         User authenticatedUser = authService.login(authRequest);
 

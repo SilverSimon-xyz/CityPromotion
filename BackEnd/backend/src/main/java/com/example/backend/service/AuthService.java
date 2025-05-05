@@ -4,7 +4,6 @@ import com.example.backend.dto.request.RegistrationRequest;
 import com.example.backend.entities.users.Role;
 import com.example.backend.entities.users.RoleType;
 import com.example.backend.entities.users.User;
-import com.example.backend.repository.PrivilegeRepository;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.dto.request.AuthRequest;
@@ -28,18 +27,14 @@ public class AuthService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private PrivilegeRepository privilegeRepository;
 
     public User registration(RegistrationRequest registrationRequest) throws Exception {
-
+        if(userRepository.existsByEmail(registrationRequest.getEmail())) {
+            throw new Exception("User already exist!");
+        }
         Optional<Role> optionalRole = roleRepository.findByName(RoleType.TOURIST);
         if(optionalRole.isEmpty()) {
             return null;
-        }
-
-        if(userRepository.existsByEmail(registrationRequest.getEmail())) {
-            throw new Exception("Utente già registrato!");
         }
 
         User user = new User();
@@ -56,7 +51,8 @@ public class AuthService {
     public User login(AuthRequest authRequest) {
 
         authenticationManager.authenticate(
-                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()
+                 ));
 
         return this.userRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
 
