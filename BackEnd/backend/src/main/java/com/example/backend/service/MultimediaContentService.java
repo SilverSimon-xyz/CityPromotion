@@ -14,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -86,7 +85,13 @@ public class MultimediaContentService {
     }
 
     public List<MultimediaContent> getAllMultimediaContent() {
-        return multimediaContentRepository.findAll();
+        List<MultimediaContent> multimediaContentList = multimediaContentRepository.findAll();
+        multimediaContentList.removeIf(multimediaContent -> multimediaContent.getStatus()==Status.REJECTED || multimediaContent.getStatus()==Status.PENDING);
+        return multimediaContentList;
+    }
+
+    public List<MultimediaContent> getAllPendingMultimediaContent() {
+        return multimediaContentRepository.findByStatus(Status.PENDING);
     }
 
     public void deleteMultimediaContentById(int id) {
@@ -109,6 +114,32 @@ public class MultimediaContentService {
             mediaFileRepository.delete(mediaFile);
         });
         multimediaContentRepository.deleteAll();
+    }
+
+    public MultimediaContent validateMultimediaContent(int id, Status status) {
+        MultimediaContent multimediaContent = multimediaContentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Multimedia Content not Found!"));
+        switch(status) {
+            case PENDING -> throw new IllegalArgumentException("You have to APPROVED or REJECTED");
+            case APPROVED, REJECTED -> {
+                    multimediaContent.setStatus(status);
+                    multimediaContentRepository.save(multimediaContent);
+            }
+            default -> throw new RuntimeException("No such state exist!");
+        }
+        return multimediaContent;
+    }
+
+    public void deleteAllMultimediaContentRejected() {
+        List<MultimediaContent> multimediaContentList = multimediaContentRepository.findByStatus(Status.REJECTED);
+        List<PointOfInterest> pointOfInterestList = poiRepository.findAll();
+        pointOfInterestList.forEach(poi -> poi.getMultimediaContents().removeIf(multimediaContent -> multimediaContent.getStatus().equals(Status.REJECTED)));
+        poiRepository.saveAll(pointOfInterestList);
+        multimediaContentList.forEach(multimediaContent -> {
+            MediaFile mediaFile = multimediaContent.getMediaFile();
+            mediaFileRepository.delete(mediaFile);
+        });
+        multimediaContentRepository.deleteAll(multimediaContentList);
+
     }
 
 }

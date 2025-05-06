@@ -1,4 +1,4 @@
-package com.example.backend.dto;
+package com.example.backend.dto.response;
 
 import com.example.backend.entities.users.Privilege;
 import com.example.backend.entities.users.Role;

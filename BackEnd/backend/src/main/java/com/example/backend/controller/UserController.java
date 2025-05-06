@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.entities.users.User;
-import com.example.backend.dto.Account;
+import com.example.backend.dto.response.Account;
 import com.example.backend.service.UserService;
 import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;

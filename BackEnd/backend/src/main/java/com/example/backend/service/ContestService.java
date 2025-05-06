@@ -67,6 +67,16 @@ public class ContestService {
         return contestRepository.searchByName(name);
     }
 
+    public List<Contest> searchActiveContest() {
+        return contestRepository.findAll().stream().filter(Contest::getActive).toList();
+    }
+
+    public Contest activeClosedContest(int id) {
+        Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
+        if(!contest.getActive()) contest.setActive(true);
+        return contest;
+    }
+
     public void deleteAllContest() {
         contestParticipationRepository.deleteAll();
         contestRepository.deleteAll();

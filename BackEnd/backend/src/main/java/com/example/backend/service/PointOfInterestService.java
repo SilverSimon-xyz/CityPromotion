@@ -83,7 +83,6 @@ public class PointOfInterestService {
     }
 
     public void deletePOI(int id) {
-
         PointOfInterest poi = poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
         List<Integer> mcIds = poi.getMultimediaContents().stream()
                 .map(MultimediaContent::getId)

@@ -1,10 +1,10 @@
-package com.example.backend.dto;
+package com.example.backend.dto.response;
 
 import com.example.backend.entities.users.RoleType;
 
 import java.util.Collection;
 
-public class RoleDto {
+public class RoleResponse {
 
     private int id;
 
@@ -16,7 +16,7 @@ public class RoleDto {
 
     private Collection<String> privileges;
 
-    public RoleDto() {
+    public RoleResponse() {
 
     }
 

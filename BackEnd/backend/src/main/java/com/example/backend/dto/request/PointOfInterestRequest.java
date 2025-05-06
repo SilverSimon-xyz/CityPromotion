@@ -1,12 +1,12 @@
-package com.example.backend.dto.record;
+package com.example.backend.dto.request;
 
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.poi.PointOfInterestType;
 
 import java.time.LocalTime;
 
-public record PointOfInterestRecordCreate(String name, String description, String authorName, double latitude, double longitude,
-                                          PointOfInterestType type, LocalTime openTime, LocalTime closeTime) {
+public record PointOfInterestRequest(String name, String description, String authorName, double latitude, double longitude,
+                                     PointOfInterestType type, LocalTime openTime, LocalTime closeTime) {
 
     public PointOfInterest toPOI() {
         PointOfInterest pointOfInterest = new PointOfInterest();

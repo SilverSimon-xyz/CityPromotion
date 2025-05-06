@@ -1,9 +1,9 @@
-package com.example.backend.dto;
+package com.example.backend.dto.response;
 
 import com.example.backend.entities.content.FormatFileType;
 import com.example.backend.entities.content.Status;
 
-public class MultimediaContentDto {
+public class MultimediaContentResponse {
 
     private int id;
 
@@ -17,11 +17,11 @@ public class MultimediaContentDto {
 
     private Status status;
 
-    private MediaFileDto mediaFileDto;
+    private MediaFileResponse mediaFileResponse;
 
-    private PointOfInterestDto pointOfInterestDto;
+    private PointOfInterestResponse pointOfInterestResponse;
 
-    public MultimediaContentDto() {
+    public MultimediaContentResponse() {
 
     }
 
@@ -73,19 +73,19 @@ public class MultimediaContentDto {
         this.status = status;
     }
 
-    public MediaFileDto getMediaFile() {
-        return mediaFileDto;
+    public MediaFileResponse getMediaFile() {
+        return mediaFileResponse;
     }
 
-    public void setMediaFile(MediaFileDto mediaFileDto) {
-        this.mediaFileDto = mediaFileDto;
+    public void setMediaFile(MediaFileResponse mediaFileResponse) {
+        this.mediaFileResponse = mediaFileResponse;
     }
 
-    public PointOfInterestDto getPOI() {
-        return pointOfInterestDto;
+    public PointOfInterestResponse getPOI() {
+        return pointOfInterestResponse;
     }
 
-    public void setPOI(PointOfInterestDto pointOfInterestDto) {
-        this.pointOfInterestDto = pointOfInterestDto;
+    public void setPOI(PointOfInterestResponse pointOfInterestResponse) {
+        this.pointOfInterestResponse = pointOfInterestResponse;
     }
 }

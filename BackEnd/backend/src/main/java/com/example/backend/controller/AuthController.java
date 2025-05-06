@@ -5,15 +5,13 @@ import com.example.backend.dto.response.AuthResponse;
 import com.example.backend.dto.request.AuthRequest;
 import com.example.backend.entities.users.User;
 import com.example.backend.security.jwt.JwtService;
-import com.example.backend.dto.Account;
+import com.example.backend.dto.response.Account;
 import com.example.backend.service.AuthService;
-import com.example.backend.utility.Mapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,31 +24,25 @@ public class AuthController {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private Mapper mapper;
-
     @PostMapping("/registration")
     public ResponseEntity<Account> registrationHandler(@Valid @RequestBody RegistrationRequest registrationRequest) throws Exception {
 
         User registeredUser = authService.registration(registrationRequest);
 
-        Account registredAccount = mapper.mapUserToAccount(registeredUser);
+        Account registredAccount = new Account(registeredUser);
 
         return new ResponseEntity<>(registredAccount, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    //@PreAuthorize("hasAuthority('PRIVILEGE_LOGIN')")
-    public ResponseEntity<AuthResponse> loginHandler(@Valid @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> loginHandler(@RequestBody AuthRequest authRequest) {
 
         User authenticatedUser = authService.login(authRequest);
 
-        Account account = mapper.mapUserToAccount(authenticatedUser);
+        Account account = new Account(authenticatedUser);
         String token = jwtService.generateToken(account);
 
-        AuthResponse response = new AuthResponse();
-        response.setToken(token);
-        response.setExpiresIn(jwtService.getExpirationTime());
+        AuthResponse response = new AuthResponse(token, jwtService.getExpirationTime());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -76,7 +76,6 @@ public class Contest {
         this.name = name;
     }
 
-
     public String getDescription() {
         return description;
     }

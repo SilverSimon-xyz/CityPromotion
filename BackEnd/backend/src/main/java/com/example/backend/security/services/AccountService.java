@@ -1,6 +1,6 @@
 package com.example.backend.security.services;
 
-import com.example.backend.dto.Account;
+import com.example.backend.dto.response.Account;
 import com.example.backend.entities.users.User;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,10 @@
-package com.example.backend.dto;
+package com.example.backend.dto.response;
 import com.example.backend.entities.poi.PointOfInterestType;
 
 import java.time.LocalTime;
 import java.util.Date;
 
-public class PointOfInterestDto {
+public class PointOfInterestResponse {
 
     private int id;
     private String name;
@@ -18,7 +18,7 @@ public class PointOfInterestDto {
     private Date createdAt;
     private Date updatedAt;
 
-    public PointOfInterestDto() {
+    public PointOfInterestResponse() {
 
     }
 

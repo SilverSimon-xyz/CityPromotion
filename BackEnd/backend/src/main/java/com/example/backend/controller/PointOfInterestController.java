@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.PointOfInterestDto;
-import com.example.backend.dto.record.PointOfInterestRecordCreate;
+import com.example.backend.dto.response.PointOfInterestResponse;
+import com.example.backend.dto.request.PointOfInterestRequest;
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.poi.PointOfInterestType;
 import com.example.backend.service.PointOfInterestService;
@@ -23,50 +23,50 @@ public class PointOfInterestController {
     private Mapper mapper;
 
     @GetMapping("/all")
-    public ResponseEntity<List<PointOfInterestDto>> getAllPOIs() {
-        List<PointOfInterestDto> pointOfInterestDtoList = pointOfInterestService.getAllPOIs()
+    public ResponseEntity<List<PointOfInterestResponse>> getAllPOIs() {
+        List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestService.getAllPOIs()
                 .stream()
-                .map(poi -> mapper.mapPOIToDto(poi))
+                .map(poi -> mapper.mapPOIToResponse(poi))
                 .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestDtoList);
+        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<PointOfInterestDto> getPOIDetailsById(@PathVariable int id) {
+    public ResponseEntity<PointOfInterestResponse> getPOIDetailsById(@PathVariable int id) {
         PointOfInterest pointOfInterest = pointOfInterestService.getPOIById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToDto(pointOfInterest));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToResponse(pointOfInterest));
     }
 
     @GetMapping("/find/name")
-    public ResponseEntity<List<PointOfInterestDto>> getPOIDetailsByName(@RequestParam String name) {
+    public ResponseEntity<List<PointOfInterestResponse>> getPOIDetailsByName(@RequestParam String name) {
         List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByName(name);
-        List<PointOfInterestDto> pointOfInterestDtoList = pointOfInterestList
+        List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
                         .stream()
-                        .map(poi -> mapper.mapPOIToDto(poi))
+                        .map(poi -> mapper.mapPOIToResponse(poi))
                         .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestDtoList);
+        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
 
     @GetMapping("/find/type")
-    public ResponseEntity<List<PointOfInterestDto>> getPOIDetailsByType(@RequestParam PointOfInterestType type) {
+    public ResponseEntity<List<PointOfInterestResponse>> getPOIDetailsByType(@RequestParam PointOfInterestType type) {
         List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByType(type);
-        List<PointOfInterestDto> pointOfInterestDtoList = pointOfInterestList
+        List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
                 .stream()
-                .map(poi -> mapper.mapPOIToDto(poi))
+                .map(poi -> mapper.mapPOIToResponse(poi))
                 .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestDtoList);
+        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<PointOfInterestDto> createPOI(@RequestBody PointOfInterestRecordCreate request) {
+    public ResponseEntity<PointOfInterestResponse> createPOI(@RequestBody PointOfInterestRequest request) {
         PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request.toPOI(), request.authorName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapPOIToDto(pointOfInterestCreated));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapPOIToResponse(pointOfInterestCreated));
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<PointOfInterestDto> editPOI(@PathVariable int id, @RequestBody PointOfInterest pointOfInterest) {
+    public ResponseEntity<PointOfInterestResponse> editPOI(@PathVariable int id, @RequestBody PointOfInterest pointOfInterest) {
         PointOfInterest updatedPOI = pointOfInterestService.updatePOI(id, pointOfInterest);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToDto(updatedPOI));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToResponse(updatedPOI));
     }
 
     @DeleteMapping("/delete/{id}")

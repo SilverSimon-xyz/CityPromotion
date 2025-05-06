@@ -1,9 +1,10 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.MultimediaContentDto;
-import com.example.backend.dto.record.MultimediaContentRecordCreate;
+import com.example.backend.dto.response.MultimediaContentResponse;
+import com.example.backend.dto.request.MultimediaContentRequest;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.MultimediaContent;
+import com.example.backend.entities.content.Status;
 import com.example.backend.service.MultimediaContentService;
 import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,36 +25,36 @@ public class MultimediaContentController {
     private Mapper mapper;
 
     @PostMapping("/upload")
-    public ResponseEntity<MultimediaContentDto> uploadFile(@RequestBody MultimediaContentRecordCreate request, @RequestParam int idPoi) {
+    public ResponseEntity<MultimediaContentResponse> uploadFile(@RequestBody MultimediaContentRequest request, @RequestParam int idPoi) {
         MultimediaContent multimediaContent = multimediaContentService.saveMultimediaContent(request.toMultimediaContent(), request.authorName(), request.mediaFile(), idPoi);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToResponse(multimediaContent));
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<MultimediaContentDto> getContentDetails(@PathVariable int id) {
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContentService.getMultimediaContentById(id)));
+    public ResponseEntity<MultimediaContentResponse> getContentDetails(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToResponse(multimediaContentService.getMultimediaContentById(id)));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<MultimediaContentDto>> getAllContents() {
+    public ResponseEntity<List<MultimediaContentResponse>> getAllContents() {
         return ResponseEntity.status(HttpStatus.OK).body(multimediaContentService.getAllMultimediaContent().stream()
-                .map(multimediaContent -> mapper.mapContentToDto(multimediaContent))
+                .map(multimediaContent -> mapper.mapContentToResponse(multimediaContent))
                 .toList());
     }
 
     @PutMapping("/edit/content/{idContent}")
-    public ResponseEntity<MultimediaContentDto> updateContent(@PathVariable int idContent, @RequestBody MultimediaContent multimediaContentDetails) throws IOException {
+    public ResponseEntity<MultimediaContentResponse> updateContent(@PathVariable int idContent, @RequestBody MultimediaContent multimediaContentDetails) throws IOException {
 
         MultimediaContent multimediaContent = multimediaContentService.updateContent(idContent, multimediaContentDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToResponse(multimediaContent));
     }
 
     @PutMapping("/edit/file/{idFile}")
-    public ResponseEntity<MultimediaContentDto> updateFile(@PathVariable int idFile, @RequestParam int idContent,
-                                                              @RequestBody MediaFile mediaFile) throws IOException {
+    public ResponseEntity<MultimediaContentResponse> updateFile(@PathVariable int idFile, @RequestParam int idContent,
+                                                                @RequestBody MediaFile mediaFile) throws IOException {
 
         MultimediaContent multimediaContent = multimediaContentService.updateFile(idContent, idFile, mediaFile);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToDto(multimediaContent));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToResponse(multimediaContent));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -65,6 +66,25 @@ public class MultimediaContentController {
     @DeleteMapping("/delete/all")
     public ResponseEntity<Void> deleteAllMultimediaContent()  {
         multimediaContentService.deleteAllMultimediaContent();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/validate/view-all-pending")
+    public ResponseEntity<List<MultimediaContentResponse>> getAllPendingMultimediaContent() {
+        return ResponseEntity.status(HttpStatus.OK).body(multimediaContentService.getAllPendingMultimediaContent().stream()
+                .map(multimediaContent -> mapper.mapContentToResponse(multimediaContent))
+                .toList());
+    }
+
+    @PatchMapping("/validate/{id}")
+    public ResponseEntity<MultimediaContentResponse> validateMultimediaContent(@PathVariable int id, @RequestParam Status status) {
+        MultimediaContent multimediaContent = multimediaContentService.validateMultimediaContent(id, status);
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContentToResponse(multimediaContent));
+    }
+
+    @DeleteMapping("/validate/delete-all-rejected")
+    public ResponseEntity<Void> deleteAllMultimediaContentRejected() {
+        multimediaContentService.deleteAllMultimediaContentRejected();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

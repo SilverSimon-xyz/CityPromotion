@@ -40,6 +40,7 @@ public class MultimediaContent {
     @Column(name = "updated_at", nullable = false, updatable = false)
     private Date updatedAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
 

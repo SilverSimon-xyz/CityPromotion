@@ -1,9 +1,9 @@
-package com.example.backend.dto;
+package com.example.backend.dto.response;
 
 import java.time.LocalDate;
 import java.util.Date;
 
-public class ContestDto {
+public class ContestResponse {
 
     private int id;
 
@@ -29,7 +29,7 @@ public class ContestDto {
 
     private int numberOfParticipant;
 
-    public ContestDto() {
+    public ContestResponse() {
 
     }
 

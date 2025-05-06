@@ -1,6 +1,6 @@
 package com.example.backend.utility;
 
-import com.example.backend.dto.*;
+import com.example.backend.dto.response.*;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.contest.Contest;
@@ -12,94 +12,90 @@ import org.springframework.stereotype.Component;
 @Component
 public class Mapper {
 
-    public Account mapUserToAccount(User user) {
-        return new Account(user);
+    public PointOfInterestResponse mapPOIToResponse(PointOfInterest pointOfInterest) {
+        PointOfInterestResponse pointOfInterestResponse = new PointOfInterestResponse();
+
+        pointOfInterestResponse.setId(pointOfInterest.getId());
+        pointOfInterestResponse.setName(pointOfInterest.getName());
+        pointOfInterestResponse.setDescription(pointOfInterest.getDescription());
+        pointOfInterestResponse.setAuthor(pointOfInterest.getAuthor().getName());
+        pointOfInterestResponse.setLatitude(pointOfInterest.getLatitude());
+        pointOfInterestResponse.setLongitude(pointOfInterest.getLongitude());
+        pointOfInterestResponse.setOpenTime(pointOfInterest.getOpenTime());
+        pointOfInterestResponse.setCloseTime(pointOfInterest.getCloseTime());
+        pointOfInterestResponse.setType(pointOfInterest.getType());
+        pointOfInterestResponse.setCreatedAt(pointOfInterest.getCreatedAt());
+        pointOfInterestResponse.setUpdatedAt(pointOfInterest.getUpdatedAt());
+
+        return pointOfInterestResponse;
     }
 
-    public PointOfInterestDto mapPOIToDto(PointOfInterest pointOfInterest) {
-        PointOfInterestDto pointOfInterestDto = new PointOfInterestDto();
+    public RoleResponse mapRoleToResponse(Role role) {
+        RoleResponse roleResponse = new RoleResponse();
+        roleResponse.setId(role.getId());
+        roleResponse.setName(role.getName());
+        roleResponse.setDescription(role.getDescription());
 
-        pointOfInterestDto.setId(pointOfInterest.getId());
-        pointOfInterestDto.setName(pointOfInterest.getName());
-        pointOfInterestDto.setDescription(pointOfInterest.getDescription());
-        pointOfInterestDto.setAuthor(pointOfInterest.getAuthor().getName());
-        pointOfInterestDto.setLatitude(pointOfInterest.getLatitude());
-        pointOfInterestDto.setLongitude(pointOfInterest.getLongitude());
-        pointOfInterestDto.setOpenTime(pointOfInterest.getOpenTime());
-        pointOfInterestDto.setCloseTime(pointOfInterest.getCloseTime());
-        pointOfInterestDto.setType(pointOfInterest.getType());
-        pointOfInterestDto.setCreatedAt(pointOfInterest.getCreatedAt());
-        pointOfInterestDto.setUpdatedAt(pointOfInterest.getUpdatedAt());
-
-        return pointOfInterestDto;
-    }
-
-    public RoleDto mapRoleToDto(Role role) {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setId(role.getId());
-        roleDto.setName(role.getName());
-        roleDto.setDescription(role.getDescription());
-
-        roleDto.setUsers(role.getUsers()
+        roleResponse.setUsers(role.getUsers()
                 .stream()
                 .map(User::getEmail)
                 .toList());
-        roleDto.setPrivileges(role.getPrivileges()
+        roleResponse.setPrivileges(role.getPrivileges()
                 .stream()
                 .map(privilege -> privilege.getName().name())
                 .toList());
-        return roleDto;
+        return roleResponse;
     }
 
-    public ContestDto mapContestToDto(Contest contest) {
-        ContestDto contestDto = new ContestDto();
+    public ContestResponse mapContestToResponse(Contest contest) {
+        ContestResponse contestResponse = new ContestResponse();
 
-        contestDto.setId(contest.getId());
-        contestDto.setName(contest.getName());
-        contestDto.setDescription(contest.getDescription());
-        contestDto.setAuthor(contest.getAuthor().getName());
-        contestDto.setRules(contest.getRules());
-        contestDto.setGoal(contest.getGoal());
-        contestDto.setPrize(contest.getPrize());
-        contestDto.setDeadline(contest.getDeadline());
-        contestDto.setActive(contest.getActive());
-        contestDto.setNumberOfParticipant(contest.getNumberOfParticipant());
-        contestDto.setCreatedAt(contest.getCreatedAt());
-        contestDto.setDataUpdated(contest.getDataUpdated());
+        contestResponse.setId(contest.getId());
+        contestResponse.setName(contest.getName());
+        contestResponse.setDescription(contest.getDescription());
+        contestResponse.setAuthor(contest.getAuthor().getName());
+        contestResponse.setRules(contest.getRules());
+        contestResponse.setGoal(contest.getGoal());
+        contestResponse.setPrize(contest.getPrize());
+        contestResponse.setDeadline(contest.getDeadline());
+        contestResponse.setActive(contest.getActive());
+        contestResponse.setNumberOfParticipant(contest.getNumberOfParticipant());
+        contestResponse.setCreatedAt(contest.getCreatedAt());
+        contestResponse.setDataUpdated(contest.getDataUpdated());
 
-        return contestDto;
+        return contestResponse;
     }
 
-    public MultimediaContentDto mapContentToDto(MultimediaContent multimediaContent) {
-        MultimediaContentDto multimediaContentDto = new MultimediaContentDto();
+    public MultimediaContentResponse mapContentToResponse(MultimediaContent multimediaContent) {
+        MultimediaContentResponse multimediaContentResponse = new MultimediaContentResponse();
 
-        multimediaContentDto.setId(multimediaContent.getId());
-        multimediaContentDto.setTitle(multimediaContent.getTitle());
-        multimediaContentDto.setDescription(multimediaContent.getDescription());
-        multimediaContentDto.setAuthor(multimediaContent.getAuthor().getName());
-        multimediaContentDto.setStatus(multimediaContent.getStatus());
+        multimediaContentResponse.setId(multimediaContent.getId());
+        multimediaContentResponse.setTitle(multimediaContent.getTitle());
+        multimediaContentResponse.setDescription(multimediaContent.getDescription());
+        multimediaContentResponse.setAuthor(multimediaContent.getAuthor().getName());
+        multimediaContentResponse.setStatus(multimediaContent.getStatus());
 
         if(multimediaContent.getMediaFile() != null) {
-            MediaFileDto mediaFileDto = mapMediaFileToDto(multimediaContent.getMediaFile());
-            multimediaContentDto.setMediaFile(mediaFileDto);
+            MediaFileResponse mediaFileResponse = mapMediaFileToResponse(multimediaContent.getMediaFile());
+            multimediaContentResponse.setMediaFile(mediaFileResponse);
         }
         if(multimediaContent.getPoi() != null) {
-            PointOfInterestDto pointOfInterestDto = mapPOIToDto(multimediaContent.getPoi());
-            multimediaContentDto.setPOI(pointOfInterestDto);
+            PointOfInterestResponse pointOfInterestResponse = mapPOIToResponse(multimediaContent.getPoi());
+            multimediaContentResponse.setPOI(pointOfInterestResponse);
         }
 
-        return multimediaContentDto;
+        return multimediaContentResponse;
     }
 
-    private MediaFileDto mapMediaFileToDto(MediaFile mediaFile) {
+    private MediaFileResponse mapMediaFileToResponse(MediaFile mediaFile) {
 
-        MediaFileDto mediaFileDto = new MediaFileDto();
-        mediaFileDto.setId(mediaFile.getId());
-        mediaFileDto.setName(mediaFile.getName());
-        mediaFileDto.setType(mediaFile.getType());
-        mediaFileDto.setData(mediaFile.getData());
+        MediaFileResponse mediaFileResponse = new MediaFileResponse();
+        mediaFileResponse.setId(mediaFile.getId());
+        mediaFileResponse.setName(mediaFile.getName());
+        mediaFileResponse.setType(mediaFile.getType());
+        mediaFileResponse.setData(mediaFile.getData());
 
-        return mediaFileDto;
+        return mediaFileResponse;
 
     }
 

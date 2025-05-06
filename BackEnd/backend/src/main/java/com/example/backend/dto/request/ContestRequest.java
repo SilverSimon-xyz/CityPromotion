@@ -1,4 +1,4 @@
-package com.example.backend.dto.record;
+package com.example.backend.dto.request;
 
 
 import com.example.backend.entities.contest.Contest;
@@ -6,8 +6,8 @@ import com.example.backend.entities.contest.Contest;
 import java.time.LocalDate;
 
 
-public record ContestRecordCreate(String name, String description, String authorName, String rules, String goal, String prize,
-                                  LocalDate deadline, boolean active, int numberParticipant) {
+public record ContestRequest(String name, String description, String authorName, String rules, String goal, String prize,
+                             LocalDate deadline, boolean active, int numberParticipant) {
 
     public Contest toContest() {
         Contest contest = new Contest();

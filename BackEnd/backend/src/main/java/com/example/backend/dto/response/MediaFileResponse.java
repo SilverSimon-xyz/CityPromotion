@@ -1,6 +1,6 @@
-package com.example.backend.dto;
+package com.example.backend.dto.response;
 
-public class MediaFileDto {
+public class MediaFileResponse {
 
     private int id;
 
@@ -10,7 +10,7 @@ public class MediaFileDto {
 
     private byte[] data;
 
-    public MediaFileDto() {
+    public MediaFileResponse() {
 
     }
 

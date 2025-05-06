@@ -1,11 +1,10 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.Account;
-import com.example.backend.dto.ContestDto;
-import com.example.backend.dto.record.ContestRecordCreate;
+import com.example.backend.dto.response.Account;
+import com.example.backend.dto.response.ContestResponse;
+import com.example.backend.dto.request.ContestRequest;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.contest.Contest;
-import com.example.backend.entities.contest.ContestParticipation;
 import com.example.backend.entities.contest.QuoteCriterion;
 import com.example.backend.entities.users.User;
 import com.example.backend.service.ContestService;
@@ -27,40 +26,56 @@ public class ContestController {
     private Mapper mapper;
 
     @PostMapping("/add")
-    public ResponseEntity<ContestDto> addContest(@RequestBody ContestRecordCreate request) {
+    public ResponseEntity<ContestResponse> addContest(@RequestBody ContestRequest request) {
         Contest contest = contestService.createContest(request.toContest(), request.authorName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapContestToDto(contest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapContestToResponse(contest));
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<ContestDto> updateContest(@PathVariable int id, @RequestBody Contest contestDetails) {
+    public ResponseEntity<ContestResponse> updateContest(@PathVariable int id, @RequestBody Contest contestDetails) {
         Contest contest = contestService.updateContest(id, contestDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToDto(contest));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToResponse(contest));
+    }
+
+    @PatchMapping("/edit/active")
+    public ResponseEntity<ContestResponse> updateContest(@PathVariable int id) {
+        Contest contest = contestService.activeClosedContest(id);
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToResponse(contest));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ContestDto>> getAllContest() {
+    public ResponseEntity<List<ContestResponse>> getAllContest() {
         return ResponseEntity.status(HttpStatus.OK).body(
                 contestService.getAllContest()
                         .stream()
-                        .map(contest -> mapper.mapContestToDto(contest))
+                        .map(contest -> mapper.mapContestToResponse(contest))
                         .toList());
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<ContestDto> getContestById(@PathVariable int id) {
+    public ResponseEntity<ContestResponse> getContestById(@PathVariable int id) {
         Contest contest = contestService.getContestById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToDto(contest));
+        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToResponse(contest));
     }
 
     @GetMapping("/find/name")
-    public ResponseEntity<List<ContestDto>> searchContestByName(@RequestParam String name) {
+    public ResponseEntity<List<ContestResponse>> searchContestByName(@RequestParam String name) {
         List<Contest> contestList = contestService.searchContestByName(name);
-        List<ContestDto> contestDtoList = contestList
+        List<ContestResponse> contestResponseList = contestList
                 .stream()
-                .map(contest -> mapper.mapContestToDto(contest))
+                .map(contest -> mapper.mapContestToResponse(contest))
                 .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(contestDtoList);
+        return ResponseEntity.status(HttpStatus.OK).body(contestResponseList);
+    }
+
+    @GetMapping("/find/active")
+    public ResponseEntity<List<ContestResponse>> searchActiveContest() {
+        List<Contest> contestList = contestService.searchActiveContest();
+        List<ContestResponse> contestResponseList = contestList
+                .stream()
+                .map(contest -> mapper.mapContestToResponse(contest))
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(contestResponseList);
     }
 
     @DeleteMapping("/delete/all")
