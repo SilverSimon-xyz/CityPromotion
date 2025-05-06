@@ -1,91 +1,24 @@
 package com.example.backend.dto.response;
 
 import com.example.backend.entities.content.FormatFileType;
+import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.content.Status;
 
-public class MultimediaContentResponse {
+public record MultimediaContentResponse(int id, String title, FormatFileType type, String description, String author,
+                                        Status status, MediaFileResponse mediaFileResponse, PointOfInterestResponse pointOfInterestResponse) {
 
-    private int id;
-
-    private String title;
-
-    private FormatFileType type;
-
-    private String description;
-
-    private String author;
-
-    private Status status;
-
-    private MediaFileResponse mediaFileResponse;
-
-    private PointOfInterestResponse pointOfInterestResponse;
-
-    public MultimediaContentResponse() {
-
+    public static MultimediaContentResponse mapContentToResponse(MultimediaContent multimediaContent) {
+        return new MultimediaContentResponse(
+                multimediaContent.getId(),
+                multimediaContent.getTitle(),
+                multimediaContent.getType(),
+                multimediaContent.getDescription(),
+                multimediaContent.getAuthor().getName(),
+                multimediaContent.getStatus(),
+                MediaFileResponse.mapMediaFileToResponse(multimediaContent.getMediaFile()),
+                PointOfInterestResponse.mapPOIToResponse(multimediaContent.getPoi())
+                );
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public FormatFileType getType() {
-        return type;
-    }
-
-    public void setType(FormatFileType type) {
-        this.type = type;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public MediaFileResponse getMediaFile() {
-        return mediaFileResponse;
-    }
-
-    public void setMediaFile(MediaFileResponse mediaFileResponse) {
-        this.mediaFileResponse = mediaFileResponse;
-    }
-
-    public PointOfInterestResponse getPOI() {
-        return pointOfInterestResponse;
-    }
-
-    public void setPOI(PointOfInterestResponse pointOfInterestResponse) {
-        this.pointOfInterestResponse = pointOfInterestResponse;
-    }
 }

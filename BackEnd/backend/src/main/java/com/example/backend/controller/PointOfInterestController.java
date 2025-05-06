@@ -5,7 +5,6 @@ import com.example.backend.dto.request.PointOfInterestRequest;
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.poi.PointOfInterestType;
 import com.example.backend.service.PointOfInterestService;
-import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +18,12 @@ public class PointOfInterestController {
 
     @Autowired
     private PointOfInterestService pointOfInterestService;
-    @Autowired
-    private Mapper mapper;
 
     @GetMapping("/all")
     public ResponseEntity<List<PointOfInterestResponse>> getAllPOIs() {
         List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestService.getAllPOIs()
                 .stream()
-                .map(poi -> mapper.mapPOIToResponse(poi))
+                .map(PointOfInterestResponse::mapPOIToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
@@ -34,7 +31,7 @@ public class PointOfInterestController {
     @GetMapping("/find/{id}")
     public ResponseEntity<PointOfInterestResponse> getPOIDetailsById(@PathVariable int id) {
         PointOfInterest pointOfInterest = pointOfInterestService.getPOIById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToResponse(pointOfInterest));
+        return ResponseEntity.status(HttpStatus.OK).body(PointOfInterestResponse.mapPOIToResponse(pointOfInterest));
     }
 
     @GetMapping("/find/name")
@@ -42,7 +39,7 @@ public class PointOfInterestController {
         List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByName(name);
         List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
                         .stream()
-                        .map(poi -> mapper.mapPOIToResponse(poi))
+                        .map(PointOfInterestResponse::mapPOIToResponse)
                         .toList();
         return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
@@ -52,7 +49,7 @@ public class PointOfInterestController {
         List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByType(type);
         List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
                 .stream()
-                .map(poi -> mapper.mapPOIToResponse(poi))
+                .map(PointOfInterestResponse::mapPOIToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
@@ -60,13 +57,13 @@ public class PointOfInterestController {
     @PostMapping("/add")
     public ResponseEntity<PointOfInterestResponse> createPOI(@RequestBody PointOfInterestRequest request) {
         PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request.toPOI(), request.authorName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapPOIToResponse(pointOfInterestCreated));
+        return ResponseEntity.status(HttpStatus.CREATED).body(PointOfInterestResponse.mapPOIToResponse(pointOfInterestCreated));
     }
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<PointOfInterestResponse> editPOI(@PathVariable int id, @RequestBody PointOfInterest pointOfInterest) {
         PointOfInterest updatedPOI = pointOfInterestService.updatePOI(id, pointOfInterest);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapPOIToResponse(updatedPOI));
+        return ResponseEntity.status(HttpStatus.OK).body(PointOfInterestResponse.mapPOIToResponse(updatedPOI));
     }
 
     @DeleteMapping("/delete/{id}")

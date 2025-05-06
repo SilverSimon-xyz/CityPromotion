@@ -7,7 +7,7 @@ import com.example.backend.entities.poi.PointOfInterestType;
 import com.example.backend.repository.MultimediaContentRepository;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.utility.builder.PointOfInterestBuilder;
+import com.example.backend.utility.PointOfInterestBuilder;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

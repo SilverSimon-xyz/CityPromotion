@@ -8,7 +8,6 @@ import com.example.backend.entities.contest.Contest;
 import com.example.backend.entities.contest.QuoteCriterion;
 import com.example.backend.entities.users.User;
 import com.example.backend.service.ContestService;
-import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,25 +21,23 @@ public class ContestController {
 
     @Autowired
     private ContestService contestService;
-    @Autowired
-    private Mapper mapper;
 
     @PostMapping("/add")
     public ResponseEntity<ContestResponse> addContest(@RequestBody ContestRequest request) {
         Contest contest = contestService.createContest(request.toContest(), request.authorName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapContestToResponse(contest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ContestResponse.mapContestToResponse(contest));
     }
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<ContestResponse> updateContest(@PathVariable int id, @RequestBody Contest contestDetails) {
         Contest contest = contestService.updateContest(id, contestDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToResponse(contest));
+        return ResponseEntity.status(HttpStatus.OK).body(ContestResponse.mapContestToResponse(contest));
     }
 
     @PatchMapping("/edit/active")
     public ResponseEntity<ContestResponse> updateContest(@PathVariable int id) {
         Contest contest = contestService.activeClosedContest(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToResponse(contest));
+        return ResponseEntity.status(HttpStatus.OK).body(ContestResponse.mapContestToResponse(contest));
     }
 
     @GetMapping("/all")
@@ -48,14 +45,14 @@ public class ContestController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 contestService.getAllContest()
                         .stream()
-                        .map(contest -> mapper.mapContestToResponse(contest))
+                        .map(ContestResponse::mapContestToResponse)
                         .toList());
     }
 
     @GetMapping("/find/{id}")
     public ResponseEntity<ContestResponse> getContestById(@PathVariable int id) {
         Contest contest = contestService.getContestById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapContestToResponse(contest));
+        return ResponseEntity.status(HttpStatus.OK).body(ContestResponse.mapContestToResponse(contest));
     }
 
     @GetMapping("/find/name")
@@ -63,7 +60,7 @@ public class ContestController {
         List<Contest> contestList = contestService.searchContestByName(name);
         List<ContestResponse> contestResponseList = contestList
                 .stream()
-                .map(contest -> mapper.mapContestToResponse(contest))
+                .map(ContestResponse::mapContestToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(contestResponseList);
     }
@@ -73,7 +70,7 @@ public class ContestController {
         List<Contest> contestList = contestService.searchActiveContest();
         List<ContestResponse> contestResponseList = contestList
                 .stream()
-                .map(contest -> mapper.mapContestToResponse(contest))
+                .map(ContestResponse::mapContestToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(contestResponseList);
     }
@@ -107,7 +104,7 @@ public class ContestController {
         List<User> winners = contestService.declareWinners(id);
         List<Account> winnersAccounts = winners
                 .stream()
-                .map(winner -> mapper.mapUserToAccount(winner))
+                .map(Account::new)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(winnersAccounts);
     }

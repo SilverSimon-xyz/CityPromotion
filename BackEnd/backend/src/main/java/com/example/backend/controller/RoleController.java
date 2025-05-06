@@ -6,7 +6,6 @@ import com.example.backend.entities.users.User;
 import com.example.backend.entities.users.PrivilegeType;
 import com.example.backend.entities.users.RoleType;
 import com.example.backend.service.RoleService;
-import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,6 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private Mapper mapper;
 
     @GetMapping("/all")
     public List<RoleResponse> getAllRoles() {
@@ -30,7 +27,7 @@ public class RoleController {
             List<User> users = roleService.getUsersByRoleName(role.getName());
             role.setUsers(users);
         });
-        return roles.stream().map(role->mapper.mapRoleToResponse(role)).toList();
+        return roles.stream().map(RoleResponse::mapRoleToResponse).toList();
     }
 
     @GetMapping("/find/{id}")
@@ -38,19 +35,19 @@ public class RoleController {
         Role role = roleService.getRoleById(id);
         List<User> users = roleService.getUsersByRoleName(role.getName());
         role.setUsers(users);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapRoleToResponse(role));
+        return ResponseEntity.status(HttpStatus.OK).body(RoleResponse.mapRoleToResponse(role));
     }
 
     @PostMapping("/add")
     public ResponseEntity<RoleResponse> addRole(@RequestBody Role role) {
         Role newRole = roleService.addRole(role);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapRoleToResponse(newRole));
+        return ResponseEntity.status(HttpStatus.CREATED).body(RoleResponse.mapRoleToResponse(role));
     }
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<RoleResponse> editRole(@PathVariable int id, @RequestBody Role role) {
         Role updatedRole = roleService.updateRole(id, role);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapRoleToResponse(updatedRole));
+        return ResponseEntity.status(HttpStatus.OK).body(RoleResponse.mapRoleToResponse(role));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -62,7 +59,7 @@ public class RoleController {
     @PutMapping("/assign/{id}/name")
     public ResponseEntity<RoleResponse> assignRoleToUser(@PathVariable int id, @RequestParam RoleType name) {
         Role role = this.roleService.assignRoleToUser(id, name);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapRoleToResponse(role));
+        return ResponseEntity.status(HttpStatus.OK).body(RoleResponse.mapRoleToResponse(role));
     }
 
     @PutMapping("/remove/{id}/name")
@@ -74,7 +71,7 @@ public class RoleController {
     @PutMapping("/assign/{id}/name/privilege-name")
     public ResponseEntity<RoleResponse> assignPrivilegeRoleToUser(@PathVariable int id, @RequestParam RoleType name, @RequestParam PrivilegeType privilegeName) {
         Role role = this.roleService.assignPrivilegeRoleToUser(id, name, privilegeName);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapRoleToResponse(role));
+        return ResponseEntity.status(HttpStatus.OK).body(RoleResponse.mapRoleToResponse(role));
     }
 
     @PutMapping("/remove/{id}/name/privilege-name")

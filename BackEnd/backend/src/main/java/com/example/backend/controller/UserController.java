@@ -3,7 +3,6 @@ package com.example.backend.controller;
 import com.example.backend.entities.users.User;
 import com.example.backend.dto.response.Account;
 import com.example.backend.service.UserService;
-import com.example.backend.utility.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +17,13 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private Mapper mapper;
 
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public List<Account> getAllUsers() {
         return this.userService.getAllUsers()
                 .stream()
-                .map(mapper::mapUserToAccount)
+                .map(Account::new)
                 .toList();
     }
 
@@ -34,21 +31,21 @@ public class UserController {
     @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Account> getUserDetails(@PathVariable int id) {
         User user = userService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapUserToAccount(user));
+        return ResponseEntity.status(HttpStatus.OK).body(new Account(user));
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Account> createUser(@RequestBody User user) {
         User newUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapUserToAccount(newUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Account(newUser));
     }
 
     @PutMapping("/edit/{id}")
     @PreAuthorize("hasAuthority('PRIVILEGE_SUPERVISOR')")
     public ResponseEntity<Account> editUserName(@PathVariable int id, @RequestParam String name) {
         User updatedUser = userService.updateUser(id, name);
-        return ResponseEntity.status(HttpStatus.OK).body(mapper.mapUserToAccount(updatedUser));
+        return ResponseEntity.status(HttpStatus.OK).body(new Account(updatedUser));
     }
 
     @DeleteMapping("/delete/{id}")

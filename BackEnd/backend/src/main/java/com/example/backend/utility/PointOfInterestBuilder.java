@@ -1,4 +1,4 @@
-package com.example.backend.utility.builder;
+package com.example.backend.utility;
 
 import com.example.backend.entities.poi.PointOfInterest;
 

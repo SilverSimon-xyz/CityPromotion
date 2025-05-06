@@ -9,7 +9,7 @@ import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.repository.MultimediaContentRepository;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.utility.builder.MultimediaContentBuilder;
+import com.example.backend.utility.MultimediaContentBuilder;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 

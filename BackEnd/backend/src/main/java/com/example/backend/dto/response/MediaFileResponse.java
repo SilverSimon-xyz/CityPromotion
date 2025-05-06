@@ -1,48 +1,15 @@
 package com.example.backend.dto.response;
 
-public class MediaFileResponse {
+import com.example.backend.entities.content.MediaFile;
 
-    private int id;
+public record MediaFileResponse(int id, String name, String type, byte[] data) {
 
-    private String name;
-
-    private String type;
-
-    private byte[] data;
-
-    public MediaFileResponse() {
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
+    public static MediaFileResponse mapMediaFileToResponse(MediaFile mediaFile) {
+        return new MediaFileResponse(
+                mediaFile.getId(),
+                mediaFile.getName(),
+                mediaFile.getType(),
+                mediaFile.getData()
+        );
     }
 }
