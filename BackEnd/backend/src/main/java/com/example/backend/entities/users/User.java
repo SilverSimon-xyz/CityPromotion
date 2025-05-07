@@ -5,9 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -42,7 +40,7 @@ public class User {
                     @JoinColumn(name = "role_id", referencedColumnName = "role_id"),
                     @JoinColumn(name = "role_name", referencedColumnName = "name")
             })
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -55,7 +53,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, String email, String password, List<Role> roles) {
+    public User(int id, String name, String email, String password, Set<Role> roles) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -96,11 +94,11 @@ public class User {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

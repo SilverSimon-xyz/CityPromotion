@@ -5,8 +5,10 @@ import com.example.backend.entities.users.RoleType;
 import com.example.backend.entities.users.User;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public record RoleResponse(int id, RoleType name, String description, Collection<String> users,Collection<String> privileges) {
+public record RoleResponse(int id, RoleType name, String description, Set<String> users, Set<String> privileges) {
 
     public static RoleResponse mapRoleToResponse(Role role) {
         return new RoleResponse(
@@ -16,12 +18,12 @@ public record RoleResponse(int id, RoleType name, String description, Collection
 
                 role.getUsers()
                 .stream()
-                .map(User::getEmail)
-                .toList(),
+                        .map(User::getEmail)
+                        .collect(Collectors.toSet()),
                 role.getPrivileges()
                 .stream()
-                .map(privilege -> privilege.getName().name())
-                .toList());
+                        .map(privilege -> privilege.getName().name())
+                        .collect(Collectors.toSet()));
 
     }
 }

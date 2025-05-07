@@ -35,12 +35,8 @@ public class SetupRolePrivilege implements ApplicationListener<ContextRefreshedE
 
         PrivilegeType[] privilegeNames = new PrivilegeType[] {
                 PrivilegeType.PRIVILEGE_LOGIN,
-                PrivilegeType.PRIVILEGE_AUTHENTICATE,
                 PrivilegeType.PRIVILEGE_READ,
-                PrivilegeType.PRIVILEGE_AUTHORIZED,
                 PrivilegeType.PRIVILEGE_PARTICIPATE,
-                PrivilegeType.PRIVILEGE_REPORT,
-                PrivilegeType.PRIVILEGE_SAVE_INFO,
                 PrivilegeType.PRIVILEGE_DELETE,
                 PrivilegeType.PRIVILEGE_UPDATE,
                 PrivilegeType.PRIVILEGE_CREATE,

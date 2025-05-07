@@ -2,7 +2,7 @@ package com.example.backend.entities.users;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="roles")
@@ -21,7 +21,7 @@ public class Role {
     private String description;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private List<User> users;
+    private Set<User> users;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinTable(
@@ -33,7 +33,7 @@ public class Role {
                     @JoinColumn(name = "privilege_id", referencedColumnName = "privilege_id")
             }
     )
-    private List<Privilege> privileges;
+    private Set<Privilege> privileges;
 
     public Role() {
 
@@ -63,19 +63,19 @@ public class Role {
         this.description = description;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return this.users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 
-    public List<Privilege> getPrivileges() {
+    public Set<Privilege> getPrivileges() {
         return this.privileges;
     }
 
-    public void setPrivileges(List<Privilege> privileges) {
+    public void setPrivileges(Set<Privilege> privileges) {
         this.privileges = privileges;
     }
 

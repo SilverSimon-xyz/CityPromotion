@@ -3,7 +3,7 @@ package com.example.backend.entities.users;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "privileges")
@@ -20,7 +20,7 @@ public class Privilege {
 
     @ManyToMany(mappedBy = "privileges")
     @JsonBackReference
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public Privilege() {
 
@@ -42,11 +42,11 @@ public class Privilege {
         this.name = name;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 }

@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -22,9 +24,9 @@ public class RoleController {
 
     @GetMapping("/all")
     public List<RoleResponse> getAllRoles() {
-        List<Role> roles = roleService.getAllRole();
+        Set<Role> roles = new HashSet<>(roleService.getAllRole());
         roles.forEach(role -> {
-            List<User> users = roleService.getUsersByRoleName(role.getName());
+            Set<User> users = new HashSet<>(roleService.getUsersByRoleName(role.getName()));
             role.setUsers(users);
         });
         return roles.stream().map(RoleResponse::mapRoleToResponse).toList();
@@ -33,7 +35,7 @@ public class RoleController {
     @GetMapping("/find/{id}")
     public ResponseEntity<RoleResponse> getRoleDetails(@PathVariable int id) {
         Role role = roleService.getRoleById(id);
-        List<User> users = roleService.getUsersByRoleName(role.getName());
+        Set<User> users = new HashSet<>(roleService.getUsersByRoleName(role.getName()));
         role.setUsers(users);
         return ResponseEntity.status(HttpStatus.OK).body(RoleResponse.mapRoleToResponse(role));
     }
@@ -41,13 +43,13 @@ public class RoleController {
     @PostMapping("/add")
     public ResponseEntity<RoleResponse> addRole(@RequestBody Role role) {
         Role newRole = roleService.addRole(role);
-        return ResponseEntity.status(HttpStatus.CREATED).body(RoleResponse.mapRoleToResponse(role));
+        return ResponseEntity.status(HttpStatus.CREATED).body(RoleResponse.mapRoleToResponse(newRole));
     }
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<RoleResponse> editRole(@PathVariable int id, @RequestBody Role role) {
         Role updatedRole = roleService.updateRole(id, role);
-        return ResponseEntity.status(HttpStatus.OK).body(RoleResponse.mapRoleToResponse(role));
+        return ResponseEntity.status(HttpStatus.OK).body(RoleResponse.mapRoleToResponse(updatedRole));
     }
 
     @DeleteMapping("/delete/{id}")
