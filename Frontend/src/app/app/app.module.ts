@@ -1,22 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppComponent } from '../app.component';
+import { AuthService } from '../auth.service';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-
-
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from '../app.component';
 
 @NgModule({
-  declarations: [
-
-  ],
+  declarations: [AppComponent],
   imports: [
-    CommonModule
+    BrowserModule,
+    CommonModule,
+    FormsModule
   ],
-  providers: [
-    provideHttpClient(withFetch())
-  ],
-  bootstrap: [
-    AppComponent
-  ]
+  providers: [AuthService, provideHttpClient(withFetch())]
 })
 export class AppModule { }
