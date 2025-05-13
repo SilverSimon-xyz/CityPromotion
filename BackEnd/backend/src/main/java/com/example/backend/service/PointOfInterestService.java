@@ -7,7 +7,6 @@ import com.example.backend.entities.poi.PointOfInterestType;
 import com.example.backend.repository.MultimediaContentRepository;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
-import com.example.backend.utility.PointOfInterestBuilder;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,31 +31,36 @@ public class PointOfInterestService {
     public PointOfInterestService() {
     }
 
-    public PointOfInterest createPOI(PointOfInterest pointOfInterest, String authorName) {
-        User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        Optional<PointOfInterest> optional = poiRepository.findByNameAndLatitudeAndLongitude(
+    public PointOfInterest createPOI(PointOfInterest pointOfInterest, String authorFirstName, String authorLastName) {
+        User author = userRepository.findByFirstNameAndLastName(authorFirstName, authorLastName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        Optional<PointOfInterest> optionalPOI = poiRepository.findByNameAndLatitudeAndLongitude(
                 pointOfInterest.getName(), pointOfInterest.getLatitude(), pointOfInterest.getLongitude()
         );
-        if(optional.isPresent()) {
-            throw new EntityExistsException("Point of Interest already existing!");
+        if(optionalPOI.isPresent()) {
+            throw new EntityExistsException("Point of Interest already existing!\n" + optionalPOI.get());
         }
         pointOfInterest.setAuthor(author);
-        PointOfInterest newPOI = PointOfInterestBuilder.build(pointOfInterest);
-        return this.poiRepository.save(newPOI);
+        return this.poiRepository.save(pointOfInterest);
     }
 
 
     public PointOfInterest updatePOI(int id, PointOfInterest pointOfInterestDetails) {
-        PointOfInterest pointOfInterest = poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
-        pointOfInterest.setName(pointOfInterestDetails.getName());
-        pointOfInterest.setDescription(pointOfInterestDetails.getDescription());
-        pointOfInterest.setLatitude(pointOfInterestDetails.getLatitude());
-        pointOfInterest.setLongitude(pointOfInterestDetails.getLongitude());
-        pointOfInterest.setType(pointOfInterestDetails.getType());
-        pointOfInterest.setOpenTime(pointOfInterestDetails.getOpenTime());
-        pointOfInterest.setCloseTime(pointOfInterestDetails.getCloseTime());
-        pointOfInterest.setUpdatedAt(new Date());
-        return poiRepository.save(pointOfInterest);
+        Optional<PointOfInterest> optionalPOI = poiRepository.findById(id);
+        if(optionalPOI.isPresent()) {
+            PointOfInterest pointOfInterest = optionalPOI.get()
+                    .setName(pointOfInterestDetails.getName())
+                    .setDescription(pointOfInterestDetails.getDescription())
+                    .setLatitude(pointOfInterestDetails.getLatitude())
+                    .setLongitude(pointOfInterestDetails.getLongitude())
+                    .setType(pointOfInterestDetails.getType())
+                    .setOpenTime(pointOfInterestDetails.getOpenTime())
+                    .setCloseTime(pointOfInterestDetails.getCloseTime())
+                    .setUpdatedAt(new Date());
+            return poiRepository.save(pointOfInterest);
+        } else {
+            throw new EntityNotFoundException("Point of Interest not found!");
+        }
+
     }
 
     public List<PointOfInterest> searchPOIByName(String name) {

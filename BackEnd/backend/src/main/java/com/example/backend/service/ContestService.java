@@ -34,24 +34,30 @@ public class ContestService {
 
     }
 
-    public Contest createContest(Contest contest, String authorName) {
-        User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+    public Contest createContest(Contest contest, String authorFirstName, String authorLastName) {
+        User author = userRepository.findByFirstNameAndLastName(authorFirstName, authorLastName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         contest.setCreatedAt(new Date());
         contest.setAuthor(author);
         return contestRepository.save(contest);
     }
 
     public Contest updateContest(int id, Contest contestDetails) {
-        Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        contest.setName(contestDetails.getName());
-        contest.setDescription(contestDetails.getDescription());
-        contest.setRules(contestDetails.getRules());
-        contest.setGoal(contestDetails.getGoal());
-        contest.setPrize(contestDetails.getPrize());
-        contest.setDeadline(contestDetails.getDeadline());
-        contest.setActive(contestDetails.getActive());
-        contest.setUpdatedAt(new Date());
-        return contestRepository.save(contest);
+        Optional<Contest> optionalContest = contestRepository.findById(id);
+        if(optionalContest.isPresent()) {
+            Contest contest = optionalContest.get()
+                    .setName(contestDetails.getName())
+                    .setDescription(contestDetails.getDescription())
+                    .setRules(contestDetails.getRules())
+                    .setGoal(contestDetails.getGoal())
+                    .setPrize(contestDetails.getPrize())
+                    .setDeadline(contestDetails.getDeadline())
+                    .setActive(contestDetails.isActive())
+                    .setUpdatedAt(new Date());
+            return contestRepository.save(contest);
+        } else {
+            throw new EntityNotFoundException("User not found!");
+        }
+
     }
 
     public List<Contest> getAllContest() {
@@ -68,12 +74,12 @@ public class ContestService {
     }
 
     public List<Contest> searchActiveContest() {
-        return contestRepository.findAll().stream().filter(Contest::getActive).toList();
+        return contestRepository.findAll().stream().filter(Contest::isActive).toList();
     }
 
     public Contest activeClosedContest(int id) {
         Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
-        if(!contest.getActive()) contest.setActive(true);
+        if(!contest.isActive()) contest.setActive(true);
         return contest;
     }
 
@@ -100,13 +106,14 @@ public class ContestService {
         if(optionalContest.isPresent() && optionalUser.isPresent()) {
             Contest contest = optionalContest.get();
             User user = optionalUser.get();
-            if(contest.getActive()) {
-                ContestParticipation participation = new ContestParticipation();
+            if(contest.isActive()) {
                 QuoteCriterion quoteCriterion = new QuoteCriterion();
-                participation.setContest(contest);
-                participation.setParticipant(user);
-                participation.setMediaFile(mediaFile);
-                participation.setQuoteCriterion(quoteCriterion);
+                ContestParticipation participation = ContestParticipation.builder()
+                        .contest(contest)
+                        .participant(user)
+                        .mediaFile(mediaFile)
+                        .quoteCriterion(quoteCriterion)
+                        .build();
                 contest.getParticipationContestList().add(participation);
                 contest.setNumberOfParticipant(contest.getNumberOfParticipant()+1);
                 mediaFileRepository.save(mediaFile);
@@ -122,11 +129,12 @@ public class ContestService {
         Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
         if(optionalContestParticipation.isPresent()) {
             ContestParticipation participation = optionalContestParticipation.get();
-            if (!participation.getQuoteCriterion().getQuote()) {
-                QuoteCriterion quoteCriterion = new QuoteCriterion();
-                quoteCriterion.setVote(quoteCriterionDetails.getVote());
-                quoteCriterion.setDescription(quoteCriterionDetails.getDescription());
-                quoteCriterion.setQuote(true);
+            if (!participation.getQuoteCriterion().isQuote()) {
+                QuoteCriterion quoteCriterion = QuoteCriterion.builder()
+                        .vote(quoteCriterionDetails.getVote())
+                        .description(quoteCriterionDetails.getDescription())
+                        .isQuote(true)
+                        .build();
                 participation.setQuoteCriterion(quoteCriterion);
                 contestParticipationRepository.save(participation);
             }

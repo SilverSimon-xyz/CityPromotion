@@ -8,13 +8,14 @@ SHOW TABLES;
 #-Table for Users
 CREATE TABLE users (
   user_id INTEGER NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
+  firstname VARCHAR(255) NOT NULL,
+  lastname VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(user_id),
-  UNIQUE KEY(name)
+  UNIQUE KEY(email)
 );
 
 #-Table for Roles
@@ -57,7 +58,8 @@ CREATE TABLE pois (
     poi_id INTEGER NOT NULL AUTO_INCREMENT,
 	name VARCHAR(255) NOT NULL,
 	description TEXT NOT NULL,
-    author VARCHAR(255) NOT NULL,
+    author_first_name VARCHAR(255) NOT NULL,
+    author_last_name VARCHAR(255) NOT NULL,
 	lat DOUBLE NOT NULL,
     lon DOUBLE NOT NULL,
     type ENUM('TOURISM', 'ACCOMMODATION', 'SERVICE', 'NATURE', 'OTHER') NOT NULL,
@@ -66,7 +68,8 @@ CREATE TABLE pois (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (poi_id),
-    FOREIGN KEY (author) REFERENCES users(name)
+    FOREIGN KEY (author_first_name) REFERENCES users(firstname),
+    FOREIGN KEY (author_last_name) REFERENCES users(lastname)
 );
 
 #-Table for Contest
@@ -74,7 +77,8 @@ CREATE TABLE contest (
   contest_id INTEGER NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
-  author VARCHAR(255) NOT NULL,
+  author_first_name VARCHAR(255) NOT NULL,
+  author_last_name VARCHAR(255) NOT NULL,
   rules VARCHAR(255) NOT NULL,
   goal VARCHAR(255) NOT NULL,
   prize VARCHAR(255) NOT NULL,
@@ -84,7 +88,8 @@ CREATE TABLE contest (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(contest_id),
-  FOREIGN KEY (author) REFERENCES users(name) 
+  FOREIGN KEY (author_first_name) REFERENCES users(firstname),
+  FOREIGN KEY (author_last_name) REFERENCES users(lastname)
 );
 
 #-Table for Media File
@@ -102,14 +107,16 @@ CREATE TABLE multimediacontent (
   title VARCHAR(255) NOT NULL,
   type ENUM('DOCUMENT', 'IMAGE', 'AUDIO', 'VIDEO', 'OTHER') NOT NULL,
   description TEXT NOT NULL,
-  author VARCHAR(255) NOT NULL,
+  author_first_name VARCHAR(255) NOT NULL,
+  author_last_name VARCHAR(255) NOT NULL,
   file_id INTEGER NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   status ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL,
   poi_id INTEGER NOT NULL,
   PRIMARY KEY(mc_id),
-  FOREIGN KEY (author) REFERENCES users(name),
+  FOREIGN KEY (author_first_name) REFERENCES users(firstname),
+  FOREIGN KEY (author_last_name) REFERENCES users(lastname),
   FOREIGN KEY (file_id) REFERENCES media_file(id),
   CONSTRAINT fk_multimediacontent_poi FOREIGN KEY(poi_id) REFERENCES pois(poi_id)
 );
@@ -118,7 +125,8 @@ CREATE TABLE multimediacontent (
 CREATE TABLE contest_participation (
   participant_id INTEGER NOT NULL AUTO_INCREMENT,
   contest_id INTEGER NOT NULL,
-  participant VARCHAR(255) NOT NULL,
+  participant_first_name VARCHAR(255) NOT NULL,
+  participant_last_name VARCHAR(255) NOT NULL,
   file_id INTEGER NOT NULL,
   vote INTEGER NOT NULL,
   description TEXT NOT NULL,
@@ -126,7 +134,8 @@ CREATE TABLE contest_participation (
   PRIMARY KEY(participant_id),
   FOREIGN KEY(contest_id) REFERENCES contest(contest_id),
   FOREIGN KEY(file_id) REFERENCES media_file(id),
-  FOREIGN KEY (participant) REFERENCES users(name),
+  FOREIGN KEY (participant_first_name) REFERENCES users(firstname),
+  FOREIGN KEY (participant_last_name) REFERENCES users(lastname),
   CONSTRAINT fk_contest_participation_contest FOREIGN KEY (contest_id) REFERENCES contest(contest_id)
 );
 

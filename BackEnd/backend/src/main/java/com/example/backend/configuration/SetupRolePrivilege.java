@@ -1,10 +1,6 @@
 package com.example.backend.configuration;
 
-import com.example.backend.entities.users.Privilege;
 import com.example.backend.entities.users.Role;
-import com.example.backend.entities.users.PrivilegeType;
-import com.example.backend.entities.users.RoleType;
-import com.example.backend.repository.PrivilegeRepository;
 import com.example.backend.repository.RoleRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +18,6 @@ public class SetupRolePrivilege implements ApplicationListener<ContextRefreshedE
 
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private PrivilegeRepository privilegeRepository;
 
     @Override
     @Transactional
@@ -33,41 +27,20 @@ public class SetupRolePrivilege implements ApplicationListener<ContextRefreshedE
 
     private void loadRolesAndPrivileges() {
 
-        PrivilegeType[] privilegeNames = new PrivilegeType[] {
-                PrivilegeType.PRIVILEGE_LOGIN,
-                PrivilegeType.PRIVILEGE_READ,
-                PrivilegeType.PRIVILEGE_PARTICIPATE,
-                PrivilegeType.PRIVILEGE_DELETE,
-                PrivilegeType.PRIVILEGE_UPDATE,
-                PrivilegeType.PRIVILEGE_CREATE,
-                PrivilegeType.PRIVILEGE_LOAD,
-                PrivilegeType.PRIVILEGE_ENDING,
-                PrivilegeType.PRIVILEGE_VALIDATOR,
-                PrivilegeType.PRIVILEGE_SUPERVISOR
-        };
-        Arrays.stream(privilegeNames).forEach(privilegeName -> {
-            Optional<Privilege> optional = privilegeRepository.findByName(privilegeName);
-            optional.ifPresentOrElse(System.out::println, () -> {
-                Privilege privilegeToCreate = new Privilege();
-                privilegeToCreate.setName(privilegeName);
-                privilegeRepository.save(privilegeToCreate);
-            });
-        });
-
-        RoleType[] roleNames = new RoleType[] {
-                RoleType.TOURIST,
-                RoleType.CONTRIBUTOR,
-                RoleType.ANIMATOR,
-                RoleType.CURATOR,
-                RoleType.ADMIN
+        String[] roleNames = new String[] {
+                "TOURIST",
+                "CONTRIBUTOR",
+                "ANIMATOR",
+                "CURATOR",
+                "ADMIN"
         };
 
-        Map<RoleType, String> roleDescriptionMap = Map.of(
-                RoleType.TOURIST, "Default user role, have permission to read Elements (POI, TOUR, CONTEST, EVENT), report Contents and participate to Contest or Event",
-                RoleType.CONTRIBUTOR, "Contributor role, have permission to create POI and TOUR, loading Contents to POI",
-                RoleType.ANIMATOR, "Animator role, have permission to create, update and/or delete Contest, managing Contest for declaring a winner and Validate the Contents of the Contest",
-                RoleType.CURATOR, "Curator role, have permission to load Contents to POI or Tour, validate pending or reported Contents",
-                RoleType.ADMIN, "Administrator role, is the SUPERVISOR, could do everything and managing the users"
+        Map<String, String> roleDescriptionMap = Map.of(
+                "TOURIST", "Default user role, have permission to read Elements (POI, TOUR, CONTEST, EVENT), report Contents and participate to Contest or Event",
+                "CONTRIBUTOR", "Contributor role, have permission to create POI and TOUR, loading Contents to POI",
+                "ANIMATOR", "Animator role, have permission to create, update and/or delete Contest, managing Contest for declaring a winner and Validate the Contents of the Contest",
+                "CURATOR", "Curator role, have permission to load Contents to POI or Tour, validate pending or reported Contents",
+                "ADMIN", "Administrator role, is the SUPERVISOR, could do everything and managing the users"
         );
 
         Arrays.stream(roleNames).forEach(roleName -> {

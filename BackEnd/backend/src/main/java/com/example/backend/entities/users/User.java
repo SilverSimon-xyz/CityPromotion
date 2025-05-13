@@ -1,35 +1,49 @@
 package com.example.backend.entities.users;
 
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.Principal;
 import java.util.*;
 
-@EntityListeners(AuditingEntityListener.class)
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
             @UniqueConstraint(columnNames = {"email"})
         })
-public class User {
+public class User implements UserDetails, Principal {
 
     @Id
     @Column(name = "user_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "firstname", nullable = false)
+    private String firstname;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "lastname", nullable = false)
+    private String lastname;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    /*
     @JoinTable(
             name = "users_roles",
             joinColumns = {
@@ -40,6 +54,8 @@ public class User {
                     @JoinColumn(name = "role_id", referencedColumnName = "role_id"),
                     @JoinColumn(name = "role_name", referencedColumnName = "name")
             })
+
+     */
     private Set<Role> roles = new HashSet<>();
 
     @CreationTimestamp
@@ -50,72 +66,57 @@ public class User {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    public User() {
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refreshToken;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        roles.forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+            //Set<Privilege> privileges = new HashSet<>(role.getPrivileges());
+            //privileges.forEach(privilege -> authorities.add(new SimpleGrantedAuthority(privilege.getName())));
+        });
+        return authorities;
     }
 
-    public User(int id, String name, String email, String password, Set<Role> roles) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.createdAt = new Date();
-        this.roles = roles;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id=id;
-    }
-
+    @Override
     public String getName() {
-        return name;
+        return getFullName();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    private String getFullName() {
+        return firstname + " " + lastname;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    @Override
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String getUsername() {
+        return email;
     }
 
-    public Set<Role> getRoles() {
-        return this.roles;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt=createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt=updatedAt;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 

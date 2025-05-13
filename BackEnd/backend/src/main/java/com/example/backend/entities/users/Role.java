@@ -1,9 +1,20 @@
 package com.example.backend.entities.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import lombok.*;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.util.Date;
 import java.util.Set;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 @Entity
 @Table(name="roles")
 public class Role {
@@ -13,15 +24,24 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
-    private RoleType name;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(nullable = false)
     private String description;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private Set<User> users;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinTable(
@@ -35,49 +55,6 @@ public class Role {
     )
     private Set<Privilege> privileges;
 
-    public Role() {
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public RoleType getName() {
-        return name;
-    }
-
-    public void setName(RoleType name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<User> getUsers() {
-        return this.users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public Set<Privilege> getPrivileges() {
-        return this.privileges;
-    }
-
-    public void setPrivileges(Set<Privilege> privileges) {
-        this.privileges = privileges;
-    }
 
 
 }

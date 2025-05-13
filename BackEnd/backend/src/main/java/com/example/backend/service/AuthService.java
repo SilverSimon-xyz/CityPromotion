@@ -2,7 +2,6 @@ package com.example.backend.service;
 
 import com.example.backend.dto.request.RegistrationRequest;
 import com.example.backend.entities.users.Role;
-import com.example.backend.entities.users.RoleType;
 import com.example.backend.entities.users.User;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
@@ -15,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -29,33 +29,29 @@ public class AuthService {
     private RoleRepository roleRepository;
 
     public User registration(RegistrationRequest registrationRequest) throws Exception {
-        if(userRepository.existsByEmail(registrationRequest.getEmail())) {
+        if(userRepository.existsByEmail(registrationRequest.email())) {
             throw new Exception("User already exist!");
         }
-        Optional<Role> optionalRole = roleRepository.findByName(RoleType.TOURIST);
+        Optional<Role> optionalRole = roleRepository.findByName("TOURIST");
         if(optionalRole.isEmpty()) {
             return null;
         }
-
-        User user = new User();
-        user.setName(registrationRequest.getName());
-        user.setEmail(registrationRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
         Role role = optionalRole.get();
-        user.getRoles().add(role);
-
-        return userRepository.save(user);
-
+        User user = User.builder()
+                .firstname(registrationRequest.firstname())
+                .lastname(registrationRequest.lastname())
+                .email(registrationRequest.email())
+                .password(passwordEncoder.encode(registrationRequest.password()))
+                .roles(Set.of(role))
+                .build();
+        userRepository.save(user);
+        return user;
     }
 
     public User login(AuthRequest authRequest) {
-
-        authenticationManager.authenticate(
-                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()
-                 ));
-
-        return this.userRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
-
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.email(), authRequest.password()));
+        return this.userRepository.findByEmail(authRequest.email()).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
     }
+
 
 }

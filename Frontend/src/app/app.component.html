@@ -1,7 +1,19 @@
 <nav>
-    <a routerLink="/home">Home</a>
-    <a routerLink="/poi">Point of Interest</a>
-    <a routerLink="/contest">Contest</a>
-    <a routerLink="/content">Content</a>
+    <div class="menu">
+        <i class="fa fa-bars" id="hamburger-menu" aria-hidden="true"></i>
+        <ul class="menu-list">
+          <li><a href=""><i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> Home</a></li>
+          <li><a href=""><i class="fa fa-pie-chart fa-fw" aria-hidden="true"></i> Point of Interest</a></li>
+          <li><a href=""><i class="fa fa-user fa-fw" aria-hidden="true"></i> Content</a></li>
+          <li><a href=""><i class="fa fa-tachometer fa-fw" aria-hidden="true"></i> Contest</a></li>
+          <li><a href=""><i class="fa fa-pie-chart fa-fw" aria-hidden="true"></i> Feedback</a></li>
+        </ul>
+       
+      </div>
+      <div class="nav-search">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        <input type="search" placeholder="Search"/>
+      </div>
+
 </nav>
 <router-outlet></router-outlet>

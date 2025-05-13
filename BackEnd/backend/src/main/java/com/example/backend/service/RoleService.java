@@ -3,8 +3,6 @@ package com.example.backend.service;
 import com.example.backend.entities.users.Privilege;
 import com.example.backend.entities.users.Role;
 import com.example.backend.entities.users.User;
-import com.example.backend.entities.users.PrivilegeType;
-import com.example.backend.entities.users.RoleType;
 import com.example.backend.repository.PrivilegeRepository;
 import com.example.backend.repository.RoleRepository;
 import com.example.backend.repository.UserRepository;
@@ -26,10 +24,6 @@ public class RoleService {
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
-    public RoleService() {
-
-    }
-
     public Role addRole(Role role) {
         return this.roleRepository.save(role);
     }
@@ -44,10 +38,11 @@ public class RoleService {
 
     public Role updateRole(int id, Role roleDetails) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
-        role.setName(roleDetails.getName());
-        role.setDescription(roleDetails.getDescription());
-        role.setUsers(roleDetails.getUsers());
-        role.setPrivileges(roleDetails.getPrivileges());
+        role
+                .setName(roleDetails.getName())
+                .setDescription(roleDetails.getDescription())
+                .setUsers(roleDetails.getUsers());
+        //role.setPrivileges(roleDetails.getPrivileges());
         return roleRepository.save(role);
     }
 
@@ -55,7 +50,7 @@ public class RoleService {
         this.roleRepository.deleteById(id);
     }
 
-    public Role assignRoleToUser(int id, RoleType name) {
+    public Role assignRoleToUser(int id, String name) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
         Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
         user.getRoles().add(role);
@@ -65,7 +60,7 @@ public class RoleService {
         return this.roleRepository.save(role);
     }
 
-    public void removeRoleToUser(int id, RoleType name) {
+    public void removeRoleToUser(int id, String name) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
         Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
         user.getRoles().remove(role);
@@ -75,11 +70,11 @@ public class RoleService {
         this.roleRepository.save(role);
     }
 
-    public Role assignPrivilegeRoleToUser(int id, RoleType name, PrivilegeType privilegeName) {
+    public Role assignPrivilegeRoleToUser(int id, String roleName, String privilegeName) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
-        Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
+        Role role = roleRepository.findByName(roleName).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
         Privilege privilege = privilegeRepository.findByName(privilegeName).orElseThrow(() -> new EntityNotFoundException("Privilege not Found!"));
-        role.getPrivileges().add(privilege);
+        //role.getPrivileges().add(privilege);
         privilege.getRoles().remove(role);
         user.setUpdatedAt(new Date());
         this.userRepository.save(user);
@@ -87,12 +82,12 @@ public class RoleService {
         return this.roleRepository.save(role);
     }
 
-    public void removePrivilegeRoleToUser(int id, RoleType name, PrivilegeType privilegeName) {
+    public void removePrivilegeRoleToUser(int id, String name, String privilegeName) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
         Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
         Privilege privilege = privilegeRepository.findByName(privilegeName).orElseThrow(() -> new EntityNotFoundException("Privilege not Found!"));
         privilege.getRoles().remove(role);
-        role.getPrivileges().remove(privilege);
+        //role.getPrivileges().remove(privilege);
         user.setUpdatedAt(new Date());
         this.userRepository.save(user);
         this.privilegeRepository.save(privilege);
@@ -100,7 +95,7 @@ public class RoleService {
     }
 
     @Transactional
-    public List<User> getUsersByRoleName(RoleType roleName) {
+    public List<User> getUsersByRoleName(String roleName) {
         return roleRepository.findUsersByRoleName(roleName);
     }
 

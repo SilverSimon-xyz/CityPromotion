@@ -3,11 +3,19 @@ package com.example.backend.entities.content;
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.users.User;
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
 @Entity
 @Table(name = "multimediacontent")
 public class MultimediaContent {
@@ -29,7 +37,10 @@ public class MultimediaContent {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "author", referencedColumnName = "name")
+    @JoinColumns({
+            @JoinColumn(name = "author_first_name", referencedColumnName = "firstname", nullable = false),
+            @JoinColumn(name = "author_last_name", referencedColumnName = "lastname", nullable = false)
+    })
     private User author;
 
     @CreationTimestamp
@@ -52,87 +63,5 @@ public class MultimediaContent {
     @JoinColumn(name = "poi_id", nullable = false)
     private PointOfInterest poi;
 
-    public MultimediaContent() {
 
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public FormatFileType getType() {
-        return type;
-    }
-
-    public void setType(FormatFileType type) {
-        this.type = type;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getDataUpdated() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public MediaFile getMediaFile() {
-        return mediaFile;
-    }
-
-    public void setMediaFile(MediaFile mediaFile) {
-        this.mediaFile = mediaFile;
-    }
-
-    public PointOfInterest getPoi() {
-        return poi;
-    }
-
-    public void setPoi(PointOfInterest poi) {
-        this.poi = poi;
-    }
 }

@@ -1,0 +1,89 @@
+$nav-bg: #333366;
+$nav-color: #8395AF;
+
+nav{
+  background-color: $nav-bg;
+  width:100%;
+  height: 35px;
+  padding: 5px 0;
+  display:block;
+  position:relative;
+  z-index:99;
+  }
+#hamburger-menu{
+  color: $nav-color;
+  vertical-align:middle;
+  display:inline-block;
+  transition: .1s;
+  cursor: pointer;
+  &:hover{
+    color: lighten($nav-color, 50%);
+  }
+}
+%menu{
+  background-color: $nav-bg;
+  position:relative;
+  display:inline-block;
+  z-index:10;
+  height:30px;
+  padding: 5px 20px;
+}
+.menu{
+  @extend %menu;
+}
+.menu-right{
+  @extend %menu;
+  float:right;
+}
+.menu-list{
+  list-style: none;
+  display:inline-block;
+  padding:0;
+  margin:0 0 0 20px;
+  color: $nav-color;
+  position:relative;
+  li{
+    display: inline-block;
+    margin: 0 12px;
+    vertical-align: middle;
+    a{
+      color: #8395AF;
+      text-decoration: none;
+      transition: .1s;
+      &:hover{
+        color: #fff;
+      }
+    }
+  }
+}
+
+.nav-search{
+  display:inline-block;
+  position:absolute;
+  z-index:1;
+  left:0;
+  width:100%;
+  i{
+    position:absolute;
+    color: lighten($nav-color, 10%);
+    left:655px;
+    z-index: 5;
+    padding:8px 15px;
+  }
+  input{
+  height:35px;  
+    box-shadow: none;
+  border: 0;
+    border-radius: 3px;
+    width:calc(100% - 900px);
+    position:absolute;
+    background-color: #485D82;
+    padding: 10px 10px 10px 40px;
+    color: lighten($nav-color, 30%);
+    margin-left: 660px;
+    &::placeholder{
+      color: lighten($nav-color, 10%);
+      opacity:1;
+    }
+  }
+}

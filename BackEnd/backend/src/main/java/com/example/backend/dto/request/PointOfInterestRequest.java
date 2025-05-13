@@ -5,18 +5,19 @@ import com.example.backend.entities.poi.PointOfInterestType;
 
 import java.time.LocalTime;
 
-public record PointOfInterestRequest(String name, String description, String authorName, double latitude, double longitude,
+public record PointOfInterestRequest(String name, String description, String authorFirstName, String authorLastName, double latitude, double longitude,
                                      PointOfInterestType type, LocalTime openTime, LocalTime closeTime) {
 
     public PointOfInterest toPOI() {
-        PointOfInterest pointOfInterest = new PointOfInterest();
-        pointOfInterest.setName(name);
-        pointOfInterest.setDescription(description);
-        pointOfInterest.setLatitude(latitude);
-        pointOfInterest.setLongitude(longitude);
-        pointOfInterest.setType(type);
-        pointOfInterest.setOpenTime(openTime);
-        pointOfInterest.setCloseTime(closeTime);
-        return pointOfInterest;
+
+        return PointOfInterest.builder()
+                .name(name)
+                .description(description)
+                .latitude(latitude)
+                .longitude(longitude)
+                .type(type)
+                .openTime(openTime)
+                .closeTime(closeTime)
+                .build();
     }
 }

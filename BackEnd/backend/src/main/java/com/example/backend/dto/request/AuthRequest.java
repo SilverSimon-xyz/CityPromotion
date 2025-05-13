@@ -1,25 +1,5 @@
 package com.example.backend.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+public record AuthRequest(String email, String password) {
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class AuthRequest {
-
-    private String email;
-
-    private String password;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }

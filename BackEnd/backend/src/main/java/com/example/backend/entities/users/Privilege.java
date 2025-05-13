@@ -2,8 +2,15 @@ package com.example.backend.entities.users;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Set;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 @Table(name = "privileges")
@@ -15,38 +22,11 @@ public class Privilege {
     private int id;
 
     @Column(nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
-    private PrivilegeType name;
+    private String name;
 
     @ManyToMany(mappedBy = "privileges")
     @JsonBackReference
     private Set<Role> roles;
 
-    public Privilege() {
 
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public PrivilegeType getName() {
-        return name;
-    }
-
-    public void setName(PrivilegeType name) {
-        this.name = name;
-    }
-
-    public Set<Role> getRoles() {
-        return this.roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 }

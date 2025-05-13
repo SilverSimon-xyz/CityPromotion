@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MultimediaContentService {
@@ -34,9 +35,9 @@ public class MultimediaContentService {
 
     }
 
-    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorName, MediaFile mediaFile, int idPoi) {
+    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorFirstName, String authorLastName, MediaFile mediaFile, int idPoi) {
 
-        User author = userRepository.findByName(authorName).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+        User author = userRepository.findByFirstNameAndLastName(authorFirstName, authorLastName).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
 
         PointOfInterest poi = poiRepository.findById(idPoi).orElseThrow(() -> new EntityNotFoundException("POI Not Found"));
 
@@ -53,29 +54,36 @@ public class MultimediaContentService {
 
     public MultimediaContent updateContent(int idContent, MultimediaContent multimediaContentDetails) {
 
-        MultimediaContent multimediaContent = multimediaContentRepository.findById(idContent).orElseThrow(() -> new EntityNotFoundException("Content not Found!"));
+        Optional<MultimediaContent> optionalMultimediaContent = multimediaContentRepository.findById(idContent);
+        if(optionalMultimediaContent.isPresent()) {
+            MultimediaContent multimediaContent = optionalMultimediaContent.get()
+                    .setTitle(multimediaContentDetails.getTitle())
+                    .setType(multimediaContentDetails.getType())
+                    .setDescription(multimediaContentDetails.getDescription())
+                    .setStatus(Status.APPROVED)
+                    .setUpdatedAt(new Date());
 
-        multimediaContent.setTitle(multimediaContentDetails.getTitle());
-        multimediaContent.setDescription(multimediaContentDetails.getDescription());
-        multimediaContent.setUpdatedAt(new Date());
-        multimediaContent.setStatus(Status.APPROVED);
+            return multimediaContentRepository.save(multimediaContent);
+        } else {
+            throw new EntityNotFoundException("Content not Found!");
+        }
 
-        return multimediaContentRepository.save(multimediaContent);
     }
 
     public MultimediaContent updateFile(int idContent, int idFile, MediaFile mediaFileDetails) {
         MediaFile mediaFile = mediaFileRepository.findById(idFile).orElseThrow(() -> new EntityNotFoundException("Media File not Found!"));
-        mediaFile.setName(mediaFileDetails.getName());
-        mediaFile.setType(mediaFileDetails.getType());
-        mediaFile.setData(mediaFileDetails.getData());
+        mediaFile
+                .setName(mediaFileDetails.getName())
+                .setType(mediaFileDetails.getType())
+                .setData(mediaFileDetails.getData());
 
         mediaFileRepository.save(mediaFile);
 
         MultimediaContent multimediaContent = multimediaContentRepository.findById(idContent).orElseThrow(() -> new EntityNotFoundException("Content not Found!"));
 
-        multimediaContent.setUpdatedAt(new Date());
-        multimediaContent.setMediaFile(mediaFile);
-        multimediaContent.setStatus(Status.APPROVED);
+        multimediaContent.setUpdatedAt(new Date())
+                .setMediaFile(mediaFile)
+                .setStatus(Status.APPROVED);
 
         return multimediaContentRepository.save(multimediaContent);
     }

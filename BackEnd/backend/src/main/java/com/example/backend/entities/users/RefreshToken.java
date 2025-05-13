@@ -1,0 +1,32 @@
+package com.example.backend.entities.users;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.Instant;
+
+@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity(name = "UserToken")
+@Table(name = "tokens")
+public class RefreshToken {
+
+    @Id
+    @Column(name = "token_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false, unique = true)
+    private String token;
+
+    private Instant expiryDate;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;
+
+}

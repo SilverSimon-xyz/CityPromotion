@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +11,17 @@ import { RouterOutlet, RouterLink } from '@angular/router';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  constructor(private authService: AuthService) {}
+  private isAutheticated = false;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.isAutheticated = this.authService.isAutheticated();
+  }
 
   logout() {
-    this.authService.logout()
+    if(this.isAutheticated) {
+      this.authService.logout();
+      this.router.navigate(['/login']);
+    }
   }
 
 }
