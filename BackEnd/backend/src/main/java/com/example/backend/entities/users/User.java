@@ -43,7 +43,6 @@ public class User implements UserDetails, Principal {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    /*
     @JoinTable(
             name = "users_roles",
             joinColumns = {
@@ -54,9 +53,7 @@ public class User implements UserDetails, Principal {
                     @JoinColumn(name = "role_id", referencedColumnName = "role_id"),
                     @JoinColumn(name = "role_name", referencedColumnName = "name")
             })
-
-     */
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -72,11 +69,7 @@ public class User implements UserDetails, Principal {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            //Set<Privilege> privileges = new HashSet<>(role.getPrivileges());
-            //privileges.forEach(privilege -> authorities.add(new SimpleGrantedAuthority(privilege.getName())));
-        });
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
         return authorities;
     }
 

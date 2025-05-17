@@ -67,6 +67,4 @@ public class Contest {
     @Column(name = "number_participants", nullable = false, updatable = false)
     private int numberOfParticipant = 0;
 
-
-
 }

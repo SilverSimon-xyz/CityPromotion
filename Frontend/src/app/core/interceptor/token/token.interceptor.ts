@@ -14,6 +14,13 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError(error => {
+      
+      if(error.status === 401) {
+        authService.logout();
+      } else{
+        return throwError(() => error);
+      }
+
       if(error.status === 403) {
           return handleAuthErrors(req, next, authService, refreshTokenSubject, isRefreshing);
         } else {

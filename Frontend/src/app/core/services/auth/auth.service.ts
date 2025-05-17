@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../../environments/environment.development';
 import { SessionStorageService } from '../session.storage/session.storage.service';
-import { AuthResponse } from '../../auth.response';
+import { AuthResponse } from '../../interfaces/auth.response';
 
 @Injectable({
   providedIn: 'root'
@@ -29,15 +29,15 @@ export class AuthService {
 
   saveToken(response: AuthResponse): void {
     this.sessionStorage.setItem('accessToken', response.accessToken);
-    this.sessionStorage.setItem('refreshToken', response.token);
+    this.sessionStorage.setItem('refreshToken', response.refreshToken);
   }
 
   refreshToken(): Observable<boolean> {
     const refreshToken = this.sessionStorage.getItem('refreshToken');
     if(refreshToken) {
-      return this.http.post<{authToken: string}>(`${this.apiURL}/refresh-token`, {refreshToken})
+      return this.http.post<{accessToken: string}>(`${this.apiURL}/auth/refresh-token`, {refreshToken})
       .pipe(
-        tap(response => { this.sessionStorage.setItem('authToken', response.authToken);
+        tap(response => { this.sessionStorage.setItem('accessToken', response.accessToken);
         }),
         map(() => true),
         catchError(() => of(false))
@@ -47,13 +47,31 @@ export class AuthService {
   }
   
   logout() {
-    this.sessionStorage.clear();
+    const refreshToken = this.sessionStorage.getItem('refreshToken');
+    console.log('Refresh Token inviato:', refreshToken); //This is only for debug
+    if(!refreshToken) {
+      console.error('Token not Found!');
+      return;
+    } 
+    this.http.post<boolean>(`${this.apiURL}/auth/logout`, {token: refreshToken}).subscribe( {
+      next:(response) => {
+        if(response) {
+          this.sessionStorage.removeItem('accessToken');
+          this.sessionStorage.removeItem('refreshToken');
+          console.log("Logout done!");
+        } else {
+          console.error('Response is false!');
+        }
+    },
+      error: (err) => {
+        console.error('Error during logout: ', err);
+      }
+    });
   }
 
   isTokenExpired(): boolean {
     const token = this.sessionStorage.getItem('accessToken');
     if(!token) return true;
-
     const expiry = JSON.parse(atob(token.split('.')[1])).exp;
     return (expiry * 1000) < Date.now();
   }

@@ -1,6 +1,5 @@
 package com.example.backend.entities.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -15,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@ToString(exclude = {"id", "privileges"})
 @Entity
 @Table(name="roles")
 public class Role {
@@ -30,8 +30,7 @@ public class Role {
     @Column(nullable = false)
     private String description;
 
-    @ManyToMany(mappedBy = "roles")
-    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users;
 
     @CreationTimestamp
@@ -41,8 +40,7 @@ public class Role {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-
-
+    
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_privileges",

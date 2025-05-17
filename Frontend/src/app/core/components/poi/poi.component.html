@@ -1,0 +1,15 @@
+<h2>Point of Interest List</h2>
+<ul>
+    <li *ngFor="let poi of pois">
+        <h3> {{ poi.name }} </h3>
+        <p> Description: {{ poi.description }} </p>
+        <p> Author: {{ poi.author }} </p>
+        <p> Latitude: {{ poi.latitude }} </p>
+        <p> Longitude: {{ poi.longitude }} </p>
+        <p> Type: {{ poi.type }} </p>
+        <p> Open Time: {{ poi.openTime }} </p>
+        <p> Close Time: {{ poi.closeTime }} </p>
+        <p> Created at: {{ poi.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+        <p> Updated At: {{ poi.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+    </li>
+</ul>

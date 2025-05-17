@@ -2,6 +2,7 @@ package com.example.backend.dto.request;
 
 
 import com.example.backend.entities.contest.Contest;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 

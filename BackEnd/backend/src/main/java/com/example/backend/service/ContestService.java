@@ -98,8 +98,12 @@ public class ContestService {
         contestRepository.deleteById(id);
     }
 
+    public List<ContestParticipation> getAllContestParticipant() {
+        return contestParticipationRepository.findAll();
+    }
+
     @Transactional
-    public void participateContest(int idContest, int idUser, MediaFile mediaFile) {
+    public ContestParticipation participateContest(int idContest, int idUser, MediaFile mediaFile) {
         Optional<Contest> optionalContest = contestRepository.findById(idContest);
         Optional<User> optionalUser = userRepository.findById(idUser);
 
@@ -119,25 +123,38 @@ public class ContestService {
                 mediaFileRepository.save(mediaFile);
                 contestParticipationRepository.save(participation);
                 contestRepository.save(contest);
+                return participation;
             }
+            return null;
         } else {
             throw new RuntimeException("Contest or User not Fount.");
         }
     }
 
-    public void evaluateParticipant(int idParticipant, QuoteCriterion quoteCriterionDetails) {
+    public ContestParticipation evaluateParticipant(int idParticipant, QuoteCriterion quoteCriterionDetails) {
         Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
         if(optionalContestParticipation.isPresent()) {
-            ContestParticipation participation = optionalContestParticipation.get();
-            if (!participation.getQuoteCriterion().isQuote()) {
+            ContestParticipation participant = optionalContestParticipation.get();
+            if (!participant.getQuoteCriterion().isQuote()) {
                 QuoteCriterion quoteCriterion = QuoteCriterion.builder()
                         .vote(quoteCriterionDetails.getVote())
                         .description(quoteCriterionDetails.getDescription())
                         .isQuote(true)
                         .build();
-                participation.setQuoteCriterion(quoteCriterion);
-                contestParticipationRepository.save(participation);
+                participant.setQuoteCriterion(quoteCriterion);
+                contestParticipationRepository.save(participant);
+                return participant;
             }
+            return null;
+        } else {
+            throw new RuntimeException("Participant non found.");
+        }
+    }
+
+    public void deleteParticipant(int idParticipant) {
+        Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
+        if(optionalContestParticipation.isPresent()) {
+            contestParticipationRepository.delete(optionalContestParticipation.get());
         } else {
             throw new RuntimeException("Participant non found.");
         }

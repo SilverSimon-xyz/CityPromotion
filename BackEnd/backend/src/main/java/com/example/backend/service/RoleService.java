@@ -50,14 +50,14 @@ public class RoleService {
         this.roleRepository.deleteById(id);
     }
 
-    public Role assignRoleToUser(int id, String name) {
+    public User assignRoleToUser(int id, String name) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
         Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
         user.getRoles().add(role);
         role.getUsers().add(user);
         user.setUpdatedAt(new Date());
-        this.userRepository.save(user);
-        return this.roleRepository.save(role);
+        this.roleRepository.save(role);
+        return this.userRepository.save(user);
     }
 
     public void removeRoleToUser(int id, String name) {
@@ -70,6 +70,7 @@ public class RoleService {
         this.roleRepository.save(role);
     }
 
+    /**
     public Role assignPrivilegeRoleToUser(int id, String roleName, String privilegeName) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
         Role role = roleRepository.findByName(roleName).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
@@ -93,7 +94,7 @@ public class RoleService {
         this.privilegeRepository.save(privilege);
         this.roleRepository.save(role);
     }
-
+*/
     @Transactional
     public List<User> getUsersByRoleName(String roleName) {
         return roleRepository.findUsersByRoleName(roleName);

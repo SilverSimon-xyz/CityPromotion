@@ -4,18 +4,29 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from '../app.component';
-import { authInterceptor } from '../auth.interceptor';
-import { AuthService } from '../services/auth/auth.service';
-import { SessionStorageService } from '../services/session.storage/session.storage.service';
-import { LoginComponent } from '../login/login.component';
-import { HomeComponent } from '../home/home.component';
+import { AuthService } from '../core/services/auth/auth.service';
+import { SessionStorageService } from '../core/services/session.storage/session.storage.service';
 import { AppRouteModule } from '../app.routes';
-import { tokenInterceptor } from '../token.interceptor';
+import { UsersComponent } from '../core/components/users/users.component';
+import { UserService } from '../core/services/user/user.service';
+import { HomeComponent } from '../core/components/home/home.component';
+import { LoginComponent } from '../core/components/login/login.component';
+import { DashboardComponent } from '../core/dashboard/dashboard.component';
+import { authInterceptor } from '../core/interceptor/auth/auth.interceptor';
+import { tokenInterceptor } from '../core/interceptor/token/token.interceptor';
+import { PoiComponent } from '../core/components/poi/poi.component';
+import { PoiService } from '../core/services/poi/poi.service';
+import { ContestComponent } from '../core/components/contest/contest.component';
+import { ContestService } from '../core/services/contest/contest.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    DashboardComponent,
+    UsersComponent,
+    PoiComponent,
+    ContestComponent,
     HomeComponent
   ],
   imports: [
@@ -27,6 +38,9 @@ import { tokenInterceptor } from '../token.interceptor';
   providers: [
     AuthService, 
     SessionStorageService,
+    UserService,
+    PoiService,
+    ContestService,
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, tokenInterceptor]))
   ],
   bootstrap: [AppComponent]

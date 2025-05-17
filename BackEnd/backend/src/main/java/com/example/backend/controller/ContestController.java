@@ -1,22 +1,21 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.response.AccountResponse;
+import com.example.backend.dto.response.ContestParticipationResponse;
 import com.example.backend.dto.response.ContestResponse;
 import com.example.backend.dto.request.ContestRequest;
-import com.example.backend.dto.response.RoleResponse;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.contest.Contest;
+import com.example.backend.entities.contest.ContestParticipation;
 import com.example.backend.entities.contest.QuoteCriterion;
 import com.example.backend.entities.users.User;
 import com.example.backend.service.ContestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/contest")
@@ -28,48 +27,21 @@ public class ContestController {
     @PostMapping("/add")
     public ResponseEntity<ContestResponse> addContest(@RequestBody ContestRequest request) {
         Contest contest = contestService.createContest(request.toContest(), request.authorFirstName(), request.authorLastName());
-        ContestResponse response = ContestResponse.builder()
-                .name(contest.getName())
-                .description(contest.getDescription())
-                .author(contest.getAuthor().getName())
-                .rules(contest.getRules())
-                .goal(contest.getGoal())
-                .prize(contest.getPrize())
-                .deadline(contest.getDeadline())
-                .active(contest.isActive())
-                .build();
+        ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<ContestResponse> updateContest(@PathVariable int id, @RequestBody Contest contestDetails) {
         Contest contest = contestService.updateContest(id, contestDetails);
-        ContestResponse response = ContestResponse.builder()
-                .name(contest.getName())
-                .description(contest.getDescription())
-                .author(contest.getAuthor().getName())
-                .rules(contest.getRules())
-                .goal(contest.getGoal())
-                .prize(contest.getPrize())
-                .deadline(contest.getDeadline())
-                .active(contest.isActive())
-                .build();
+        ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/edit/active")
     public ResponseEntity<ContestResponse> reActiveContest(@PathVariable int id) {
         Contest contest = contestService.activeClosedContest(id);
-        ContestResponse response = ContestResponse.builder()
-                .name(contest.getName())
-                .description(contest.getDescription())
-                .author(contest.getAuthor().getName())
-                .rules(contest.getRules())
-                .goal(contest.getGoal())
-                .prize(contest.getPrize())
-                .deadline(contest.getDeadline())
-                .active(contest.isActive())
-                .build();
+        ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -78,34 +50,14 @@ public class ContestController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 contestService.getAllContest()
                         .stream()
-                        .map(contest ->
-                                ContestResponse.builder()
-                                .name(contest.getName())
-                                .description(contest.getDescription())
-                                .author(contest.getAuthor().getName())
-                                .rules(contest.getRules())
-                                .goal(contest.getGoal())
-                                .prize(contest.getPrize())
-                                .deadline(contest.getDeadline())
-                                .active(contest.isActive())
-                                .build()
-                        )
+                        .map(ContestResponse::mapToResponse)
                         .toList());
     }
 
     @GetMapping("/find/{id}")
     public ResponseEntity<ContestResponse> getContestById(@PathVariable int id) {
         Contest contest = contestService.getContestById(id);
-        ContestResponse response = ContestResponse.builder()
-                .name(contest.getName())
-                .description(contest.getDescription())
-                .author(contest.getAuthor().getName())
-                .rules(contest.getRules())
-                .goal(contest.getGoal())
-                .prize(contest.getPrize())
-                .deadline(contest.getDeadline())
-                .active(contest.isActive())
-                .build();
+        ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -114,18 +66,7 @@ public class ContestController {
         List<Contest> contestList = contestService.searchContestByName(name);
         List<ContestResponse> contestResponseList = contestList
                 .stream()
-                .map(contest ->
-                        ContestResponse.builder()
-                        .name(contest.getName())
-                        .description(contest.getDescription())
-                        .author(contest.getAuthor().getName())
-                        .rules(contest.getRules())
-                        .goal(contest.getGoal())
-                        .prize(contest.getPrize())
-                        .deadline(contest.getDeadline())
-                        .active(contest.isActive())
-                        .build()
-                )
+                .map(ContestResponse::mapToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(contestResponseList);
     }
@@ -135,17 +76,7 @@ public class ContestController {
         List<Contest> contestList = contestService.searchActiveContest();
         List<ContestResponse> contestResponseList = contestList
                 .stream()
-                .map(contest -> ContestResponse.builder()
-                        .name(contest.getName())
-                        .description(contest.getDescription())
-                        .author(contest.getAuthor().getName())
-                        .rules(contest.getRules())
-                        .goal(contest.getGoal())
-                        .prize(contest.getPrize())
-                        .deadline(contest.getDeadline())
-                        .active(contest.isActive())
-                        .build()
-                )
+                .map(ContestResponse::mapToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(contestResponseList);
     }
@@ -162,42 +93,41 @@ public class ContestController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/participate/{idContest}/idUser")
-    public ResponseEntity<Void> participateContest(@PathVariable int idContest, @RequestParam int idUser, @RequestBody MediaFile mediaFile) {
-        contestService.participateContest(idContest, idUser, mediaFile);
+    @GetMapping("/participant/all")
+    public ResponseEntity<List<ContestParticipationResponse>> getAllParticipants() {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                contestService.getAllContestParticipant()
+                        .stream()
+                        .map(ContestParticipationResponse::mapToResponse)
+                        .toList());
+    }
+
+    @PostMapping("/participant/participate/{idContest}/idUser")
+    public ResponseEntity<ContestParticipationResponse> participateContest(@PathVariable int idContest, @RequestParam int idUser, @RequestBody MediaFile mediaFile) {
+        ContestParticipation participant = contestService.participateContest(idContest, idUser, mediaFile);
+        ContestParticipationResponse response = ContestParticipationResponse.mapToResponse(participant);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/participant/delete/{idParticipant}")
+    public ResponseEntity<Void> deleteParticipant(@PathVariable int idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
+        contestService.deleteParticipant(idParticipant);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping("/validate/{idParticipant}")
-    @PreAuthorize("hasAuthority('PRIVILEGE_VALIDATOR')")
-    public ResponseEntity<Void> evaluateParticipant(@PathVariable int idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
-        contestService.evaluateParticipant(idParticipant, quoteCriterionDetails);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @PatchMapping("/participant/validate/{idParticipant}")
+    public ResponseEntity<ContestParticipationResponse> evaluateParticipant(@PathVariable int idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
+        ContestParticipation participant = contestService.evaluateParticipant(idParticipant, quoteCriterionDetails);
+        ContestParticipationResponse response = ContestParticipationResponse.mapToResponse(participant);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/winners/{id}")
+    @PostMapping("/participant/winners/{id}")
     public ResponseEntity<List<AccountResponse>> declareWinners(@PathVariable int id) {
         List<User> winners = contestService.declareWinners(id);
         List<AccountResponse> winnersAccountResponses = winners
                 .stream()
-                .map(winner -> AccountResponse
-                        .builder()
-                        .id(winner.getId())
-                        .name(winner.getName())
-                        .email(winner.getEmail())
-                        .password(winner.getPassword())
-                        .roles(winner.getRoles().stream().map(
-                                        role ->
-                                                RoleResponse
-                                                        .builder()
-                                                        .name(role.getName())
-                                                        .description(role.getDescription())
-                                                        .build()
-                                )
-                                .collect(Collectors.toSet()))
-                        .createdAt(winner.getCreatedAt())
-                        .updatedAt(winner.getUpdatedAt())
-                        .build())
+                .map(AccountResponse::mapToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(winnersAccountResponses);
     }

@@ -1,0 +1,6 @@
+<div class="home-container">
+  <h1>Benvenuto!</h1>
+  <p>Accedi per gestire</p>
+  <button routerLink="/login">Login</button>
+  <button *ngIf="isAutheticated()" (click)="logout()">Logout</button>
+</div>

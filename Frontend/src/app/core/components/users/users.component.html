@@ -1,0 +1,17 @@
+<h2>Lista Utenti</h2>
+<ul> 
+  <table *ngFor="let user of users" border="1">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Created at</th>
+      <th>Updated at</th>
+    </tr>
+    <tr>
+      <td><strong>{{ user.name }}</strong></td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+      <td>{{ user.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+    </tr>
+  </table>
+</ul>

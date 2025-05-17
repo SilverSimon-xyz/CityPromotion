@@ -23,20 +23,7 @@ public class PointOfInterestController {
     public ResponseEntity<List<PointOfInterestResponse>> getAllPOIs() {
         List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestService.getAllPOIs()
                 .stream()
-                .map(pointOfInterest -> PointOfInterestResponse
-                            .builder()
-                                .name(pointOfInterest.getName())
-                                .description(pointOfInterest.getDescription())
-                                .author(pointOfInterest.getAuthor().getName())
-                                .latitude(pointOfInterest.getLatitude())
-                                .longitude(pointOfInterest.getLongitude())
-                                .type(pointOfInterest.getType())
-                                .openTime(pointOfInterest.getOpenTime())
-                                .closeTime(pointOfInterest.getOpenTime())
-                                .createdAt(pointOfInterest.getCreatedAt())
-                                .updatedAt(pointOfInterest.getCreatedAt())
-                        .build()
-                )
+                .map(PointOfInterestResponse::mapToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
@@ -44,19 +31,7 @@ public class PointOfInterestController {
     @GetMapping("/find/{id}")
     public ResponseEntity<PointOfInterestResponse> getPOIDetailsById(@PathVariable int id) {
         PointOfInterest pointOfInterest = pointOfInterestService.getPOIById(id);
-        PointOfInterestResponse response = PointOfInterestResponse
-                .builder()
-                .name(pointOfInterest.getName())
-                .description(pointOfInterest.getDescription())
-                .author(pointOfInterest.getAuthor().getName())
-                .latitude(pointOfInterest.getLatitude())
-                .longitude(pointOfInterest.getLongitude())
-                .type(pointOfInterest.getType())
-                .openTime(pointOfInterest.getOpenTime())
-                .closeTime(pointOfInterest.getOpenTime())
-                .createdAt(pointOfInterest.getCreatedAt())
-                .updatedAt(pointOfInterest.getCreatedAt())
-                .build();
+        PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(pointOfInterest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -65,19 +40,7 @@ public class PointOfInterestController {
         List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByName(name);
         List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
                         .stream()
-                        .map(pointOfInterest -> PointOfInterestResponse
-                                .builder()
-                                .name(pointOfInterest.getName())
-                                .description(pointOfInterest.getDescription())
-                                .author(pointOfInterest.getAuthor().getName())
-                                .latitude(pointOfInterest.getLatitude())
-                                .longitude(pointOfInterest.getLongitude())
-                                .type(pointOfInterest.getType())
-                                .openTime(pointOfInterest.getOpenTime())
-                                .closeTime(pointOfInterest.getOpenTime())
-                                .createdAt(pointOfInterest.getCreatedAt())
-                                .updatedAt(pointOfInterest.getCreatedAt())
-                                .build())
+                        .map(PointOfInterestResponse::mapToResponse)
                         .toList();
         return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
@@ -87,19 +50,7 @@ public class PointOfInterestController {
         List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByType(type);
         List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
                 .stream()
-                .map(pointOfInterest -> PointOfInterestResponse
-                        .builder()
-                        .name(pointOfInterest.getName())
-                        .description(pointOfInterest.getDescription())
-                        .author(pointOfInterest.getAuthor().getName())
-                        .latitude(pointOfInterest.getLatitude())
-                        .longitude(pointOfInterest.getLongitude())
-                        .type(pointOfInterest.getType())
-                        .openTime(pointOfInterest.getOpenTime())
-                        .closeTime(pointOfInterest.getOpenTime())
-                        .createdAt(pointOfInterest.getCreatedAt())
-                        .updatedAt(pointOfInterest.getCreatedAt())
-                        .build())
+                .map(PointOfInterestResponse::mapToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
@@ -107,38 +58,14 @@ public class PointOfInterestController {
     @PostMapping("/add")
     public ResponseEntity<PointOfInterestResponse> createPOI(@RequestBody PointOfInterestRequest request) {
         PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request.toPOI(), request.authorFirstName(), request.authorLastName());
-        PointOfInterestResponse response = PointOfInterestResponse
-                .builder()
-                .name(pointOfInterestCreated.getName())
-                .description(pointOfInterestCreated.getDescription())
-                .author(pointOfInterestCreated.getAuthor().getName())
-                .latitude(pointOfInterestCreated.getLatitude())
-                .longitude(pointOfInterestCreated.getLongitude())
-                .type(pointOfInterestCreated.getType())
-                .openTime(pointOfInterestCreated.getOpenTime())
-                .closeTime(pointOfInterestCreated.getOpenTime())
-                .createdAt(pointOfInterestCreated.getCreatedAt())
-                .updatedAt(pointOfInterestCreated.getCreatedAt())
-                .build();
+        PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(pointOfInterestCreated);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<PointOfInterestResponse> editPOI(@PathVariable int id, @RequestBody PointOfInterest pointOfInterest) {
         PointOfInterest updatedPOI = pointOfInterestService.updatePOI(id, pointOfInterest);
-        PointOfInterestResponse response = PointOfInterestResponse
-                .builder()
-                .name(updatedPOI.getName())
-                .description(updatedPOI.getDescription())
-                .author(updatedPOI.getAuthor().getName())
-                .latitude(updatedPOI.getLatitude())
-                .longitude(updatedPOI.getLongitude())
-                .type(updatedPOI.getType())
-                .openTime(updatedPOI.getOpenTime())
-                .closeTime(updatedPOI.getOpenTime())
-                .createdAt(updatedPOI.getCreatedAt())
-                .updatedAt(updatedPOI.getCreatedAt())
-                .build();
+        PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(updatedPOI);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

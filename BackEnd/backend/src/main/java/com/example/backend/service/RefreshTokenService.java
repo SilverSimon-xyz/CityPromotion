@@ -1,29 +1,36 @@
 package com.example.backend.service;
 
 import com.example.backend.entities.users.RefreshToken;
+import com.example.backend.entities.users.User;
 import com.example.backend.repository.RefreshTokenRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class RefreshTokenService {
 
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    private final UserRepository userRepository;
 
     public RefreshToken createRefreshToken(String username) {
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUser(user);
+        existingToken.ifPresent(refreshTokenRepository::delete);
         RefreshToken refreshToken = RefreshToken.builder()
-                .user(userRepository.findByEmail(username).orElseThrow(() -> new EntityNotFoundException("User not found!")))
+                .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(600000))
+                .expiryDate(Instant.now().plus(Duration.ofDays(7)))
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
@@ -40,7 +47,18 @@ public class RefreshTokenService {
         return token;
     }
 
-    public void revokeToken(String token) {
-        refreshTokenRepository.deleteByToken(token);
+    @Transactional
+    public boolean revokeToken(String token) {
+        Optional<RefreshToken> optionalToken = refreshTokenRepository.findByToken(token);
+        if(optionalToken.isEmpty()) return false;
+        try {
+            System.out.println("Token arrived on service: " + optionalToken.get());
+            refreshTokenRepository.deleteByToken(token);
+            SecurityContextHolder.clearContext();
+            return true;
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error during cancellation of token " + e );
+        }
     }
+
 }

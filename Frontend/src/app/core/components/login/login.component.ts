@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth/auth.service';
-import { AuthResponse } from '../auth.response';
+import { AuthService } from '../../services/auth/auth.service';
+import { AuthResponse } from '../../interfaces/auth.response';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit{
     this.authService.login(email, password).subscribe({
       next: (res: AuthResponse) => {
         this.authService.saveToken(res);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error('Error during login:', err);

@@ -154,5 +154,5 @@ INSERT INTO users (name, email, password) VALUES ('Giacomo Freddi', 'giacomo.fre
 INSERT INTO users (name, email, password) VALUES ('Federico Badiali', 'radius@gmail.com', '$2a$10$dWTI8ezvRUp1R7ziyuO4TOCyIaBoHAHIOVEBOrpfLR8CriSI9mrmO');
 
 #POI for testing DB
-INSERT INTO pois (name, description, author, lat, lon, type, open_time, close_time) 
-VALUES ('nome di prova', 'descrizione di prova','Simone Stacchiotti', 1.0, 1.0, 'TOURISM', '09:00:00', '18:00:00');
+INSERT INTO pois (name, description, author_first_name, author_last_name, lat, lon, type, open_time, close_time) 
+VALUES ('nome di prova', 'descrizione di prova','Simone', 'Stacchiotti', 1.0, 1.0, 'TOURISM', '09:00:00', '18:00:00');

@@ -68,5 +68,20 @@ public class PointOfInterest {
     @OneToMany(mappedBy = "poi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MultimediaContent> multimediaContents = new ArrayList<>();
 
-
+    @Override
+    public String toString() {
+        return "PointOfInterest{" +
+                "author=" + author +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", type=" + type +
+                ", openTime=" + openTime +
+                ", closeTime=" + closeTime +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

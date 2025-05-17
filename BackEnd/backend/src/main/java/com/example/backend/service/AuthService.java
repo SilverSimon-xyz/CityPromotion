@@ -16,17 +16,20 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.Set;
 
-
 @Service
 public class AuthService {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
+
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    public AuthService(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User registration(RegistrationRequest registrationRequest) throws Exception {
         if(userRepository.existsByEmail(registrationRequest.email())) {
