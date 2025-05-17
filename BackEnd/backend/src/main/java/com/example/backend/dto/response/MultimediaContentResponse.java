@@ -12,7 +12,8 @@ import java.util.Date;
 @Builder
 public record MultimediaContentResponse(String title, FormatFileType type, String description, String author,
                                         Status status, MediaFileResponse mediaFileResponse, PointOfInterestResponse pointOfInterestResponse,
-                                        Date createdAt, Date updatedAt) {
+                                        Date createdAt,
+                                        Date updatedAt) {
 
     public static MultimediaContentResponse mapToResponse(MultimediaContent multimediaContent) {
         MediaFile mediaFile = multimediaContent.getMediaFile();

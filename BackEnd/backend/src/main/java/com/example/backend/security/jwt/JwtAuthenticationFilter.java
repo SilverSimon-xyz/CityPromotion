@@ -50,7 +50,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                filterChain.doFilter(request, response);
                return;
             }
-
             try {
                 final String jwtToken = header.substring(7);
                 final String username = jwtService.extractUsername(jwtToken);

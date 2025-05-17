@@ -4,14 +4,13 @@ import com.example.backend.entities.contest.Contest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
 public record ContestResponse(String name, String description, String author, String rules,
                               String goal, String prize,
-                              @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") LocalDate deadline,
-                              boolean active, Date createdAt, Date updatedAt, int numberOfParticipant) {
+                              Date deadline, boolean active,
+                              Date createdAt, Date updatedAt, int numberOfParticipant) {
 
     public static ContestResponse mapToResponse(Contest contest) {
         return ContestResponse.builder()

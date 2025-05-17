@@ -10,17 +10,12 @@ import com.example.backend.security.jwt.JwtService;
 import com.example.backend.dto.response.AccountResponse;
 import com.example.backend.service.AuthService;
 import com.example.backend.service.RefreshTokenService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,10 +39,10 @@ public class AuthController {
     public ResponseEntity<JwtResponse> loginHandler(@RequestBody AuthRequest authRequest) {
         try {
             User authenticatedUser = authService.login(authRequest);
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequest.email());
+            String refreshToken = refreshTokenService.generateRefreshToken(authRequest.email());
             JwtResponse response = JwtResponse.mapToResponse(
                     jwtService.generateToken(authenticatedUser),
-                    refreshToken.getToken(),
+                    refreshToken,
                     jwtService.getExpirationTime());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(Exception e) {
@@ -68,20 +63,12 @@ public class AuthController {
 
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutHandler(@RequestBody RefreshTokenRequest request) { //HttpServletRequest request) {
+    public ResponseEntity<?> logoutHandler(@RequestHeader("Authorization") String token) {
+        System.out.println("Request is arrived on backend: " + token);
         try {
-            /**
-            String body = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-            System.out.println("Request is arrived on backend: " + body);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.readTree(body);
-            String token = jsonNode.get("refreshToken").asText();
-
-            System.out.println("Token extract: " + token);
-             */
-            System.out.println("Request is arrived on backend: " + request);
-            System.out.println("Token is arrived on backend: " + request.getRefreshToken());
-            boolean deleted = refreshTokenService.revokeToken(request.getRefreshToken());
+            if(token == null || !token.contains(".")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token JWT not valid. No token come to Backend");
+            String refreshToken = token.replace("Bearer ", "").trim();
+            boolean deleted = refreshTokenService.revokeToken(refreshToken);
             return deleted?
                     ResponseEntity.ok().body("Logout done!"):
                     ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token not Found or already deleted!!");

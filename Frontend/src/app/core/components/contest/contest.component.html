@@ -6,7 +6,7 @@
         <p> Rules: {{ contest.rules }} </p>
         <p> Goal: {{ contest.goal }} </p>
         <p> Prize: {{ contest.prize }} </p>
-        <p> Deadline: {{ contest?.deadLine | date:'yyyy-MM-dd'}} </p>
+        <p> Deadline: {{ contest.deadLine | date:'dd/MM/yyyy HH:mm:ss' }} </p>
         <p> Active: {{ contest.active ? 'Active' : 'Inactive'}} </p>
         <p> Created at: {{ contest.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
         <p> Updated At: {{ contest.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>

@@ -7,6 +7,7 @@ import { authGuard } from './auth.guard/auth.guard';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
 import { PoiComponent } from './core/components/poi/poi.component';
 import { ContestComponent } from './core/components/contest/contest.component';
+import { MultimediaContentComponent } from './core/components/multimedia.content/multimedia.content.component';
 
 export const routes: Routes = [
     {path: '', pathMatch: 'full', redirectTo: '/home'},
@@ -15,6 +16,7 @@ export const routes: Routes = [
     {path: 'users', component: UsersComponent},
     {path: 'poi', component: PoiComponent},
     {path: 'contest', component: ContestComponent},
+    {path: 'contents', component: MultimediaContentComponent},
     {path: 'dashboard', component: DashboardComponent, canActivate:[authGuard]},
     {path: '**', redirectTo:'home'},
     

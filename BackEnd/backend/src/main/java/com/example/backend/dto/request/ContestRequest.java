@@ -2,13 +2,11 @@ package com.example.backend.dto.request;
 
 
 import com.example.backend.entities.contest.Contest;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.time.LocalDate;
+import java.util.Date;
 
 
 public record ContestRequest(String name, String description, String authorFirstName, String authorLastName, String rules, String goal, String prize,
-                             LocalDate deadline, boolean active, int numberParticipant) {
+                             Date deadline, boolean active, int numberParticipant) {
 
     public Contest toContest() {
 

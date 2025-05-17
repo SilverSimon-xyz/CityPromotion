@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +48,7 @@ public class Contest {
     private String prize;
 
     @Column(nullable = false)
-    private LocalDate deadline;
+    private Date deadline;
 
     @Column(nullable = false)
     private boolean active;

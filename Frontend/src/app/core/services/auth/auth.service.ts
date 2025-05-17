@@ -47,18 +47,19 @@ export class AuthService {
   }
   
   logout() {
-    const refreshToken = this.sessionStorage.getItem('refreshToken');
+    const refreshToken = this.getRefreshToken();
     console.log('Refresh Token inviato:', refreshToken); //This is only for debug
     if(!refreshToken) {
       console.error('Token not Found!');
       return;
     } 
-    this.http.post<boolean>(`${this.apiURL}/auth/logout`, {token: refreshToken}).subscribe( {
+    const headers = new HttpHeaders({'Authorization': `Bearer ${refreshToken}`});
+    this.http.post<boolean>(`${this.apiURL}/auth/logout`, {token: refreshToken}, { headers }).subscribe( {
       next:(response) => {
         if(response) {
           this.sessionStorage.removeItem('accessToken');
           this.sessionStorage.removeItem('refreshToken');
-          console.log("Logout done!");
+          console.log("Logout done!", response);
         } else {
           console.error('Response is false!');
         }

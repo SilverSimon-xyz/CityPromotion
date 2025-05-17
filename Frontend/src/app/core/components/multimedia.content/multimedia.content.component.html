@@ -1,0 +1,26 @@
+<h2>MultimediaContents List</h2>
+<li *ngFor="let multimediaContent of multimediaContents">
+        <h3> {{ multimediaContent.title }} </h3>
+        <p> Format: {{ multimediaContent.type }} </p>
+        <p> Description: {{ multimediaContent.description }} </p>
+        <p> Author: {{ multimediaContent.author }} </p>
+        <p> Status: {{ multimediaContent.status }} </p>
+        <div>
+                <h3> File: </h3>
+                <p>Name: {{ multimediaContent.mediaFile.name }}</p>
+                <p>Type: {{ multimediaContent.mediaFile.type }}</p>
+        </div>
+        <div>
+                <h3> Point Of Interest: </h3>
+                <p> Name: {{ multimediaContent.pointOfInterest.name }} </p>
+                <p> Description: {{ multimediaContent.pointOfInterest.description }} </p>
+                <p> Author: {{ multimediaContent.pointOfInterest.author }} </p>
+                <p> Latitude: {{ multimediaContent.pointOfInterest.latitude }} </p>
+                <p> Longitude: {{ multimediaContent.pointOfInterest.longitude }} </p>
+                <p> Type: {{ multimediaContent.pointOfInterest.type }} </p>
+                <p> Open Time: {{ multimediaContent.pointOfInterest.openTime }} </p>
+                <p> Close Time: {{ multimediaContent.pointOfInterest.closeTime }} </p>
+        </div>
+        <p> Created at: {{ multimediaContent.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+        <p> Updated At: {{ multimediaContent.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+</li>

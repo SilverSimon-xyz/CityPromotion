@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Getter
@@ -23,7 +24,11 @@ public class RefreshToken {
     @Column(nullable = false, unique = true)
     private String token;
 
-    private Instant expiryDate;
+    private boolean revoked;
+    private boolean expired;
+
+    private Date issuedAt;
+    private Date expiryAt;
 
     @OneToOne(orphanRemoval = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, unique = true)

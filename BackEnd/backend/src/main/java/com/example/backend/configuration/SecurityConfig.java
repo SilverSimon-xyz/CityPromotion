@@ -68,7 +68,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authz) ->
                         authz
                                 .requestMatchers("/", "/api/**").permitAll()
-                                .requestMatchers("/api/auth/registration", "/api/auth/login", "/api/auth/refresh-token").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/users/**", "/api/roles/**").hasRole("ADMIN")
                                 .requestMatchers("/api/poi/**").hasAnyRole("TOURIST","CONTRIBUTOR","CURATOR","ADMIN")
                                 .requestMatchers("/api/contest/**").hasAnyRole("TOURIST", "ANIMATOR","ADMIN")
