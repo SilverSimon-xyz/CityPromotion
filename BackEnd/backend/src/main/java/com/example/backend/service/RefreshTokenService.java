@@ -76,7 +76,6 @@ public class RefreshTokenService {
         Optional<RefreshToken> optionalToken = refreshTokenRepository.findByToken(token);
         if(optionalToken.isEmpty()) return false;
         try {
-            System.out.println("Token arrived on service: " + optionalToken.get());
             refreshTokenRepository.deleteByToken(token);
             SecurityContextHolder.clearContext();
             return true;

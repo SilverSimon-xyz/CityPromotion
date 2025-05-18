@@ -13,6 +13,7 @@ import com.example.backend.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -64,16 +65,21 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logoutHandler(@RequestHeader("Authorization") String token) {
-        System.out.println("Request is arrived on backend: " + token);
         try {
             if(token == null || !token.contains(".")) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token JWT not valid. No token come to Backend");
             String refreshToken = token.replace("Bearer ", "").trim();
-            boolean deleted = refreshTokenService.revokeToken(refreshToken);
-            return deleted?
-                    ResponseEntity.ok().body("Logout done!"):
-                    ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token not Found or already deleted!!");
+            return refreshTokenService.revokeToken(refreshToken)?
+                    ResponseEntity
+                            .status(HttpStatus.OK)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body("{\"message\":\"Logout done with success!\"}"):
+                    ResponseEntity
+                            .status(HttpStatus.NOT_FOUND)
+                            .body("Token not Found or already deleted!!");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during logout: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error during logout: " + e.getMessage());
         }
     }
 
