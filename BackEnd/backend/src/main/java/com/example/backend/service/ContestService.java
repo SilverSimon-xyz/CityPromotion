@@ -41,7 +41,7 @@ public class ContestService {
         return contestRepository.save(contest);
     }
 
-    public Contest updateContest(int id, Contest contestDetails) {
+    public Contest updateContest(Long id, Contest contestDetails) {
         Optional<Contest> optionalContest = contestRepository.findById(id);
         if(optionalContest.isPresent()) {
             Contest contest = optionalContest.get()
@@ -64,7 +64,7 @@ public class ContestService {
         return contestRepository.findAll();
     }
 
-    public Contest getContestById(int id) {
+    public Contest getContestById(Long id) {
         return contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
     }
 
@@ -77,7 +77,7 @@ public class ContestService {
         return contestRepository.findAll().stream().filter(Contest::isActive).toList();
     }
 
-    public Contest activeClosedContest(int id) {
+    public Contest activeClosedContest(Long id) {
         Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
         if(!contest.isActive()) contest.setActive(true);
         return contest;
@@ -88,8 +88,8 @@ public class ContestService {
         contestRepository.deleteAll();
     }
 
-    public void deleteContest(int id) {
-        List<Integer> participantsIds = contestParticipationRepository
+    public void deleteContest(Long id) {
+        List<Long> participantsIds = contestParticipationRepository
                 .findByContestId(id)
                 .stream()
                 .map(ContestParticipation::getId)
@@ -103,7 +103,7 @@ public class ContestService {
     }
 
     @Transactional
-    public ContestParticipation participateContest(int idContest, int idUser, MediaFile mediaFile) {
+    public ContestParticipation participateContest(Long idContest, Long idUser, MediaFile mediaFile) {
         Optional<Contest> optionalContest = contestRepository.findById(idContest);
         Optional<User> optionalUser = userRepository.findById(idUser);
 
@@ -114,7 +114,7 @@ public class ContestService {
                 QuoteCriterion quoteCriterion = new QuoteCriterion();
                 ContestParticipation participation = ContestParticipation.builder()
                         .contest(contest)
-                        .participant(user)
+                        .user(user)
                         .mediaFile(mediaFile)
                         .quoteCriterion(quoteCriterion)
                         .build();
@@ -131,7 +131,7 @@ public class ContestService {
         }
     }
 
-    public ContestParticipation evaluateParticipant(int idParticipant, QuoteCriterion quoteCriterionDetails) {
+    public ContestParticipation evaluateParticipant(Long idParticipant, QuoteCriterion quoteCriterionDetails) {
         Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
         if(optionalContestParticipation.isPresent()) {
             ContestParticipation participant = optionalContestParticipation.get();
@@ -151,7 +151,7 @@ public class ContestService {
         }
     }
 
-    public void deleteParticipant(int idParticipant) {
+    public void deleteParticipant(Long idParticipant) {
         Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
         if(optionalContestParticipation.isPresent()) {
             contestParticipationRepository.delete(optionalContestParticipation.get());
@@ -160,7 +160,7 @@ public class ContestService {
         }
     }
 
-    public List<User> declareWinners(int id) {
+    public List<User> declareWinners(Long id) {
         Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest not Found!"));
         int maxScore = contest.getParticipationContestList()
                 .stream()
@@ -170,7 +170,7 @@ public class ContestService {
         List<User> winners = contest.getParticipationContestList()
                 .stream()
                 .filter(participateContest -> participateContest.getQuoteCriterion().getVote()==maxScore)
-                .map(ContestParticipation::getParticipant)
+                .map(ContestParticipation::getUser)
                 .toList();
         contest.setActive(false);
         contestRepository.save(contest);

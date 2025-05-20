@@ -2,13 +2,14 @@ import { MediaFile } from "./media.file";
 import { PointOfInterest } from "./point.of.interest";
 
 export interface MultimediaContent {
+    id: number,
     title: string,
     type: FormatFileType,
     description: string,
     author: string,
     status: Status,
-    mediaFile: MediaFile,
-    pointOfInterest: PointOfInterest
+    mediaFileResponse: MediaFile,
+    pointOfInterestResponse: PointOfInterest
     createdAt: Date,
     updatedAt: Date,
 }

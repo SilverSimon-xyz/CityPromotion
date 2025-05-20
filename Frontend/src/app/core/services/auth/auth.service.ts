@@ -13,7 +13,10 @@ export class AuthService {
 
   private apiURL = environment.baseUrl;
 
-  constructor(private http: HttpClient, private sessionStorage: SessionStorageService) { }
+  constructor(
+    private http: HttpClient, 
+    private sessionStorage: SessionStorageService
+  ) { }
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiURL}/auth/login`, {email, password});
@@ -78,4 +81,5 @@ export class AuthService {
   isAutheticated(): boolean {
     return !!this.getAccessToken();
   }
+
 }

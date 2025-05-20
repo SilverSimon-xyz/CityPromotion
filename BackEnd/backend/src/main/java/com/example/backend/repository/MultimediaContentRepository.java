@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MultimediaContentRepository extends JpaRepository<MultimediaContent, Integer> {
+public interface MultimediaContentRepository extends JpaRepository<MultimediaContent, Long> {
 
     List<MultimediaContent> findByStatus(Status status);
 

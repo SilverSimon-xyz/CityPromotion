@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, pipe } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { MultimediaContent } from '../../interfaces/multimedia.content';
 
@@ -14,6 +14,20 @@ export class MultimediaContentService {
 
   getAllMultimediaContent(): Observable<MultimediaContent[]> {
     return this.http.get<MultimediaContent[]>(`${this.apiURL}/contents/all`);
+/** .pipe(
+      map(response => response.map(multimediaContent => ({
+        id: multimediaContent.id,
+        title: multimediaContent.title,
+        type: multimediaContent.type,
+        description: multimediaContent.description,
+        author: multimediaContent.author,
+        status: multimediaContent.status,
+        mediaFile: { ...multimediaContent.mediaFile },
+        pointOfInterest: { ...multimediaContent.pointOfInterest },
+        createdAt: multimediaContent.createdAt,
+        updatedAt: multimediaContent.updatedAt,
+      }))))*/
+    
   }
 
   getMultimediaContent(id: number): Observable<MultimediaContent> {

@@ -22,37 +22,22 @@ public class Role {
     @Id
     @Column(name = "role_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String name;
 
-    @Column(nullable = false)
     private String description;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-    
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "role_privileges",
-            joinColumns = {
-                    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "privilege_id", referencedColumnName = "privilege_id")
-            }
-    )
-    private Set<Privilege> privileges;
-
-
 
 }

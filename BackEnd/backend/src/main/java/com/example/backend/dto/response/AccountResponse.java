@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Builder
-public record AccountResponse(int id, String name, String email, String password, Set<RoleResponse> roles,
+public record AccountResponse(Long id, String firstname, String lastname, String email, String password, Set<RoleResponse> roles,
                               @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date createdAt,
                               @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date updatedAt) {
 
@@ -17,7 +17,8 @@ public record AccountResponse(int id, String name, String email, String password
         return AccountResponse
                 .builder()
                 .id(user.getId())
-                .name(user.getName())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .roles(user.getRoles().stream()

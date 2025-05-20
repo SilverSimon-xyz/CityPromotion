@@ -6,11 +6,11 @@ import com.example.backend.entities.contest.QuoteCriterion;
 import lombok.Builder;
 
 @Builder
-public record ContestParticipationResponse(String participant, String contestName, MediaFileResponse mediaFileResponse, QuoteCriterion quoteCriterion) {
+public record ContestParticipationResponse(Long id, String participant, String contestName, MediaFileResponse mediaFileResponse, QuoteCriterion quoteCriterion) {
 
     public static ContestParticipationResponse mapToResponse(ContestParticipation participant) {
         return ContestParticipationResponse.builder()
-                .participant(participant.getParticipant().getName())
+                .participant(participant.getUser().getName())
                 .contestName(participant.getContest().getName())
                 .mediaFileResponse(MediaFileResponse.mapToResponse(participant.getMediaFile()))
                 .quoteCriterion(participant.getQuoteCriterion())

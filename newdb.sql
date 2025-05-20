@@ -2,8 +2,8 @@ SHOW DATABASES;
 USE newdb;
 SHOW TABLES;
 
-#DROP DATABASE newdb;
-#CREATE DATABASE newdb;
+DROP DATABASE newdb;
+CREATE DATABASE newdb;
 
 #-Table for Users
 CREATE TABLE users (
@@ -155,4 +155,4 @@ INSERT INTO users (name, email, password) VALUES ('Federico Badiali', 'radius@gm
 
 #POI for testing DB
 INSERT INTO pois (name, description, author_first_name, author_last_name, lat, lon, type, open_time, close_time) 
-VALUES ('nome di prova', 'descrizione di prova','Simone', 'Stacchiotti', 1.0, 1.0, 'TOURISM', '09:00:00', '18:00:00');
+VALUES ('nome di prova', 'descrizione di prova','Simone', 'Stacchiotti', 1.0, 1.0, 'TOURISM', '09:00:00', '18:00:00');ALTER TABLE users MODIFY user_id BIGINT AUTO_INCREMENT

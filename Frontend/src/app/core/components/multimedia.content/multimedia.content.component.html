@@ -1,26 +1,30 @@
 <h2>MultimediaContents List</h2>
-<li *ngFor="let multimediaContent of multimediaContents">
-        <h3> {{ multimediaContent.title }} </h3>
-        <p> Format: {{ multimediaContent.type }} </p>
-        <p> Description: {{ multimediaContent.description }} </p>
-        <p> Author: {{ multimediaContent.author }} </p>
-        <p> Status: {{ multimediaContent.status }} </p>
-        <div>
-                <h3> File: </h3>
-                <p>Name: {{ multimediaContent.mediaFile.name }}</p>
-                <p>Type: {{ multimediaContent.mediaFile.type }}</p>
-        </div>
-        <div>
-                <h3> Point Of Interest: </h3>
-                <p> Name: {{ multimediaContent.pointOfInterest.name }} </p>
-                <p> Description: {{ multimediaContent.pointOfInterest.description }} </p>
-                <p> Author: {{ multimediaContent.pointOfInterest.author }} </p>
-                <p> Latitude: {{ multimediaContent.pointOfInterest.latitude }} </p>
-                <p> Longitude: {{ multimediaContent.pointOfInterest.longitude }} </p>
-                <p> Type: {{ multimediaContent.pointOfInterest.type }} </p>
-                <p> Open Time: {{ multimediaContent.pointOfInterest.openTime }} </p>
-                <p> Close Time: {{ multimediaContent.pointOfInterest.closeTime }} </p>
-        </div>
-        <p> Created at: {{ multimediaContent.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-        <p> Updated At: {{ multimediaContent.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-</li>
+<table>
+        <tr>
+                <th>Title</th>
+                <th>Format</th>
+                <th>Description</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Point of Interest</th>
+                <th>File</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+        </tr>
+        <tr *ngFor="let multimediaContent of multimediaContents">
+                <td> {{ multimediaContent.title }} </td>
+                <td> {{ multimediaContent.type }} </td>
+                <td> {{ multimediaContent.description }} </td>
+                <td> {{ multimediaContent.author }} </td>
+                <td> {{ multimediaContent.status }} </td>
+                <td *ngIf="multimediaContent.pointOfInterestResponse"> {{ multimediaContent.pointOfInterestResponse.name }} </td>
+                <td *ngIf="multimediaContent.mediaFileResponse && multimediaContent.mediaFileResponse.type.startsWith('image'); else noImage">
+                        <img [src]="'data:' + multimediaContent.mediaFileResponse.type + ';base64,' + multimediaContent.mediaFileResponse.base64" width="100">
+                </td>
+                <ng-template #noImage>
+                        <td>Immagine non disponibile</td>
+                </ng-template>
+                <td> {{ multimediaContent.createdAt | date:'dd/MM/yyyy HH:mm:ss' }} </td>
+                <td> {{ multimediaContent.updatedAt | date:'dd/MM/yyyy HH:mm:ss'}} </td>
+        </tr>
+</table>

@@ -5,6 +5,7 @@ import com.example.backend.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -69,7 +70,7 @@ public class SecurityConfig {
                         authz
                                 .requestMatchers("/", "/api/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/users/**", "/api/roles/**").hasRole("ADMIN")
+                                .requestMatchers("/api/users/**", "/api/roles/**").hasAnyRole("CURATOR", "ADMIN")
                                 .requestMatchers("/api/poi/**").hasAnyRole("TOURIST","CONTRIBUTOR","CURATOR","ADMIN")
                                 .requestMatchers("/api/contest/**").hasAnyRole("TOURIST", "ANIMATOR","ADMIN")
                                 .requestMatchers("/api/contents/**").hasAnyRole("TOURIST","CONTRIBUTOR", "CURATOR", "ADMIN")

@@ -15,17 +15,15 @@ import lombok.experimental.Accessors;
 public class MediaFile {
 
     @Id
+    @Column(name = "file_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "type", nullable = false)
     private String type;
 
     @Lob
     private byte[] data; // For images, audio, video
-
 
 }

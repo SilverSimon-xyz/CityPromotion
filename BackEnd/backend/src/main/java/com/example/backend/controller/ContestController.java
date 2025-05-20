@@ -32,14 +32,14 @@ public class ContestController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<ContestResponse> updateContest(@PathVariable int id, @RequestBody Contest contestDetails) {
+    public ResponseEntity<ContestResponse> updateContest(@PathVariable Long id, @RequestBody Contest contestDetails) {
         Contest contest = contestService.updateContest(id, contestDetails);
         ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PatchMapping("/edit/active")
-    public ResponseEntity<ContestResponse> reActiveContest(@PathVariable int id) {
+    public ResponseEntity<ContestResponse> reActiveContest(@PathVariable Long id) {
         Contest contest = contestService.activeClosedContest(id);
         ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -55,7 +55,7 @@ public class ContestController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<ContestResponse> getContestById(@PathVariable int id) {
+    public ResponseEntity<ContestResponse> getContestById(@PathVariable Long id) {
         Contest contest = contestService.getContestById(id);
         ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -88,7 +88,7 @@ public class ContestController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteContest(@PathVariable int id) {
+    public ResponseEntity<Void> deleteContest(@PathVariable Long id) {
         contestService.deleteContest(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -103,27 +103,27 @@ public class ContestController {
     }
 
     @PostMapping("/participant/participate/{idContest}/idUser")
-    public ResponseEntity<ContestParticipationResponse> participateContest(@PathVariable int idContest, @RequestParam int idUser, @RequestBody MediaFile mediaFile) {
+    public ResponseEntity<ContestParticipationResponse> participateContest(@PathVariable Long idContest, @RequestParam Long idUser, @RequestBody MediaFile mediaFile) {
         ContestParticipation participant = contestService.participateContest(idContest, idUser, mediaFile);
         ContestParticipationResponse response = ContestParticipationResponse.mapToResponse(participant);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/participant/delete/{idParticipant}")
-    public ResponseEntity<Void> deleteParticipant(@PathVariable int idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
+    public ResponseEntity<Void> deleteParticipant(@PathVariable Long idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
         contestService.deleteParticipant(idParticipant);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PatchMapping("/participant/validate/{idParticipant}")
-    public ResponseEntity<ContestParticipationResponse> evaluateParticipant(@PathVariable int idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
+    public ResponseEntity<ContestParticipationResponse> evaluateParticipant(@PathVariable Long idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
         ContestParticipation participant = contestService.evaluateParticipant(idParticipant, quoteCriterionDetails);
         ContestParticipationResponse response = ContestParticipationResponse.mapToResponse(participant);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/participant/winners/{id}")
-    public ResponseEntity<List<AccountResponse>> declareWinners(@PathVariable int id) {
+    public ResponseEntity<List<AccountResponse>> declareWinners(@PathVariable Long id) {
         List<User> winners = contestService.declareWinners(id);
         List<AccountResponse> winnersAccountResponses = winners
                 .stream()

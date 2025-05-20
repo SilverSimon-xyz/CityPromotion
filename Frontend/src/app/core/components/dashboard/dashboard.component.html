@@ -1,0 +1,26 @@
+<h2>Dashboard</h2>
+
+<div>
+    <h3>Manage Point of Interest</h3>
+    <button routerLink="/poi">Poi list</button>
+</div>
+
+<div>
+    <h3>Manage Content</h3>
+    <button routerLink="/contents">Content list</button>
+</div>
+
+<div>
+    <h3>Manage Contest</h3>
+    <button routerLink="/contest">Contest list</button>
+</div>
+
+
+<div *ngIf="userRole === 'ADMIN'">
+    <h3>Manage Users</h3>
+    <button routerLink="/users">Users list</button>
+</div>
+<p></p>
+<div >
+    <button *ngIf="isAutheticated()" (click)="logout()">Logout</button>
+</div>

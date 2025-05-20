@@ -3,7 +3,6 @@ package com.example.backend.entities.users;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -19,7 +18,7 @@ public class RefreshToken {
     @Id
     @Column(name = "token_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String token;

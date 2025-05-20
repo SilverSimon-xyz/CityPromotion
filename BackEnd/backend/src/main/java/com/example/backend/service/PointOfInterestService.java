@@ -44,7 +44,7 @@ public class PointOfInterestService {
     }
 
 
-    public PointOfInterest updatePOI(int id, PointOfInterest pointOfInterestDetails) {
+    public PointOfInterest updatePOI(Long id, PointOfInterest pointOfInterestDetails) {
         Optional<PointOfInterest> optionalPOI = poiRepository.findById(id);
         if(optionalPOI.isPresent()) {
             PointOfInterest pointOfInterest = optionalPOI.get()
@@ -77,7 +77,7 @@ public class PointOfInterestService {
         return poiRepository.findAll();
     }
 
-    public PointOfInterest getPOIById(int id) {
+    public PointOfInterest getPOIById(Long id) {
         return poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
     }
 
@@ -86,9 +86,9 @@ public class PointOfInterestService {
         poiRepository.deleteAll();
     }
 
-    public void deletePOI(int id) {
+    public void deletePOI(Long id) {
         PointOfInterest poi = poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
-        List<Integer> mcIds = poi.getMultimediaContents().stream()
+        List<Long> mcIds = poi.getMultimediaContents().stream()
                 .map(MultimediaContent::getId)
                 .toList();
         multimediaContentRepository.deleteAllById(mcIds);

@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class MultimediaContentComponent implements OnInit {
   multimediaContents: MultimediaContent[] = [];
     
-      constructor(private multimediaContentService: MultimediaContentService) {}
+  constructor(private multimediaContentService: MultimediaContentService) {}
     
       ngOnInit(): void {
         this.multimediaContentService.getAllMultimediaContent().subscribe({

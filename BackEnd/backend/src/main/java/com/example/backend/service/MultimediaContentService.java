@@ -35,7 +35,7 @@ public class MultimediaContentService {
 
     }
 
-    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorFirstName, String authorLastName, MediaFile mediaFile, int idPoi) {
+    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorFirstName, String authorLastName, MediaFile mediaFile, Long idPoi) {
 
         User author = userRepository.findByFirstNameAndLastName(authorFirstName, authorLastName).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
 
@@ -52,7 +52,7 @@ public class MultimediaContentService {
         return multimediaContentRepository.save(multimediaContent);
     }
 
-    public MultimediaContent updateContent(int idContent, MultimediaContent multimediaContentDetails) {
+    public MultimediaContent updateContent(Long idContent, MultimediaContent multimediaContentDetails) {
 
         Optional<MultimediaContent> optionalMultimediaContent = multimediaContentRepository.findById(idContent);
         if(optionalMultimediaContent.isPresent()) {
@@ -70,7 +70,7 @@ public class MultimediaContentService {
 
     }
 
-    public MultimediaContent updateFile(int idContent, int idFile, MediaFile mediaFileDetails) {
+    public MultimediaContent updateFile(Long idContent, Long idFile, MediaFile mediaFileDetails) {
         MediaFile mediaFile = mediaFileRepository.findById(idFile).orElseThrow(() -> new EntityNotFoundException("Media File not Found!"));
         mediaFile
                 .setName(mediaFileDetails.getName())
@@ -88,7 +88,7 @@ public class MultimediaContentService {
         return multimediaContentRepository.save(multimediaContent);
     }
 
-    public MultimediaContent getMultimediaContentById(int id) {
+    public MultimediaContent getMultimediaContentById(Long id) {
         return multimediaContentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Multimedia Content not Found!"));
     }
 
@@ -102,7 +102,7 @@ public class MultimediaContentService {
         return multimediaContentRepository.findByStatus(Status.PENDING);
     }
 
-    public void deleteMultimediaContentById(int id) {
+    public void deleteMultimediaContentById(Long id) {
         MultimediaContent multimediaContent = multimediaContentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Multimedia Content not Found!"));
         PointOfInterest pointOfInterest = multimediaContent.getPoi();
         pointOfInterest.getMultimediaContents().remove(multimediaContent);
@@ -124,7 +124,7 @@ public class MultimediaContentService {
         multimediaContentRepository.deleteAll();
     }
 
-    public MultimediaContent validateMultimediaContent(int id, Status status) {
+    public MultimediaContent validateMultimediaContent(Long id, Status status) {
         MultimediaContent multimediaContent = multimediaContentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Multimedia Content not Found!"));
         switch(status) {
             case PENDING -> throw new IllegalArgumentException("You have to APPROVED or REJECTED");

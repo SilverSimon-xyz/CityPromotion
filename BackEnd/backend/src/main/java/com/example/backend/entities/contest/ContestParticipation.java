@@ -16,19 +16,16 @@ public class ContestParticipation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "participant_id", nullable = false)
-    private int id;
+    @Column(name = "participant_id")
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "contest_id", referencedColumnName = "contest_id", nullable = false)
+    @JoinColumn(name = "contest_id", referencedColumnName = "contest_id")
     private Contest contest;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "participant_first_name", referencedColumnName = "firstname", nullable = false),
-            @JoinColumn(name = "participant_last_name", referencedColumnName = "lastname", nullable = false)
-    })
-    private User participant;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToOne
     @JoinColumn(name = "file_id")

@@ -5,7 +5,7 @@ export interface Contest {
     rules: string,
     goal: string,
     prize: string,
-    deadLine: Date,
+    deadline: Date,
     active: boolean
     createdAt: Date,
     updatedAt: Date,

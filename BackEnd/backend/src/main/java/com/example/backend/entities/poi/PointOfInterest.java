@@ -2,6 +2,7 @@ package com.example.backend.entities.poi;
 
 import com.example.backend.entities.content.MultimediaContent;
 import com.example.backend.entities.users.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -24,48 +25,43 @@ import java.util.List;
 public class PointOfInterest {
 
     @Id
-    @Column(name = "poi_id", nullable = false)
+    @Column(name = "poi_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description",nullable = false)
     private String description;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "author_first_name", referencedColumnName = "firstname", nullable = false),
-            @JoinColumn(name = "author_last_name", referencedColumnName = "lastname", nullable = false)
-    })
+    @JoinColumn(name = "user_id")
     private User author;
 
-    @Column(name = "lat", nullable = false)
+    @Column(name = "lat")
     private double latitude;
 
-    @Column(name = "lon", nullable = false)
+    @Column(name = "lon")
     private double longitude;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private PointOfInterestType type;
 
-    @Column(name = "open_time", nullable = false)
+    @Column(name = "open_time")
     private LocalTime openTime;
 
-    @Column(name = "close_time", nullable = false)
+    @Column(name = "close_time")
     private LocalTime closeTime;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false, updatable = false)
+    @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "poi", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "poi", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnoreProperties("poi")
     private List<MultimediaContent> multimediaContents = new ArrayList<>();
 
     @Override

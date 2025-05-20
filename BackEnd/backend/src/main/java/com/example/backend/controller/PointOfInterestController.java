@@ -29,7 +29,7 @@ public class PointOfInterestController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<PointOfInterestResponse> getPOIDetailsById(@PathVariable int id) {
+    public ResponseEntity<PointOfInterestResponse> getPOIDetailsById(@PathVariable Long id) {
         PointOfInterest pointOfInterest = pointOfInterestService.getPOIById(id);
         PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(pointOfInterest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -63,14 +63,14 @@ public class PointOfInterestController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<PointOfInterestResponse> editPOI(@PathVariable int id, @RequestBody PointOfInterest pointOfInterest) {
+    public ResponseEntity<PointOfInterestResponse> editPOI(@PathVariable Long id, @RequestBody PointOfInterest pointOfInterest) {
         PointOfInterest updatedPOI = pointOfInterestService.updatePOI(id, pointOfInterest);
         PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(updatedPOI);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deletePOI(@PathVariable int id) {
+    public ResponseEntity<Void> deletePOI(@PathVariable Long id) {
         pointOfInterestService.deletePOI(id);
         return ResponseEntity.noContent().build();
     }

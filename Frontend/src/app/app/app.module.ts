@@ -11,7 +11,7 @@ import { UsersComponent } from '../core/components/users/users.component';
 import { UserService } from '../core/services/user/user.service';
 import { HomeComponent } from '../core/components/home/home.component';
 import { LoginComponent } from '../core/components/login/login.component';
-import { DashboardComponent } from '../core/dashboard/dashboard.component';
+import { DashboardComponent } from '../core/components/dashboard/dashboard.component';
 import { authInterceptor } from '../core/interceptor/auth/auth.interceptor';
 import { tokenInterceptor } from '../core/interceptor/token/token.interceptor';
 import { PoiComponent } from '../core/components/poi/poi.component';

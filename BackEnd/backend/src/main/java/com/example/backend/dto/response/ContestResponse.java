@@ -1,13 +1,12 @@
 package com.example.backend.dto.response;
 
 import com.example.backend.entities.contest.Contest;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 
 import java.util.Date;
 
 @Builder
-public record ContestResponse(String name, String description, String author, String rules,
+public record ContestResponse(Long id, String name, String description, String author, String rules,
                               String goal, String prize,
                               Date deadline, boolean active,
                               Date createdAt, Date updatedAt, int numberOfParticipant) {

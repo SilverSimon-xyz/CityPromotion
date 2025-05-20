@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ContestParticipationRepository extends JpaRepository<ContestParticipation, Integer> {
-    List<ContestParticipation> findByContestId(int id);
+public interface ContestParticipationRepository extends JpaRepository<ContestParticipation, Long> {
+    List<ContestParticipation> findByContestId(Long id);
 }

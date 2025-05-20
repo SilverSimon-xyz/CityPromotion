@@ -1,0 +1,11 @@
+<div *ngIf="userRole === 'ADMIN'">
+  <h1>Admin Dashboard</h1>
+  <p>Welcome admin, now you can manage the users</p>
+
+  <button (click)="manageUsers()">Gestisci Utenti</button>
+</div>
+
+<div *ngIf="userRole !== 'ADMIN'">
+  <h2>Acces Denied</h2>
+  <p>Only Admin can access this dashboard</p>
+</div>

@@ -21,46 +21,40 @@ import java.util.Date;
 public class MultimediaContent {
 
     @Id
-    @Column(name = "mc_id", nullable = false)
+    @Column(name = "mc_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "title", nullable = false)
     private String title;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
     private FormatFileType type;
 
     @Lob
-    @Column(name = "description", nullable = false)
     private String description;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "author_first_name", referencedColumnName = "firstname", nullable = false),
-            @JoinColumn(name = "author_last_name", referencedColumnName = "lastname", nullable = false)
-    })
+    @JoinColumn(name = "user_id")
     private User author;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false, updatable = false)
+    @Column(name = "updated_at")
     private Date updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private Status status;
 
     @OneToOne
-    @JoinColumn(name = "file_id", nullable = false)
+    @JoinColumn(name = "file_id")
     private MediaFile mediaFile;
 
     @ManyToOne
-    @JoinColumn(name = "poi_id", nullable = false)
+    @JoinColumn(name = "poi_id")
     private PointOfInterest poi;
 
 

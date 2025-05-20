@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class SetupRolePrivilege implements ApplicationListener<ContextRefreshedEvent> {
+public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     private RoleRepository roleRepository;
