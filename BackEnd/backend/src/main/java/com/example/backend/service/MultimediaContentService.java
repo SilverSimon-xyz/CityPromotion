@@ -35,9 +35,9 @@ public class MultimediaContentService {
 
     }
 
-    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorFirstName, String authorLastName, MediaFile mediaFile, Long idPoi) {
+    public MultimediaContent saveMultimediaContent(MultimediaContent multimediaContentDetails, String authorFirstname, String authorLastname, MediaFile mediaFile, Long idPoi) {
 
-        User author = userRepository.findByFirstNameAndLastName(authorFirstName, authorLastName).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+        User author = userRepository.findByFirstnameAndLastname(authorFirstname, authorLastname).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
 
         PointOfInterest poi = poiRepository.findById(idPoi).orElseThrow(() -> new EntityNotFoundException("POI Not Found"));
 

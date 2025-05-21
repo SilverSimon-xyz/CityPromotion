@@ -19,9 +19,7 @@ export class AdminDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userService.getUserRoles().subscribe(role => {
-        this.userRole = role;}
-    );
+    //this.userService.getUserRoles().subscribe(role => {this.userRole = role;});
   }
 
   manageUsers() {

@@ -31,15 +31,20 @@ public class PointOfInterestService {
     public PointOfInterestService() {
     }
 
-    public PointOfInterest createPOI(PointOfInterest pointOfInterest, String authorFirstName, String authorLastName) {
-        User author = userRepository.findByFirstNameAndLastName(authorFirstName, authorLastName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        Optional<PointOfInterest> optionalPOI = poiRepository.findByNameAndLatitudeAndLongitude(
-                pointOfInterest.getName(), pointOfInterest.getLatitude(), pointOfInterest.getLongitude()
-        );
-        if(optionalPOI.isPresent()) {
-            throw new EntityExistsException("Point of Interest already existing!\n" + optionalPOI.get());
-        }
+    public PointOfInterest createPOI(PointOfInterest pointOfInterest, String firstname, String lastname) {
+
+        if(poiRepository.existsByNameAndLatitudeAndLongitude(pointOfInterest.getName(), pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
+            throw new EntityExistsException("Point of Interest already existing!\n" + pointOfInterest);
+
+        Optional<User> optionalAuthor = userRepository.findByFirstnameAndLastname(firstname, lastname);
+
+        if(optionalAuthor.isEmpty())
+            throw new EntityNotFoundException("User not found: " + firstname + " " + lastname);
+
+        User author = optionalAuthor.get();
+        pointOfInterest.setCreatedAt(new Date());
         pointOfInterest.setAuthor(author);
+
         return this.poiRepository.save(pointOfInterest);
     }
 

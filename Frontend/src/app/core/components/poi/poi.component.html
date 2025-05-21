@@ -1,15 +1,108 @@
 <h2>Point of Interest List</h2>
-<ul>
-    <li *ngFor="let poi of pois">
-        <h3> {{ poi.name }} </h3>
-        <p> Description: {{ poi.description }} </p>
-        <p> Author: {{ poi.author }} </p>
-        <p> Latitude: {{ poi.latitude }} </p>
-        <p> Longitude: {{ poi.longitude }} </p>
-        <p> Type: {{ poi.type }} </p>
-        <p> Open Time: {{ poi.openTime }} </p>
-        <p> Close Time: {{ poi.closeTime }} </p>
-        <p> Created at: {{ poi.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-        <p> Updated At: {{ poi.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-    </li>
-</ul>
+<div *ngIf="!poiId">
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Author</th>
+        <th>Latitude & Longitude</th>
+        <th>Type</th>
+        <th>Open Time & Close Time</th>
+        <th>Created at</th>
+        <th>Updated at</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let poi of pois">
+        <td> {{ poi.id }} </td>
+        <td><strong> {{ poi.name }} </strong></td>
+        <td> {{ poi.description }} </td>
+        <td> {{ poi.author.firstname }} {{ poi.author.lastname }} </td>
+        <td> [{{ poi.latitude }}, {{ poi.longitude }}] </td>
+        <td> {{ poi.type }} </td>
+        <td> {{ poi.openTime }}, {{ poi.closeTime }} </td>
+        <td> {{ poi.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td> {{ poi.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td>
+          <button (click)="editPoi(poi.id)">Modify</button>
+          <button class="delete" (click)="deletePoi(poi.id)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+<div *ngIf="poiId">
+  <form [formGroup]="poiForm" (ngSubmit)="updatePoi()">
+
+    <label>Name:</label>
+    <input type="text" formControlName="name" required>
+
+    <label>Description:</label>
+    <input type="text" formControlName="description" required>
+
+    <label>Firstname:</label>
+    <input type="text" formControlName="authorFirstname" required>
+
+    <label>Lastname:</label>
+    <input type="text" formControlName="authorLastname" required>
+
+    <label>Latitude:</label>
+    <input type="text" formControlName="latitude" required>
+
+    <label>Longitude:</label>
+    <input type="text" formControlName="longitude" required>
+
+    <label>Type:</label>
+    <input type="text" formControlName="type" required>
+
+    <label>Open Time:</label>
+    <input type="text" formControlName="openTime" required>
+
+    <label>Close Time:</label>
+    <input type="text" formControlName="closeTime" required>
+
+    <button type="submit">Update</button>
+    <button type="button" (click)="cancelUpdate()">Cancel</button>
+  </form>
+</div>
+
+<button (click)="openAddPoi()">Add Poi</button>
+
+<div *ngIf="newPoiForm">
+  <form [formGroup]="newPoiForm" (ngSubmit)="addPoi()">
+
+    <label>Name:</label>
+    <input type="text" formControlName="name" required>
+
+    <label>Description:</label>
+    <input type="text" formControlName="description" required>
+
+    <label>Firstname:</label>
+    <input type="text" formControlName="authorFirstname" required>
+
+    <label>Lastname:</label>
+    <input type="text" formControlName="authorLastname" required>
+
+    <label>Latitude:</label>
+    <input type="text" formControlName="latitude" required>
+
+    <label>Longitude:</label>
+    <input type="text" formControlName="longitude" required>
+
+    <label>Type:</label>
+    <input type="text" formControlName="type" required>
+
+    <label>Open Time:</label>
+    <input type="text" formControlName="openTime" required>
+
+    <label>Close Time:</label>
+    <input type="text" formControlName="closeTime" required>
+
+    <button type="submit">Add</button>
+    <button type="button" (click)="cancelAddPoi()">Cancel</button>
+  </form>
+</div>

@@ -34,8 +34,8 @@ public class ContestService {
 
     }
 
-    public Contest createContest(Contest contest, String authorFirstName, String authorLastName) {
-        User author = userRepository.findByFirstNameAndLastName(authorFirstName, authorLastName).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+    public Contest createContest(Contest contest, String authorFirstname, String authorLastname) {
+        User author = userRepository.findByFirstnameAndLastname(authorFirstname, authorLastname).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         contest.setCreatedAt(new Date());
         contest.setAuthor(author);
         return contestRepository.save(contest);

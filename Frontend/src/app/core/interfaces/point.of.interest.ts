@@ -1,7 +1,10 @@
+import { User } from "./user";
+
 export interface PointOfInterest {
+    id: number,
     name: string,
     description: string,
-    author: string,
+    author: User,
     latitude: number,
     longitude: number, 
     type: PointOfInterestType,

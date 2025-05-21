@@ -17,10 +17,7 @@ export class DashboardComponent implements OnInit {
   constructor(private authService: AuthService, private userService: UserService, private router: Router) {}
 
   ngOnInit() {
-    this.userService.getUserRoles().subscribe(role => {
-        this.userRole = role;
-      }
-    );
+    //this.userService.getUserRoles().subscribe(role => {this.userRole = role;});
   }
 
   logout() {

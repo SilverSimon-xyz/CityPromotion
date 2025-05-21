@@ -48,21 +48,11 @@ public class RoleService {
     public User assignRoleToUser(Long id, String name) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
         Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
-        user.getRoles().add(role);
+        user.setRole(role);
         role.getUsers().add(user);
         user.setUpdatedAt(new Date());
         this.roleRepository.save(role);
         return this.userRepository.save(user);
-    }
-
-    public void removeRoleToUser(Long id, String name) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
-        Role role = roleRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Role not Found!"));
-        user.getRoles().remove(role);
-        role.getUsers().remove(user);
-        user.setUpdatedAt(new Date());
-        this.userRepository.save(user);
-        this.roleRepository.save(role);
     }
 
     @Transactional

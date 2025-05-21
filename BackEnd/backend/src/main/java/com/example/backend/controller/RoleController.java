@@ -67,10 +67,5 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/remove/{id}/name")
-    public ResponseEntity<Void> removeRoleToUser(@PathVariable Long id, @RequestParam String name) {
-        this.roleService.removeRoleToUser(id, name);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 
 }

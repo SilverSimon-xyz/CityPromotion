@@ -43,18 +43,9 @@ public class User implements UserDetails, Principal {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = {
-                    @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-                    @JoinColumn(name = "email", referencedColumnName = "email")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "role_id", referencedColumnName = "role_id"),
-                    @JoinColumn(name = "role_name", referencedColumnName = "name")
-            })
-    private Set<Role> roles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
@@ -72,7 +63,8 @@ public class User implements UserDetails, Principal {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        authorities.add(new SimpleGrantedAuthority(role.getName()));
+        //roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
         return authorities;
     }
 

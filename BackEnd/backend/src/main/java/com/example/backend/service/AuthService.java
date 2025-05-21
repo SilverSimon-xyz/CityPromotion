@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class AuthService {
@@ -45,7 +44,7 @@ public class AuthService {
                 .lastname(registrationRequest.lastname())
                 .email(registrationRequest.email())
                 .password(passwordEncoder.encode(registrationRequest.password()))
-                .roles(Set.of(role))
+                .role(role)
                 .build();
         userRepository.save(user);
         return user;

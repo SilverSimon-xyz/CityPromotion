@@ -28,7 +28,6 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = params.get('id') ? Number(params.get('id')) : null;
-      console.log('navigating to user id: ', this.userId);
       if(this.userId) {
         this.loadUserDetails();
       } else {
@@ -91,7 +90,6 @@ export class UsersComponent implements OnInit {
 
   editUser(userId: number): void {
     this.router.navigate(['/users', userId]);
-    console.log('navigating to user id: ', userId);
   }
 
   cancelUpdate() {

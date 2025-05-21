@@ -5,15 +5,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.util.Date;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Builder
-public record AccountResponse(Long id, String firstname, String lastname, String email, String password, Set<RoleResponse> roles,
+public record AccountResponse(Long id, String firstname, String lastname, String email, String password, RoleResponse role,
                               @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date createdAt,
                               @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date updatedAt) {
 
     public static AccountResponse mapToResponse(User user) {
+        RoleResponse roleResponse = RoleResponse.mapToResponse(user.getRole());
         return AccountResponse
                 .builder()
                 .id(user.getId())
@@ -21,9 +20,7 @@ public record AccountResponse(Long id, String firstname, String lastname, String
                 .lastname(user.getLastname())
                 .email(user.getEmail())
                 .password(user.getPassword())
-                .roles(user.getRoles().stream()
-                        .map(RoleResponse::mapToResponse)
-                        .collect(Collectors.toSet()))
+                .role(roleResponse)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();

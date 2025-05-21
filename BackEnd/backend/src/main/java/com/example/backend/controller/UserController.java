@@ -9,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -41,17 +38,14 @@ public class UserController {
     }
 
     @GetMapping("/find/role")
-    public ResponseEntity<Set<RoleResponse>> getUserRoles() {
+    public ResponseEntity<RoleResponse> getUserRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication==null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = (User) userService.loadUserByUsername(userDetails.getUsername());
-        Set<RoleResponse> response = user.getRoles()
-                .stream()
-                .map(RoleResponse::mapToResponse)
-                .collect(Collectors.toSet());
+        RoleResponse response = RoleResponse.mapToResponse(user.getRole());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

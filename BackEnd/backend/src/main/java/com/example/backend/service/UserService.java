@@ -35,9 +35,9 @@ public class UserService implements UserDetailsService {
         Optional<Role> optionalRole = roleRepository.findByName(roleName);
         if(optionalRole.isEmpty()) throw new EntityNotFoundException("Role not present!");
         Role role = optionalRole.get();
-        user.getRoles().add(role);
         user
                 .setPassword(passwordEncoder.encode(user.getPassword()))
+                .setRole(role)
                 .setCreatedAt(new Date());
         return this.userRepository.save(user);
     }

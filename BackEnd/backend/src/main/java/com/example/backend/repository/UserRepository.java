@@ -17,6 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.firstname = :firstname AND u.lastname = :lastname")
-    Optional<User> findByFirstNameAndLastName(@Param("firstname") String firstName, @Param("lastname") String lastName);
+    Optional<User> findByFirstnameAndLastname(@Param("firstname") String firstname, @Param("lastname") String lastname);
 
 }

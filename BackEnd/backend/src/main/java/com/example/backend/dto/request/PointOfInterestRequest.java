@@ -5,7 +5,7 @@ import com.example.backend.entities.poi.PointOfInterestType;
 
 import java.time.LocalTime;
 
-public record PointOfInterestRequest(String name, String description, String authorFirstName, String authorLastName,
+public record PointOfInterestRequest(String name, String description, String authorFirstname, String authorLastname,
                                      double latitude, double longitude,
                                      PointOfInterestType type, LocalTime openTime, LocalTime closeTime) {
 

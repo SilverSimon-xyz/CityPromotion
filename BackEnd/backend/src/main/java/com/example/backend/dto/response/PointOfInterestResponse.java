@@ -8,19 +8,20 @@ import java.time.LocalTime;
 import java.util.Date;
 
 @Builder
-public record PointOfInterestResponse(Long id, String name, String description, String author,
+public record PointOfInterestResponse(Long id, String name, String description, AccountResponse author,
                                       double latitude, double longitude, PointOfInterestType type,
                                       @JsonFormat(pattern = "HH:mm:ss")LocalTime openTime, @JsonFormat(pattern = "HH:mm:ss")LocalTime closeTime,
                                       @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date createdAt,
                                       @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss", timezone = "Europe/Rome")Date updatedAt) {
 
     public static PointOfInterestResponse mapToResponse(PointOfInterest pointOfInterest) {
+        AccountResponse authorResponse = AccountResponse.mapToResponse(pointOfInterest.getAuthor());
         return PointOfInterestResponse
                 .builder()
                 .id(pointOfInterest.getId())
                 .name(pointOfInterest.getName())
                 .description(pointOfInterest.getDescription())
-                .author(pointOfInterest.getAuthor().getName())
+                .author(authorResponse)
                 .latitude(pointOfInterest.getLatitude())
                 .longitude(pointOfInterest.getLongitude())
                 .type(pointOfInterest.getType())

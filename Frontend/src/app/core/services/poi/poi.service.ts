@@ -25,7 +25,7 @@ private apiURL = environment.baseUrl;
   }
 
   updatePointOfInterest(id: number, pointOfInterest: PointOfInterest): Observable<PointOfInterest> {
-    return this.http.patch<PointOfInterest>(`${this.apiURL}/poi/edit/${id}`, pointOfInterest);
+    return this.http.put<PointOfInterest>(`${this.apiURL}/poi/edit/${id}`, pointOfInterest);
   }
 
   deletePointOfInterest(id: number): Observable<Object>{

@@ -20,6 +20,7 @@ export const routes: Routes = [
     {path: 'users', component: UsersComponent},
     {path: 'users/:id', component: UsersComponent},
     {path: 'poi', component: PoiComponent},
+    {path: 'poi/:id', component: PoiComponent},
     {path: 'contest', component: ContestComponent},
     {path: 'contents', component: MultimediaContentComponent},
     {path: '**', redirectTo:'home'},
