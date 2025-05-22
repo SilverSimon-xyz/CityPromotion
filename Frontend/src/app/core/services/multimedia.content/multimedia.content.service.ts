@@ -14,20 +14,6 @@ export class MultimediaContentService {
 
   getAllMultimediaContent(): Observable<MultimediaContent[]> {
     return this.http.get<MultimediaContent[]>(`${this.apiURL}/contents/all`);
-/** .pipe(
-      map(response => response.map(multimediaContent => ({
-        id: multimediaContent.id,
-        title: multimediaContent.title,
-        type: multimediaContent.type,
-        description: multimediaContent.description,
-        author: multimediaContent.author,
-        status: multimediaContent.status,
-        mediaFile: { ...multimediaContent.mediaFile },
-        pointOfInterest: { ...multimediaContent.pointOfInterest },
-        createdAt: multimediaContent.createdAt,
-        updatedAt: multimediaContent.updatedAt,
-      }))))*/
-    
   }
 
   getMultimediaContent(id: number): Observable<MultimediaContent> {
@@ -39,7 +25,7 @@ export class MultimediaContentService {
   }
 
   updateMultimediaContent(id: number, multimediaContent: MultimediaContent): Observable<MultimediaContent> {
-    return this.http.patch<MultimediaContent>(`${this.apiURL}/contents/edit/${id}`, multimediaContent);
+    return this.http.put<MultimediaContent>(`${this.apiURL}/contents/edit/${id}`, multimediaContent);
   }
 
   deleteMultimediaContent(id: number): Observable<Object>{

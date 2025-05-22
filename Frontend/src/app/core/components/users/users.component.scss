@@ -26,10 +26,29 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #ddd;
 }
+.button-container {
+    text-align: center; 
+    margin-bottom: 20px; 
+}
 button {
     padding: 5px 10px;
     margin: 2px;
     cursor: pointer;
 }
+.footer-button{
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+}
+.view { background-color: #1a7605; }
 .edit { background-color: #f0c040; }
 .delete { background-color: #d9534f; color: white; }

@@ -1,9 +1,69 @@
-<h2>Point of Interest List</h2>
-<div *ngIf="!poiId">
+<div class="search-container">
+  <form [formGroup]="poiForm">
+    <input type="text" formControlName="searchName" placeholder="Insert name..." (input)="searchPois()">
+
+    <select formControlName="searchType" (change)="searchPois()">
+      <option value="">-- Seleziona un tipo --</option>
+      <option value="TOURISM">Tourism</option>
+      <option value="ACCOMMODATION">Accomodation</option>
+      <option value="SERVICE">Service</option>
+      <option value="NATURE">Nature</option>
+      <option value="OTHER">Other</option>
+    </select>
+  </form>
+</div>
+
+<table border="1" *ngIf="filteredPoiList.length > 0; else allPois">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let poi of filteredPoiList">
+      <td>{{ poi.name }}</td>
+      <td>{{ poi.type }}</td>
+      <td>
+        <button class="view" (click)="viewPoiDetails(poi.id)">View</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #allPois>
+
+<div *ngIf="!selectedPoi && !isAdding && !isEditing">
+  <h2>Point of Interest List</h2>
+  <div class="button-container">
+    <button (click)="addPoi()">Add new Point of Interest</button>
+  </div>
   <table border="1">
     <thead>
       <tr>
-        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let poi of pois"> 
+        <td><strong> {{ poi.name }} </strong></td>
+        <td>
+          <button class="view" (click)="viewPoiDetails(poi.id)">View</button>
+          <button class="edit" (click)="updatePoi(poi.id)">Modify</button>
+          <button class="delete" (click)="deletePoi(poi.id)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<button class="footer-button" (click)="goToDashboard()">Return to Dashboard</button>
+</div>
+
+<div *ngIf="selectedPoi && !isEditing">
+  <table border="1">
+    <thead>
+      <tr>
         <th>Name</th>
         <th>Description</th>
         <th>Author</th>
@@ -16,27 +76,23 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let poi of pois">
-        <td> {{ poi.id }} </td>
-        <td><strong> {{ poi.name }} </strong></td>
-        <td> {{ poi.description }} </td>
-        <td> {{ poi.author.firstname }} {{ poi.author.lastname }} </td>
-        <td> [{{ poi.latitude }}, {{ poi.longitude }}] </td>
-        <td> {{ poi.type }} </td>
-        <td> {{ poi.openTime }}, {{ poi.closeTime }} </td>
-        <td> {{ poi.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-        <td> {{ poi.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-        <td>
-          <button (click)="editPoi(poi.id)">Modify</button>
-          <button class="delete" (click)="deletePoi(poi.id)">Delete</button>
-        </td>
-    </tr>
+      <td><strong> {{ selectedPoi.name }} </strong></td>
+      <td> {{ selectedPoi.description }} </td>
+      <td> {{ selectedPoi.author.firstname }} {{ selectedPoi.author.lastname }} </td>
+      <td> [{{ selectedPoi.latitude }}, {{ selectedPoi.longitude }}] </td>
+      <td> {{ selectedPoi.type }} </td>
+      <td> {{ selectedPoi.openTime }}, {{ selectedPoi.closeTime }} </td>
+      <td> {{ selectedPoi.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+      <td> {{ selectedPoi.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+      <button class="edit" (click)="updatePoi(selectedPoi.id)">Modify</button>
+      <button (click)="goBack()">Back</button>
     </tbody>
-</table>
+  </table>
 </div>
 
-<div *ngIf="poiId">
-  <form [formGroup]="poiForm" (ngSubmit)="updatePoi()">
+<div *ngIf="isAdding || isEditing">
+  <h2>{{ isAdding ? 'Add new Point of Interest' : 'Modify Point of Interest'}}</h2>
+  <form [formGroup]="poiForm" (ngSubmit)="saveChanges()">
 
     <label>Name:</label>
     <input type="text" formControlName="name" required>
@@ -56,53 +112,23 @@
     <label>Longitude:</label>
     <input type="text" formControlName="longitude" required>
 
-    <label>Type:</label>
-    <input type="text" formControlName="type" required>
+    <label for="type">Select Type of Point Of Interest:</label>
+    <select id="type" formControlName="type" required>
+      <option value="TOURISM">Tourism</option>
+      <option value="ACCOMMODATION">Accomodation</option>
+      <option value="SERVICE">Service</option>
+      <option value="NATURE">Nature</option>
+      <option value="OTHER">Other</option>
+    </select>
 
     <label>Open Time:</label>
-    <input type="text" formControlName="openTime" required>
-
+    <input type="time" formControlName="openTime" required>
+ 
     <label>Close Time:</label>
-    <input type="text" formControlName="closeTime" required>
+    <input type="time" formControlName="closeTime" required>
 
-    <button type="submit">Update</button>
-    <button type="button" (click)="cancelUpdate()">Cancel</button>
+    <button type="submit" [disabled]="poiForm.invalid">Save</button>
+    <button type="button" (click)="goBack()">Cancel</button>
   </form>
 </div>
-
-<button (click)="openAddPoi()">Add Poi</button>
-
-<div *ngIf="newPoiForm">
-  <form [formGroup]="newPoiForm" (ngSubmit)="addPoi()">
-
-    <label>Name:</label>
-    <input type="text" formControlName="name" required>
-
-    <label>Description:</label>
-    <input type="text" formControlName="description" required>
-
-    <label>Firstname:</label>
-    <input type="text" formControlName="authorFirstname" required>
-
-    <label>Lastname:</label>
-    <input type="text" formControlName="authorLastname" required>
-
-    <label>Latitude:</label>
-    <input type="text" formControlName="latitude" required>
-
-    <label>Longitude:</label>
-    <input type="text" formControlName="longitude" required>
-
-    <label>Type:</label>
-    <input type="text" formControlName="type" required>
-
-    <label>Open Time:</label>
-    <input type="text" formControlName="openTime" required>
-
-    <label>Close Time:</label>
-    <input type="text" formControlName="closeTime" required>
-
-    <button type="submit">Add</button>
-    <button type="button" (click)="cancelAddPoi()">Cancel</button>
-  </form>
-</div>
+</ng-template>

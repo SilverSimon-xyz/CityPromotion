@@ -22,7 +22,7 @@ public class MultimediaContentController {
 
     @PostMapping("/upload")
     public ResponseEntity<MultimediaContentResponse> uploadFile(@RequestBody MultimediaContentRequest request, @RequestParam Long idPoi) {
-        MultimediaContent multimediaContent = multimediaContentService.saveMultimediaContent(request.toMultimediaContent(), request.authorFirstName(), request.authorLastName(), request.mediaFile(), idPoi);
+        MultimediaContent multimediaContent = multimediaContentService.saveMultimediaContent(request.toMultimediaContent(), request.authorFirstname(), request.authorLastname(), request.mediaFile(), idPoi);
         MultimediaContentResponse response = MultimediaContentResponse.mapToResponse(multimediaContent);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

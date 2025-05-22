@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../../interfaces/user';
 import { UserService } from '../../services/user/user.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -13,87 +13,85 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
+  selectedUser?: User;
   userForm!: FormGroup;
-  userId!: number | null;
-  newUserForm?: FormGroup;
+  isEditing: boolean = false;
+  isAdding: boolean = false;
 
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder, 
     private route: ActivatedRoute,
     private router: Router) {
-
+    this.userForm = this.formBuilder.group({
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      roleName: ['', Validators.required],
+    });
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.userId = params.get('id') ? Number(params.get('id')) : null;
-      if(this.userId) {
-        this.loadUserDetails();
+      const id = params.get('id');
+      this.isEditing = this.router.url.includes('/edit');
+      this.isAdding = this.router.url.includes('/add');
+      if(this.isAdding) {
+        this.selectedUser = undefined;
+      } else if(id) {
+        this.loadUserDetails(Number(id));
       } else {
         this.loadUsers();
       }
-    });
-
-    this.userForm = this.formBuilder.group({
-      firstname: [''],
-      lastname: [''],
-      email: [''],
-      password: ['']
     });
   }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe({
-      next: (data) => this.users = data,
+      next: (response) => this.users = response,
       error: (err) => console.error('Error during loading user ', err)
     })
   }
 
-  loadUserDetails(): void {
-    this.userService.getUserById(this.userId!).subscribe({
-      next: (user) => this.userForm.patchValue(user),
+  loadUserDetails(id: number): void {
+    this.userService.getUserById(id).subscribe({
+      next: (response) => {
+        this.selectedUser = response;
+        if(this.isEditing) {
+          this.userForm.patchValue(response);
+        }
+      },
       error: (err) => console.error('Error during loading', err)
     });
   }
 
-  openAddUser(): void {
-    this.newUserForm = this.formBuilder.group({
-      firstname: [''],
-      lastname: [''],
-      email: [''],
-      password: [''],
-      roleName: ['']
-    });
+  viewUserDetails(id: number) {
+    this.router.navigate(['/users', id])
   }
 
   addUser() {
-    if(this.newUserForm?.valid) {
-      this.userService.createUser(this.newUserForm.value).subscribe(() => {
-        this.cancelAddUser();
-        this.loadUsers();
-      });
-    }
+    this.router.navigate(['/users/add'])
   }
 
-  cancelAddUser(): void {
-    this.newUserForm = undefined;
+  updateUser(id: number): void {
+    this.router.navigate(['/users', id, 'edit']);
   }
 
-  updateUser() {
+  saveChanges() {
     if(this.userForm.valid) {
-      this.userService.updateUser(this.userId!, this.userForm.value).subscribe(() => {
-      this.router.navigate(['/users']);
-      });
+      if(this.isAdding) {
+        this.userService.createUser(this.userForm.value).subscribe({
+          next: () => this.router.navigate(['/users']),
+          error: (err) => console.error('Error during creation', err)
+        });
+      } else if(this.selectedUser) {
+        this.userService.updateUser(this.selectedUser.id, this.userForm.value).subscribe({
+          next: () => this.router.navigate(['/users', this.selectedUser?.id]),
+          error: (err) => console.error('Error during saving', err)
+        });
+      }
     }
-  }
-
-  editUser(userId: number): void {
-    this.router.navigate(['/users', userId]);
-  }
-
-  cancelUpdate() {
-    this.router.navigate(['/users']);
   }
 
   deleteUser(id: number) {
@@ -102,6 +100,14 @@ export class UsersComponent implements OnInit {
         this.loadUsers();
       })
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/users'])
+  }
+
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard'])
   }
 
 }

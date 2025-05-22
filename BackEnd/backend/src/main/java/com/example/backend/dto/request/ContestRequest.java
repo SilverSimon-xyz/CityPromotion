@@ -2,10 +2,11 @@ package com.example.backend.dto.request;
 
 
 import com.example.backend.entities.contest.Contest;
+
 import java.util.Date;
 
 
-public record ContestRequest(String name, String description, String authorFirstName, String authorLastName, String rules, String goal, String prize,
+public record ContestRequest(String name, String description, String authorFirstname, String authorLastname, String rules, String goal, String prize,
                              Date deadline, boolean active, int numberParticipant) {
 
     public Contest toContest() {

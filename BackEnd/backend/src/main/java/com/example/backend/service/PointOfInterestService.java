@@ -68,14 +68,9 @@ public class PointOfInterestService {
 
     }
 
-    public List<PointOfInterest> searchPOIByName(String name) {
-        if(name == null) return List.of();
-        return poiRepository.searchByName(name);
-    }
-
-    public List<PointOfInterest> searchPOIByType(PointOfInterestType type) {
-        if(type == null) return List.of();
-        return poiRepository.searchByType(type);
+    public List<PointOfInterest> searchPOI(String name, PointOfInterestType type) {
+        return (name != null && !name.isEmpty())? poiRepository.findByNameContainingIgnoreCase(name):
+                (type != null)? poiRepository.findByType(type): poiRepository.findAll();
     }
 
     public List<PointOfInterest> getAllPOIs() {

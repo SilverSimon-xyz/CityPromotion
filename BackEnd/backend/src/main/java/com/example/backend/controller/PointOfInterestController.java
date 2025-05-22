@@ -35,9 +35,10 @@ public class PointOfInterestController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/find/name")
-    public ResponseEntity<List<PointOfInterestResponse>> getPOIDetailsByName(@RequestParam String name) {
-        List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByName(name);
+    @GetMapping("/search")
+    public ResponseEntity<List<PointOfInterestResponse>> searchPointOfInterest(@RequestParam(required = false) String name,
+                                                                               @RequestParam(required = false) PointOfInterestType type) {
+        List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOI(name, type);
         List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
                         .stream()
                         .map(PointOfInterestResponse::mapToResponse)
@@ -45,19 +46,8 @@ public class PointOfInterestController {
         return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
     }
 
-    @GetMapping("/find/type")
-    public ResponseEntity<List<PointOfInterestResponse>> getPOIDetailsByType(@RequestParam PointOfInterestType type) {
-        List<PointOfInterest> pointOfInterestList = pointOfInterestService.searchPOIByType(type);
-        List<PointOfInterestResponse> pointOfInterestResponseList = pointOfInterestList
-                .stream()
-                .map(PointOfInterestResponse::mapToResponse)
-                .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(pointOfInterestResponseList);
-    }
-
     @PostMapping("/add")
     public ResponseEntity<PointOfInterestResponse> createPOI(@RequestBody PointOfInterestRequest request) {
-        System.out.println("The request is: " + request.toPOI() + ", " + request.authorFirstname() + ", " + request.authorLastname());
         PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request.toPOI(), request.authorFirstname(), request.authorLastname());
         PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(pointOfInterestCreated);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

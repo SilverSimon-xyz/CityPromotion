@@ -9,6 +9,6 @@ import java.util.List;
 public interface PointOfInterestRepository extends JpaRepository<PointOfInterest, Long> {
 
     boolean existsByNameAndLatitudeAndLongitude(String name, double lat, double lon);
-    List<PointOfInterest> searchByName(String name);
-    List<PointOfInterest> searchByType(PointOfInterestType type);
+    List<PointOfInterest> findByNameContainingIgnoreCase(String name);
+    List<PointOfInterest> findByType(PointOfInterestType type);
 }

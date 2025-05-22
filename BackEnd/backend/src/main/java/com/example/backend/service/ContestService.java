@@ -68,13 +68,9 @@ public class ContestService {
         return contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
     }
 
-    public List<Contest> searchContestByName(String name) {
-        if(name == null) return List.of();
-        return contestRepository.searchByName(name);
-    }
-
-    public List<Contest> searchActiveContest() {
-        return contestRepository.findAll().stream().filter(Contest::isActive).toList();
+    public List<Contest> searchContest(String name) {
+        return (name != null && !name.isEmpty())? contestRepository.findByNameContainingIgnoreCase(name):
+                contestRepository.findAll();
     }
 
     public Contest activeClosedContest(Long id) {

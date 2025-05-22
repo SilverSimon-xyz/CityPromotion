@@ -10,7 +10,7 @@ import lombok.Builder;
 import java.util.Date;
 
 @Builder
-public record MultimediaContentResponse(Long id, String title, FormatFileType type, String description, String author,
+public record MultimediaContentResponse(Long id, String title, FormatFileType type, String description, AccountResponse author,
                                         Status status, MediaFileResponse mediaFileResponse, PointOfInterestResponse pointOfInterestResponse,
                                         Date createdAt,
                                         Date updatedAt) {
@@ -18,13 +18,14 @@ public record MultimediaContentResponse(Long id, String title, FormatFileType ty
     public static MultimediaContentResponse mapToResponse(MultimediaContent multimediaContent) {
         MediaFile mediaFile = multimediaContent.getMediaFile();
         PointOfInterest pointOfInterest = multimediaContent.getPoi();
+        AccountResponse authorResponse = AccountResponse.mapToResponse(multimediaContent.getAuthor());
         return MultimediaContentResponse
                 .builder()
                 .id(multimediaContent.getId())
                 .title(multimediaContent.getTitle())
                 .type(multimediaContent.getType())
                 .description(multimediaContent.getDescription())
-                .author(multimediaContent.getAuthor().getName())
+                .author(authorResponse)
                 .status(multimediaContent.getStatus())
                 .mediaFileResponse(MediaFileResponse.mapToResponse(mediaFile))
                 .pointOfInterestResponse(PointOfInterestResponse.mapToResponse(pointOfInterest))

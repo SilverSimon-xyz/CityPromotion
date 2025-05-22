@@ -1,9 +1,33 @@
-<h2>User List</h2>
-<div *ngIf="!userId">
+<div *ngIf="!selectedUser && !isAdding && !isEditing">
+  <h2>User List</h2>
+  <div class="button-container">
+    <button (click)="addUser()">Add new User</button>
+  </div>
   <table border="1">
     <thead>
       <tr>
-        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users"> 
+        <td><strong> {{ user.firstname }} {{ user.lastname }} </strong></td>
+        <td>
+          <button class="view" (click)="viewUserDetails(user.id)">View</button>
+          <button class="edit" (click)="updateUser(user.id)">Modify</button>
+          <button class="delete" (click)="deleteUser(user.id)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<button class="footer-button" (click)="goToDashboard()">Return to Dashboard</button>
+</div>
+
+<div *ngIf="selectedUser && !isEditing">
+  <table border="1">
+    <thead>
+      <tr>
         <th>Name</th>
         <th>Email</th>
         <th>Roles</th>
@@ -13,63 +37,48 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.id }}</td>
-        <td><strong>{{user.firstname}} {{user.lastname}}</strong></td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.role.name }}</td>
-        <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-        <td>{{ user.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-        <td>
-          <button (click)="editUser(user.id)">Modify</button>
-          <button class="delete" (click)="deleteUser(user.id)">Delete</button>
-        </td>
-    </tr>
+      <td><strong>{{selectedUser.firstname}} {{selectedUser.lastname}}</strong></td>
+      <td>{{ selectedUser.email }}</td>
+      <td>{{ selectedUser.role.name }}</td>
+      <td>{{ selectedUser.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+      <td>{{ selectedUser.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+      <td>
+        <button class="edit" (click)="updateUser(selectedUser.id)">Modify</button>
+        <button (click)="goBack()">Back</button>
+      </td>
     </tbody>
-</table>
+  </table>
 </div>
 
-<div *ngIf="userId">
-  <form [formGroup]="userForm" (ngSubmit)="updateUser()">
+<div *ngIf="isAdding || isEditing">
+  <h2>{{ isAdding ? 'Add new User' : 'Modify User'}}</h2>
+  <form [formGroup]="userForm" (ngSubmit)="saveChanges()">
 
-    <label>Firstname:</label>
-    <input type="text" formControlName="firstname" required>
+    <label>Firstname:
+      <input type="text" formControlName="firstname" required>
+    </label>
 
-    <label>Lastname:</label>
-    <input type="text" formControlName="lastname" required>
+    <label>Lastname:
+      <input type="text" formControlName="lastname" required>
+    </label>
 
-    <label>Email:</label>
-    <input type="email" formControlName="email" required>
+    <label>Email:
+      <input type="email" formControlName="email" required>
+    </label>
 
-    <label>Password:</label>
-    <input type="password" formControlName="password" required>
+    <label>Password:
+      <input type="password" formControlName="password" required>
+    </label>
 
-    <button type="submit">Update</button>
-    <button type="button" (click)="cancelUpdate()">Cancel</button>
-  </form>
-</div>
+    <label for="roleName">Select Role:</label>
+      <select id="type" formControlName="roleName" required>
+        <option value="TOURIST">Tourist</option>
+        <option value="CONTRIBUTOR">Contributor</option>
+        <option value="ANIMATOR">Animator</option>
+        <option value="CURATOR">Curator</option>
+      </select>
 
-<button (click)="openAddUser()">Add User</button>
-
-<div *ngIf="newUserForm">
-  <form [formGroup]="newUserForm" (ngSubmit)="addUser()">
-
-    <label>Firstname:</label>
-    <input type="text" formControlName="firstname" required>
-
-    <label>Lastname:</label>
-    <input type="text" formControlName="lastname" required>
-
-    <label>Email:</label>
-    <input type="email" formControlName="email" required>
-
-    <label>Password:</label>
-    <input type="password" formControlName="password" required>
-
-    <label for="role">Role:</label>
-    <input id="role" formControlName="roleName" required>
-
-    <button type="submit">Add</button>
-    <button type="button" (click)="cancelAddUser()">Cancel</button>
+    <button type="submit" [disabled]="userForm.invalid">Save</button>
+    <button type="button" (click)="goBack()">Cancel</button>
   </form>
 </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PointOfInterest } from '../../interfaces/point.of.interest';
+import { PointOfInterest, PointOfInterestType } from '../../interfaces/point.of.interest';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
@@ -30,5 +30,12 @@ private apiURL = environment.baseUrl;
 
   deletePointOfInterest(id: number): Observable<Object>{
     return this.http.delete(`${this.apiURL}/poi/delete/${id}`);
+  }
+
+  searchPointOfIntersts(name: string, type: PointOfInterestType): Observable<PointOfInterest[]> {
+    const params: any = {};
+    if(name) params.name = name;
+    if(type) params.type = type;
+    return this.http.get<PointOfInterest[]>(`${this.apiURL}/poi/search`, {params});
   }
 }

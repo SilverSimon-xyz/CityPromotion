@@ -1,14 +1,148 @@
-<h2>Contest List</h2>
-<li *ngFor="let contest of contests">
-        <h3> {{ contest.name }} </h3>
-        <p> Description: {{ contest.description }} </p>
-        <p> Author: {{ contest.author }} </p>
-        <p> Rules: {{ contest.rules }} </p>
-        <p> Goal: {{ contest.goal }} </p>
-        <p> Prize: {{ contest.prize }} </p>
-        <p> Deadline: {{ contest.deadline | date:'dd/MM/yyyy HH:mm:ss' }} </p>
-        <p> Active: {{ contest.active ? 'Active' : 'Inactive'}} </p>
-        <p> Created at: {{ contest.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-        <p> Updated At: {{ contest.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</p>
-        <p> Number of Participants: {{ contest.numberOfParticipant }} </p>
-</li>
+<div class="search-container">
+  <form [formGroup]="contestForm">
+    <input type="text" formControlName="searchName" placeholder="Insert name..." (input)="searchContest()">
+  </form>
+</div>
+<table border="1" *ngIf="filteredContestList.length > 0; else allContest">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Goal</th>
+        <th>Prize</th>
+        <th>Deadline</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contest of filteredContestList">
+        
+        <td><strong> {{ contest.name }} </strong></td>
+        <td>  {{ contest.goal }} </td>
+        <td>  {{ contest.prize }} </td>
+        <td>  {{ contest.deadline | date:'dd/MM/yyyy HH:mm:ss' }} </td>
+        <td>
+          <button class="view" (click)="viewContestDetails(contest.id)">View</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<ng-template #allContest>
+
+<div *ngIf="!selectedContest && !isAdding && !isEditing">
+    <h2>Contest List</h2>
+    <div class="button-container">
+        <button (click)="addContest()">Add new Contest</button>
+    </div>
+    <table border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Goal</th>
+        <th>Prize</th>
+        <th>Deadline</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contest of contests">
+        
+        <td><strong> {{ contest.name }} </strong></td>
+        <td>  {{ contest.goal }} </td>
+        <td>  {{ contest.prize }} </td>
+        <td>  {{ contest.deadline | date:'dd/MM/yyyy HH:mm:ss' }} </td>
+        <td>
+          <button class="view" (click)="viewContestDetails(contest.id)">View</button>
+          <button class="edit" (click)="updateContest(contest.id)">Modify</button>
+          <button class="delete" (click)="deleteContest(contest.id)">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+    </table>
+    <button class="footer-button" (click)="goToDashboard()">Return to Dashboard</button>
+</div>
+
+<div *ngIf="selectedContest && !isEditing">
+    <table border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Author</th>
+        <th>Rules</th>
+        <th>Goal</th>
+        <th>Prize</th>
+        <th>Deadline</th>
+        <th>Active</th>
+        <th>Created at</th>
+        <th>Updated at</th>
+        <th>Number of Participant</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong> {{ selectedContest.name }} </strong></td>
+        <td>  {{ selectedContest.description }} </td>
+        <td>  {{ selectedContest.author.firstname }} {{ selectedContest.author.lastname }} </td>
+        <td>  {{ selectedContest.rules }} </td>
+        <td>  {{ selectedContest.goal }} </td>
+        <td>  {{ selectedContest.prize }} </td>
+        <td>  {{ selectedContest.deadline | date:'dd/MM/yyyy HH:mm:ss' }} </td>
+        <td>  {{ selectedContest.active ? 'Active' : 'Inactive'}} </td>
+        <td>  {{ selectedContest.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td>  {{ selectedContest.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+        <td>  {{ selectedContest.numberOfParticipant }} </td>
+        <td>
+            <button class="edit" (click)="updateContest(selectedContest.id)">Modify</button>
+            <button (click)="goBack()">Back</button>
+        </td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+
+<div *ngIf="isAdding || isEditing">
+  <h2>{{ isAdding ? 'Add new Contest' : 'Modify Contest'}}</h2>
+    <form [formGroup]="contestForm" (ngSubmit)="saveChanges()">
+
+        <label>Name:</label>
+        <input type="text" formControlName="name" required>
+            
+        <label>Description:</label>
+        <input type="text" formControlName="description" required>
+            
+        <label>Firstname:</label>
+        <input type="text" formControlName="authorFirstname" required>
+            
+        <label>Lastname:</label>
+        <input type="text" formControlName="authorLastname" required>
+
+        <label>Rules:</label>
+        <input type="text" formControlName="rules" required>
+
+        <label>Goal:</label>
+        <input type="text" formControlName="goal" required>
+
+        <label>Prize:</label>
+        <input type="text" formControlName="prize" required>
+
+        <label for="deadline">Deadline:</label>
+        <input type="datetime-local" id="deadline" formControlName="deadline" required>
+
+        <label>Active:</label>
+        <div>
+        <label>
+            <input type="radio" formControlName="active" [value]="true" required>
+        </label>
+        
+        <label>
+            <input type="radio" formControlName="active" [value]="false" required>
+        </label>
+        </div>
+
+        <button type="submit" [disabled]="contestForm.invalid">Save</button>
+        <button type="button" (click)="goBack()">Cancel</button>
+    </form>
+</div>
+</ng-template>

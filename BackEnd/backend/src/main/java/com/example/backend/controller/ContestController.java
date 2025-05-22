@@ -26,7 +26,7 @@ public class ContestController {
 
     @PostMapping("/add")
     public ResponseEntity<ContestResponse> addContest(@RequestBody ContestRequest request) {
-        Contest contest = contestService.createContest(request.toContest(), request.authorFirstName(), request.authorLastName());
+        Contest contest = contestService.createContest(request.toContest(), request.authorFirstname(), request.authorLastname());
         ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -61,19 +61,9 @@ public class ContestController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/find/name")
-    public ResponseEntity<List<ContestResponse>> searchContestByName(@RequestParam String name) {
-        List<Contest> contestList = contestService.searchContestByName(name);
-        List<ContestResponse> contestResponseList = contestList
-                .stream()
-                .map(ContestResponse::mapToResponse)
-                .toList();
-        return ResponseEntity.status(HttpStatus.OK).body(contestResponseList);
-    }
-
-    @GetMapping("/find/active")
-    public ResponseEntity<List<ContestResponse>> searchActiveContest() {
-        List<Contest> contestList = contestService.searchActiveContest();
+    @GetMapping("/search")
+    public ResponseEntity<List<ContestResponse>> searchContest(@RequestParam(required = false) String name) {
+        List<Contest> contestList = contestService.searchContest(name);
         List<ContestResponse> contestResponseList = contestList
                 .stream()
                 .map(ContestResponse::mapToResponse)

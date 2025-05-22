@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ContestRepository extends JpaRepository<Contest, Long> {
 
-    List<Contest> searchByName(String name);
+    List<Contest> findByNameContainingIgnoreCase(String name);
 
 }

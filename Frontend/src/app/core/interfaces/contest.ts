@@ -1,7 +1,10 @@
+import { User } from "./user"
+
 export interface Contest {
+    id: number,
     name: string,
     description: string,
-    author: string,
+    author: User,
     rules: string,
     goal: string,
     prize: string,
