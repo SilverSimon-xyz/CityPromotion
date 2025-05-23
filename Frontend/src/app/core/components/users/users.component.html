@@ -50,26 +50,30 @@
   </table>
 </div>
 
-<div *ngIf="isAdding || isEditing">
+<section *ngIf="isAdding || isEditing">
   <h2>{{ isAdding ? 'Add new User' : 'Modify User'}}</h2>
   <form [formGroup]="userForm" (ngSubmit)="saveChanges()">
-
-    <label>Firstname:
+    <div>
+      <label>Firstname:</label>
       <input type="text" formControlName="firstname" required>
-    </label>
+    </div>
 
-    <label>Lastname:
+    <div>
+      <label>Lastname:</label>
       <input type="text" formControlName="lastname" required>
-    </label>
+    </div>
 
-    <label>Email:
+    <div>
+      <label>Email:</label>
       <input type="email" formControlName="email" required>
-    </label>
+    </div>
 
-    <label>Password:
+    <div>
+      <label>Password:</label>
       <input type="password" formControlName="password" required>
-    </label>
+    </div>
 
+    <div>
     <label for="roleName">Select Role:</label>
       <select id="type" formControlName="roleName" required>
         <option value="TOURIST">Tourist</option>
@@ -77,8 +81,10 @@
         <option value="ANIMATOR">Animator</option>
         <option value="CURATOR">Curator</option>
       </select>
-
-    <button type="submit" [disabled]="userForm.invalid">Save</button>
-    <button type="button" (click)="goBack()">Cancel</button>
+    </div>
+    <div>
+      <button type="submit" [disabled]="userForm.invalid">Save</button>
+      <button type="button" (click)="goBack()">Cancel</button>
+    </div>
   </form>
-</div>
+</section>

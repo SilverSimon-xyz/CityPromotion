@@ -1,0 +1,71 @@
+<div>
+  <button *ngIf="!isCreatingContent" (click)="createContent()">New Content</button>
+</div>
+
+<div *ngIf="!isCreatingContent && !selectedContent">
+  <h2>Content List</h2>
+  <ul>
+    <li *ngFor="let content of contents">
+      <button (click)="navigateToContent(content.id)">{{ content.title }}</button>
+      <button (click)="deleteContent(content.id)">Delete</button>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="selectedContent">
+<h2>Content Details</h2>
+  <div>
+    <h3>{{ selectedContent.title }}</h3>
+    <p>{{ selectedContent.content }}</p>
+    <p>{{ selectedContent.author.firstname }} {{ selectedContent.author.lastname }}</p>
+    <p>{{ selectedContent.pointOfInterest.name }}</p>
+    <p>{{ selectedContent.hashtag }}</p>
+    <button (click)="goBack()">Return to List</button>
+  </div>
+  
+</div>
+
+<section *ngIf="isCreatingContent">
+<h2>Content Creation</h2>
+<form [formGroup]="contentForm" (ngSubmit)="saveContent()">
+    <div>
+        <label>Title:</label>
+        <input formControlName="title">
+    </div>
+  
+    <div>
+        <label>Content:</label>
+        <textarea formControlName="content"></textarea>
+    </div>
+
+    <div>
+        <label>Hashtag:</label>
+        <textarea formControlName="hashtag"></textarea>
+    </div>
+
+  <div>
+    <label for="idPoi">Point of Interest Associeted:</label>
+    <select formControlName="idPoi">
+      <option value="" disabled selected>Select one Point of Interest...</option>
+      <option *ngFor="let poi of pois" [value]="poi.id">{{ poi.name }} - {{ poi.description }}</option>
+    </select>
+  </div>
+
+  <div>
+    <h3>Upload File</h3>
+    <input type="file" (change)="selectFile($event)">
+    <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview of File" width="150">
+  </div>
+
+  <p></p>
+  <p></p>
+
+  <button type="submit" [disabled]="contentForm.invalid">Save</button>
+  <button (click)="goBack()">Back</button>
+</form>
+</section>
+
+<p></p>
+<p></p>
+
+<button class="footer-button" (click)="goToDashboard()">Return to Dashboard</button>

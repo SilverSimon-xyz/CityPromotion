@@ -53,7 +53,7 @@ public class Contest {
     private Date updatedAt;
 
     @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ContestParticipation> participationContestList = new ArrayList<>();
+    private List<ContestParticipant> participationContestList = new ArrayList<>();
 
     @Column(name = "number_participants", updatable = false)
     private int numberOfParticipant = 0;

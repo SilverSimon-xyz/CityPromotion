@@ -18,8 +18,8 @@ import { PoiComponent } from '../core/components/poi/poi.component';
 import { PoiService } from '../core/services/poi/poi.service';
 import { ContestComponent } from '../core/components/contest/contest.component';
 import { ContestService } from '../core/services/contest/contest.service';
-import { MultimediaContentComponent } from '../core/components/multimedia.content/multimedia.content.component';
-import { MultimediaContentService } from '../core/services/multimedia.content/multimedia.content.service';
+import { ContentComponent } from '../core/components/content/content.component';
+import { ContentService } from '../core/services/content/content.service';
 import { MediaFileComponent } from '../core/components/media.file/media.file.component';
 
 @NgModule({
@@ -31,7 +31,7 @@ import { MediaFileComponent } from '../core/components/media.file/media.file.com
     MediaFileComponent,
     PoiComponent,
     ContestComponent,
-    MultimediaContentComponent,
+    ContentComponent,
     HomeComponent
   ],
   imports: [
@@ -46,7 +46,7 @@ import { MediaFileComponent } from '../core/components/media.file/media.file.com
     UserService,
     PoiService,
     ContestService,
-    MultimediaContentService,
+    ContentService,
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, tokenInterceptor]))
   ],
   bootstrap: [AppComponent]

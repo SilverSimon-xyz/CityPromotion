@@ -90,45 +90,65 @@
   </table>
 </div>
 
-<div *ngIf="isAdding || isEditing">
+<section *ngIf="isAdding || isEditing">
   <h2>{{ isAdding ? 'Add new Point of Interest' : 'Modify Point of Interest'}}</h2>
   <form [formGroup]="poiForm" (ngSubmit)="saveChanges()">
 
-    <label>Name:</label>
-    <input type="text" formControlName="name" required>
+    <div>
+      <label>Name:</label>
+      <input type="text" formControlName="name" required>
+    </div>
 
-    <label>Description:</label>
-    <input type="text" formControlName="description" required>
+    <div>
+      <label>Description:</label>
+      <input type="text" formControlName="description" required>
+    </div>
 
-    <label>Firstname:</label>
-    <input type="text" formControlName="authorFirstname" required>
+    <div>
+      <label>Firstname:</label>
+      <input type="text" formControlName="authorFirstname" required>
+    </div>
 
-    <label>Lastname:</label>
-    <input type="text" formControlName="authorLastname" required>
+    <div>
+      <label>Lastname:</label>
+      <input type="text" formControlName="authorLastname" required>
+    </div>
 
-    <label>Latitude:</label>
-    <input type="text" formControlName="latitude" required>
+    <div>
+      <label>Latitude:</label>
+      <input type="text" formControlName="latitude" required>
+    </div>
 
-    <label>Longitude:</label>
-    <input type="text" formControlName="longitude" required>
+    <div>
+      <label>Longitude:</label>
+      <input type="text" formControlName="longitude" required>
+    </div>
 
-    <label for="type">Select Type of Point Of Interest:</label>
-    <select id="type" formControlName="type" required>
-      <option value="TOURISM">Tourism</option>
-      <option value="ACCOMMODATION">Accomodation</option>
-      <option value="SERVICE">Service</option>
-      <option value="NATURE">Nature</option>
-      <option value="OTHER">Other</option>
-    </select>
+    <div>
+      <label for="type">Select Type of Point Of Interest:</label>
+      <select id="type" formControlName="type" required>
+        <option value="TOURISM">Tourism</option>
+        <option value="ACCOMMODATION">Accomodation</option>
+        <option value="SERVICE">Service</option>
+        <option value="NATURE">Nature</option>
+        <option value="OTHER">Other</option>
+      </select>
+    </div>
 
-    <label>Open Time:</label>
-    <input type="time" formControlName="openTime" required>
- 
-    <label>Close Time:</label>
-    <input type="time" formControlName="closeTime" required>
+    <div>
+      <label>Open Time:</label>
+      <input type="time" formControlName="openTime" required>
+    </div>
 
-    <button type="submit" [disabled]="poiForm.invalid">Save</button>
-    <button type="button" (click)="goBack()">Cancel</button>
+    <div>
+      <label>Close Time:</label>
+      <input type="time" formControlName="closeTime" required>
+    </div>
+
+    <div>
+      <button type="submit" [disabled]="poiForm.invalid">Save</button>
+      <button type="button" (click)="goBack()">Cancel</button>
+    </div>
   </form>
-</div>
+</section>
 </ng-template>

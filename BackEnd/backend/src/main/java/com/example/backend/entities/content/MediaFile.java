@@ -23,6 +23,8 @@ public class MediaFile {
 
     private String type;
 
+    private long size;
+
     @Lob
     private byte[] data; // For images, audio, video
 

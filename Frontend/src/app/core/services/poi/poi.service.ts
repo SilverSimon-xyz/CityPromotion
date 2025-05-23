@@ -38,4 +38,5 @@ private apiURL = environment.baseUrl;
     if(type) params.type = type;
     return this.http.get<PointOfInterest[]>(`${this.apiURL}/poi/search`, {params});
   }
+
 }

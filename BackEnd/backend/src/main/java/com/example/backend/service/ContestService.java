@@ -1,11 +1,12 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.request.ContestParticipantRequest;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.users.User;
 import com.example.backend.entities.contest.Contest;
-import com.example.backend.entities.contest.ContestParticipation;
+import com.example.backend.entities.contest.ContestParticipant;
 import com.example.backend.entities.contest.QuoteCriterion;
-import com.example.backend.repository.ContestParticipationRepository;
+import com.example.backend.repository.ContestParticipantRepository;
 import com.example.backend.repository.ContestRepository;
 import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.repository.UserRepository;
@@ -13,7 +14,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +29,7 @@ public class ContestService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private ContestParticipationRepository contestParticipationRepository;
+    private ContestParticipantRepository contestParticipantRepository;
     @Autowired
     private MediaFileRepository mediaFileRepository;
 
@@ -73,51 +76,46 @@ public class ContestService {
                 contestRepository.findAll();
     }
 
-    public Contest activeClosedContest(Long id) {
-        Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
-        if(!contest.isActive()) contest.setActive(true);
-        return contest;
-    }
-
-    public void deleteAllContest() {
-        contestParticipationRepository.deleteAll();
-        contestRepository.deleteAll();
-    }
-
     public void deleteContest(Long id) {
-        List<Long> participantsIds = contestParticipationRepository
+        List<Long> participantsIds = contestParticipantRepository
                 .findByContestId(id)
                 .stream()
-                .map(ContestParticipation::getId)
+                .map(ContestParticipant::getId)
                 .toList();
-        contestParticipationRepository.deleteAllById(participantsIds);
+        contestParticipantRepository.deleteAllById(participantsIds);
         contestRepository.deleteById(id);
     }
 
-    public List<ContestParticipation> getAllContestParticipant() {
-        return contestParticipationRepository.findAll();
+    public List<ContestParticipant> getAllContestParticipant() {
+        return contestParticipantRepository.findAll();
     }
 
     @Transactional
-    public ContestParticipation participateContest(Long idContest, Long idUser, MediaFile mediaFile) {
-        Optional<Contest> optionalContest = contestRepository.findById(idContest);
-        Optional<User> optionalUser = userRepository.findById(idUser);
+    public ContestParticipant participateContest(ContestParticipantRequest request, MultipartFile file) throws IOException {
+        Optional<Contest> optionalContest = contestRepository.findById(request.idContest());
+        Optional<User> optionalUser = userRepository.findById(request.idUser());
 
         if(optionalContest.isPresent() && optionalUser.isPresent()) {
             Contest contest = optionalContest.get();
             User user = optionalUser.get();
             if(contest.isActive()) {
+                MediaFile mediaFile = MediaFile.builder()
+                        .name(file.getOriginalFilename())
+                        .type(file.getContentType())
+                        .size(file.getSize())
+                        .data(file.getBytes())
+                        .build();
+                mediaFileRepository.save(mediaFile);
                 QuoteCriterion quoteCriterion = new QuoteCriterion();
-                ContestParticipation participation = ContestParticipation.builder()
+                ContestParticipant participation = ContestParticipant.builder()
                         .contest(contest)
                         .user(user)
                         .mediaFile(mediaFile)
                         .quoteCriterion(quoteCriterion)
                         .build();
+                contestParticipantRepository.save(participation);
                 contest.getParticipationContestList().add(participation);
                 contest.setNumberOfParticipant(contest.getNumberOfParticipant()+1);
-                mediaFileRepository.save(mediaFile);
-                contestParticipationRepository.save(participation);
                 contestRepository.save(contest);
                 return participation;
             }
@@ -127,10 +125,10 @@ public class ContestService {
         }
     }
 
-    public ContestParticipation evaluateParticipant(Long idParticipant, QuoteCriterion quoteCriterionDetails) {
-        Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
+    public ContestParticipant evaluateParticipant(Long idParticipant, QuoteCriterion quoteCriterionDetails) {
+        Optional<ContestParticipant> optionalContestParticipation = contestParticipantRepository.findById(idParticipant);
         if(optionalContestParticipation.isPresent()) {
-            ContestParticipation participant = optionalContestParticipation.get();
+            ContestParticipant participant = optionalContestParticipation.get();
             if (!participant.getQuoteCriterion().isQuote()) {
                 QuoteCriterion quoteCriterion = QuoteCriterion.builder()
                         .vote(quoteCriterionDetails.getVote())
@@ -138,7 +136,7 @@ public class ContestService {
                         .isQuote(true)
                         .build();
                 participant.setQuoteCriterion(quoteCriterion);
-                contestParticipationRepository.save(participant);
+                contestParticipantRepository.save(participant);
                 return participant;
             }
             return null;
@@ -148,9 +146,15 @@ public class ContestService {
     }
 
     public void deleteParticipant(Long idParticipant) {
-        Optional<ContestParticipation> optionalContestParticipation = contestParticipationRepository.findById(idParticipant);
+        Optional<ContestParticipant> optionalContestParticipation = contestParticipantRepository.findById(idParticipant);
         if(optionalContestParticipation.isPresent()) {
-            contestParticipationRepository.delete(optionalContestParticipation.get());
+            ContestParticipant participant = optionalContestParticipation.get();
+            Contest contest = participant.getContest();
+            contest.setNumberOfParticipant(contest.getNumberOfParticipant()-1);
+            MediaFile mediaFile = participant.getMediaFile();
+            mediaFileRepository.delete(mediaFile);
+            contestParticipantRepository.delete(participant);
+
         } else {
             throw new RuntimeException("Participant non found.");
         }
@@ -166,7 +170,7 @@ public class ContestService {
         List<User> winners = contest.getParticipationContestList()
                 .stream()
                 .filter(participateContest -> participateContest.getQuoteCriterion().getVote()==maxScore)
-                .map(ContestParticipation::getUser)
+                .map(ContestParticipant::getUser)
                 .toList();
         contest.setActive(false);
         contestRepository.save(contest);

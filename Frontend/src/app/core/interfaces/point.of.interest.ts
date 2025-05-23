@@ -1,3 +1,4 @@
+import { MediaFile } from "./media.file";
 import { User } from "./user";
 
 export interface PointOfInterest {

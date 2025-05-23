@@ -1,10 +1,10 @@
 package com.example.backend.service;
 
-import com.example.backend.entities.content.MultimediaContent;
+import com.example.backend.entities.content.Content;
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.users.User;
 import com.example.backend.entities.poi.PointOfInterestType;
-import com.example.backend.repository.MultimediaContentRepository;
+import com.example.backend.repository.ContentRepository;
 import com.example.backend.repository.PointOfInterestRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
@@ -26,7 +26,7 @@ public class PointOfInterestService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private MultimediaContentRepository multimediaContentRepository;
+    private ContentRepository contentRepository;
 
     public PointOfInterestService() {
     }
@@ -81,17 +81,12 @@ public class PointOfInterestService {
         return poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
     }
 
-    public void deleteAllPOIs() {
-        multimediaContentRepository.deleteAll();
-        poiRepository.deleteAll();
-    }
-
     public void deletePOI(Long id) {
         PointOfInterest poi = poiRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Point of Interest not Found!"));
-        List<Long> mcIds = poi.getMultimediaContents().stream()
-                .map(MultimediaContent::getId)
+        List<Long> mcIds = poi.getContents().stream()
+                .map(Content::getId)
                 .toList();
-        multimediaContentRepository.deleteAllById(mcIds);
+        contentRepository.deleteAllById(mcIds);
         poiRepository.delete(poi);
     }
 }

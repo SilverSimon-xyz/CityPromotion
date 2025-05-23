@@ -70,10 +70,4 @@ public class UserController {
                 : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete/all")
-    public ResponseEntity<Void> deleteAll() {
-        this.userService.deleteAllUsers();
-        return ResponseEntity.noContent().build();
-    }
-
 }

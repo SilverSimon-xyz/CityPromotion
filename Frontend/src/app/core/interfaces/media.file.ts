@@ -1,6 +1,7 @@
 export interface MediaFile {
+    id: number,
     name: string, 
     type: string, 
     size: number, 
-    base64: string
+    data: Blob
 }

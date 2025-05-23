@@ -1,6 +1,6 @@
 package com.example.backend.entities.poi;
 
-import com.example.backend.entities.content.MultimediaContent;
+import com.example.backend.entities.content.Content;
 import com.example.backend.entities.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -52,6 +52,10 @@ public class PointOfInterest {
     @Column(name = "close_time")
     private LocalTime closeTime;
 
+    @OneToMany(mappedBy = "poi", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("poi")
+    private List<Content> contents = new ArrayList<>();
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
@@ -60,24 +64,4 @@ public class PointOfInterest {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "poi", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnoreProperties("poi")
-    private List<MultimediaContent> multimediaContents = new ArrayList<>();
-
-    @Override
-    public String toString() {
-        return "PointOfInterest{" +
-                "author=" + author +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", type=" + type +
-                ", openTime=" + openTime +
-                ", closeTime=" + closeTime +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

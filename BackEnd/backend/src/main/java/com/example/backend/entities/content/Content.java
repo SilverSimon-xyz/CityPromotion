@@ -17,25 +17,24 @@ import java.util.Date;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Entity
-@Table(name = "multimediacontent")
-public class MultimediaContent {
+@Table(name = "content")
+public class Content {
 
     @Id
-    @Column(name = "mc_id")
+    @Column(name = "content_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
-    @Enumerated(EnumType.STRING)
-    private FormatFileType type;
-
     @Lob
-    private String description;
+    private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User author;
+    private String hashtag;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -45,17 +44,15 @@ public class MultimediaContent {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
-
-    @OneToOne
-    @JoinColumn(name = "file_id")
-    private MediaFile mediaFile;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User author;
 
     @ManyToOne
     @JoinColumn(name = "poi_id")
     private PointOfInterest poi;
 
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id")
+    private MediaFile mediaFile;
 }

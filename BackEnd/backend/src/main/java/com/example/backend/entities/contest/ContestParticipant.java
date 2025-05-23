@@ -11,8 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "contest_participation")
-public class ContestParticipation {
+@Table(name = "contest_participant")
+public class ContestParticipant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +33,5 @@ public class ContestParticipation {
 
     @Embedded
     private QuoteCriterion quoteCriterion;
-
 
 }

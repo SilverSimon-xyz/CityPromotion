@@ -74,11 +74,6 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void deleteAllUsers() {
-        this.userRepository.deleteAll();
-    }
-
-
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

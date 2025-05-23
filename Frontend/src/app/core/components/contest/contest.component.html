@@ -102,47 +102,64 @@
     </table>
 </div>
 
-<div *ngIf="isAdding || isEditing">
+<section *ngIf="isAdding || isEditing">
   <h2>{{ isAdding ? 'Add new Contest' : 'Modify Contest'}}</h2>
     <form [formGroup]="contestForm" (ngSubmit)="saveChanges()">
-
+      <div>
         <label>Name:</label>
         <input type="text" formControlName="name" required>
-            
+      </div>
+        
+      <div>
         <label>Description:</label>
         <input type="text" formControlName="description" required>
-            
+      </div>  
+        
+      <div>
         <label>Firstname:</label>
         <input type="text" formControlName="authorFirstname" required>
-            
+      </div>      
+        
+      <div>
         <label>Lastname:</label>
         <input type="text" formControlName="authorLastname" required>
+      </div>     
 
+      <div>
         <label>Rules:</label>
         <input type="text" formControlName="rules" required>
+      </div>
 
+      <div>
         <label>Goal:</label>
         <input type="text" formControlName="goal" required>
+      </div>
 
+      <div>
         <label>Prize:</label>
         <input type="text" formControlName="prize" required>
-
+      </div>
+        
+      <div>
         <label for="deadline">Deadline:</label>
         <input type="datetime-local" id="deadline" formControlName="deadline" required>
-
+      </div>
+      <div>
         <label>Active:</label>
-        <div>
-        <label>
+          <div>
+            <label>
             <input type="radio" formControlName="active" [value]="true" required>
-        </label>
+            </label>
         
-        <label>
+            <label>
             <input type="radio" formControlName="active" [value]="false" required>
-        </label>
-        </div>
-
+            </label>
+          </div>
+      </div>
+      <div>
         <button type="submit" [disabled]="contestForm.invalid">Save</button>
         <button type="button" (click)="goBack()">Cancel</button>
+      </div>
     </form>
-</div>
+  </section>
 </ng-template>

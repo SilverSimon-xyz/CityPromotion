@@ -2,8 +2,8 @@ SHOW DATABASES;
 USE newdb;
 SHOW TABLES;
 
-DROP DATABASE newdb;
-CREATE DATABASE newdb;
+#DROP DATABASE newdb;
+#CREATE DATABASE newdb;
 
 #-Table for Users
 CREATE TABLE users (
