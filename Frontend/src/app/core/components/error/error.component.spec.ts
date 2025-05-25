@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MediaFileComponent } from './media.file.component';
+import { ErrorComponent } from './error.component';
 
-describe('MediaFileComponent', () => {
-  let component: MediaFileComponent;
-  let fixture: ComponentFixture<MediaFileComponent>;
+describe('ErrorComponent', () => {
+  let component: ErrorComponent;
+  let fixture: ComponentFixture<ErrorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MediaFileComponent]
+      imports: [ErrorComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MediaFileComponent);
+    fixture = TestBed.createComponent(ErrorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

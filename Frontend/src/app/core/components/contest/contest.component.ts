@@ -29,10 +29,8 @@ export class ContestComponent {
 
     this.contestForm = this.formBuilder.group({
       searchName: [''],
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      authorFirstname: ['', Validators.required],
-      authorLastname: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(5)]],
+      description: ['', [Validators.required, Validators.minLength(10)]],
       rules: ['', Validators.required],
       goal: ['', Validators.required], 
       prize: ['', Validators.required],
@@ -96,7 +94,6 @@ export class ContestComponent {
   updateContest(id: number) {
     this.router.navigate(['/contest', id, 'edit'])
   }
-
 
   deleteContest(id: number) {
     if (confirm(`Sei sicuro di voler eliminare questo contest?`)) {

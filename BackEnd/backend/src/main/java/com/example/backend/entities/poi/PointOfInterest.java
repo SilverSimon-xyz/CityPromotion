@@ -52,7 +52,7 @@ public class PointOfInterest {
     @Column(name = "close_time")
     private LocalTime closeTime;
 
-    @OneToMany(mappedBy = "poi", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "poi", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("poi")
     private List<Content> contents = new ArrayList<>();
 

@@ -1,9 +1,10 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.StatusRequest;
 import com.example.backend.dto.response.ContentResponse;
 import com.example.backend.dto.request.ContentRequest;
 import com.example.backend.entities.content.Content;
-import com.example.backend.entities.content.Status;
+import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,12 @@ public class ContentController {
 
     @Autowired
     private ContentService contentService;
+    @Autowired
+    private MediaFileRepository mediaFileRepository;
 
     @PostMapping("/add")
     public ResponseEntity<ContentResponse> createContent(@RequestPart("data") ContentRequest request, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         Content content = contentService.createContent(request, file);
-        System.out.println("Successo!");
         ContentResponse response = ContentResponse.mapToResponse(content);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -43,8 +45,9 @@ public class ContentController {
                 .toList());
     }
 
-    @PutMapping("/edit/content/{idContent}")
+    @PutMapping("/edit/{idContent}")
     public ResponseEntity<ContentResponse> updateContent(@PathVariable Long idContent, @RequestBody ContentRequest request) {
+        System.out.println("Id content:" + idContent);
         Content content = contentService.updateContent(idContent, request);
         ContentResponse response = ContentResponse.mapToResponse(content);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -58,14 +61,14 @@ public class ContentController {
     }
 
 
-    @PatchMapping("/validate/{id}")
-    public ResponseEntity<ContentResponse> validateContent(@PathVariable Long id, @RequestParam Status status) {
+    @PatchMapping("/validate/{id}/status")
+    public ResponseEntity<ContentResponse> validateContent(@PathVariable Long id, @RequestBody StatusRequest status) {
         Content content = contentService.validateContent(id, status);
         ContentResponse response = ContentResponse.mapToResponse(content);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/validate/delete-all-rejected")
+    @DeleteMapping("/validate/delete/rejected")
     public ResponseEntity<Void> deleteAllContentRejected() {
         contentService.deleteAllContentRejected();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

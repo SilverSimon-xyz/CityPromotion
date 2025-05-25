@@ -47,7 +47,7 @@ public class PointOfInterestController {
 
     @PostMapping("/add")
     public ResponseEntity<PointOfInterestResponse> createPOI(@RequestBody PointOfInterestRequest request) {
-        PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request.toPOI(), request.authorFirstname(), request.authorLastname());
+        PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request);//request.authorFirstname(), request.authorLastname());
         PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(pointOfInterestCreated);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

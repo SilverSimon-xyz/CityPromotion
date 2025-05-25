@@ -1,0 +1,5 @@
+<div *ngIf="errorMessage" class="error-box">
+  <h2>Error 404 - Page not Found</h2>  
+  <p>Error: {{ errorMessage }}</p>
+  <button class="go-back-btn" (click)="goBack()"> Back </button>
+</div>

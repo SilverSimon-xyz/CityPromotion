@@ -3,10 +3,9 @@ package com.example.backend.dto.response;
 import com.example.backend.entities.content.MediaFile;
 import lombok.Builder;
 
-import java.util.Base64;
 
 @Builder
-public record MediaFileResponse(Long id, String name, String type, long size, String base64) {
+public record MediaFileResponse(Long id, String name, String type, long size, byte[] data) {
 
     public static MediaFileResponse mapToResponse(MediaFile mediaFile) {
         return MediaFileResponse.builder()
@@ -14,7 +13,7 @@ public record MediaFileResponse(Long id, String name, String type, long size, St
                 .name(mediaFile.getName())
                 .type(mediaFile.getType())
                 .size(mediaFile.getSize())
-                .base64(Base64.getEncoder().encodeToString(mediaFile.getData()))
+                .data(mediaFile.getData())
                 .build();
     }
 }

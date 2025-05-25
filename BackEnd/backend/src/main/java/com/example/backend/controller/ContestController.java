@@ -28,7 +28,7 @@ public class ContestController {
 
     @PostMapping("/add")
     public ResponseEntity<ContestResponse> addContest(@RequestBody ContestRequest request) {
-        Contest contest = contestService.createContest(request.toContest(), request.authorFirstname(), request.authorLastname());
+        Contest contest = contestService.createContest(request);
         ContestResponse response = ContestResponse.mapToResponse(contest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

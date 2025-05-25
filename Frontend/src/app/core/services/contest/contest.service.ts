@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
@@ -6,6 +6,7 @@ import { Contest } from '../../interfaces/contest';
 import { ContestParticipation, QuoteCritirion } from '../../interfaces/contest.participation';
 import { User } from '../../interfaces/user';
 import { MediaFile } from '../../interfaces/media.file';
+import { SessionStorageService } from '../session.storage/session.storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class ContestService {
 
   private apiURL = environment.baseUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private sessionStorageService: SessionStorageService) { }
 
   getAllContest(): Observable<Contest[]> {
     return this.http.get<Contest[]>(`${this.apiURL}/contest/all`);
@@ -25,7 +26,10 @@ export class ContestService {
   }
 
   createContest(contest: Contest): Observable<Contest> {
-    return this.http.post<Contest>(`${this.apiURL}/contest/add`, contest);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.sessionStorageService.getItem('accessToken')}`
+    })
+    return this.http.post<Contest>(`${this.apiURL}/contest/add`, contest, {headers});
   }
 
   updateContest(id: number, contest: Contest): Observable<Contest> {

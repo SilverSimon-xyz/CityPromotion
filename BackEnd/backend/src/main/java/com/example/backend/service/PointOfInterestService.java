@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.request.PointOfInterestRequest;
 import com.example.backend.entities.content.Content;
 import com.example.backend.entities.poi.PointOfInterest;
 import com.example.backend.entities.users.User;
@@ -10,6 +11,7 @@ import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,19 +33,25 @@ public class PointOfInterestService {
     public PointOfInterestService() {
     }
 
-    public PointOfInterest createPOI(PointOfInterest pointOfInterest, String firstname, String lastname) {
+    @Transactional
+    public PointOfInterest createPOI(PointOfInterestRequest request) {
 
-        if(poiRepository.existsByNameAndLatitudeAndLongitude(pointOfInterest.getName(), pointOfInterest.getLatitude(), pointOfInterest.getLongitude()))
-            throw new EntityExistsException("Point of Interest already existing!\n" + pointOfInterest);
+        if(poiRepository.existsByNameAndLatitudeAndLongitude(request.name(), request.latitude(), request.longitude()))
+            throw new EntityExistsException("Point of Interest already existing!\n" + request);
 
-        Optional<User> optionalAuthor = userRepository.findByFirstnameAndLastname(firstname, lastname);
-
-        if(optionalAuthor.isEmpty())
-            throw new EntityNotFoundException("User not found: " + firstname + " " + lastname);
-
-        User author = optionalAuthor.get();
-        pointOfInterest.setCreatedAt(new Date());
-        pointOfInterest.setAuthor(author);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User author = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+        PointOfInterest pointOfInterest = PointOfInterest.builder()
+                .name(request.name())
+                .description(request.description())
+                .latitude(request.latitude())
+                .longitude(request.longitude())
+                .type(request.type())
+                .openTime(request.openTime())
+                .closeTime(request.closeTime())
+                .build()
+                .setAuthor(author)
+                .setCreatedAt(new Date());
 
         return this.poiRepository.save(pointOfInterest);
     }

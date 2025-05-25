@@ -36,6 +36,7 @@ export const routes: Routes = [
     {path: 'contents', component: ContentComponent},
     {path: 'contents/:id', component: ContentComponent},
     {path: 'contents/add', component: ContentComponent},
+    {path: 'contents/:id/edit', component: ContentComponent},
 
     {path: '**', redirectTo:'dashboard'},
     

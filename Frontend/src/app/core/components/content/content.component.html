@@ -1,51 +1,65 @@
-<div>
-  <button *ngIf="!isCreatingContent" (click)="createContent()">New Content</button>
-</div>
-
-<div *ngIf="!isCreatingContent && !selectedContent">
+<div *ngIf="!isCreatingContent && !isUpdateContent && !selectedContent" class="post-list">
+  <div>
+    <button (click)="createContent()">New Content</button>
+  </div>
   <h2>Content List</h2>
   <ul>
-    <li *ngFor="let content of contents">
-      <button (click)="navigateToContent(content.id)">{{ content.title }}</button>
-      <button (click)="deleteContent(content.id)">Delete</button>
+    <li class="post-card" *ngFor="let content of contents">
+      <div *ngIf="content.status !== Status.REJECTED">
+        <h3>{{ content.title }}</h3>
+        <p>{{ content.content }}</p>
+        <button (click)="navigateToContent(content.id)">View</button>
+      </div>
     </li>
   </ul>
-</div>
-
-<div *ngIf="selectedContent">
-<h2>Content Details</h2>
   <div>
-    <h3>{{ selectedContent.title }}</h3>
-    <p>{{ selectedContent.content }}</p>
-    <p>{{ selectedContent.author.firstname }} {{ selectedContent.author.lastname }}</p>
-    <p>{{ selectedContent.pointOfInterest.name }}</p>
-    <p>{{ selectedContent.hashtag }}</p>
-    <button (click)="goBack()">Return to List</button>
+    <button (click)="deleteAllRejectContent()">Delete All Rejected Contents</button>
   </div>
-  
 </div>
 
-<section *ngIf="isCreatingContent">
-<h2>Content Creation</h2>
+<div *ngIf="selectedContent && !isUpdateContent" class="post-container">
+    <h3 class="post-content">{{ selectedContent.title }}</h3>
+    <div class="post-header" *ngIf="previewUrl">
+      <img *ngIf="previewUrl.includes('image')" [src]="previewUrl" class="img-thumbnail" width="200">
+      <a *ngIf="!previewUrl.includes('image')" [href]="previewUrl" target="_blank">Open File</a>
+    </div>
+    <p class="post-content">{{ selectedContent.content }}</p>
+    <p class="author-name">{{ selectedContent.author.firstname }} {{ selectedContent.author.lastname }}</p>
+    <p>{{ selectedContent.pointOfInterest.name }}</p>
+    <p class="hashtags">{{ selectedContent.hashtag }}</p>
+    <p>{{ selectedContent.status }}</p>
+    <div class="post-actions">
+      <div *ngIf="selectedContent.status === Status.PENDING">
+        <button (click)="approveContent(selectedContent.id)">Approve</button>
+        <button (click)="rejectContent(selectedContent.id)">Reject</button>
+      </div>
+      <button (click)="updateContent(selectedContent.id)">Modify</button>
+      <button (click)="deleteContent(selectedContent.id)">Delete</button>
+      <button (click)="goBack()">Return to List</button>
+    </div>
+</div>
+
+<section *ngIf="isCreatingContent || isUpdateContent">
+<h2>{{ isCreatingContent ? 'New Content' : 'Modify Content'}}</h2>
 <form [formGroup]="contentForm" (ngSubmit)="saveContent()">
     <div>
         <label>Title:</label>
-        <input formControlName="title">
+        <input type="text" formControlName="title" required>
     </div>
   
     <div>
         <label>Content:</label>
-        <textarea formControlName="content"></textarea>
+        <textarea type="text" formControlName="content" required></textarea>
     </div>
 
     <div>
         <label>Hashtag:</label>
-        <textarea formControlName="hashtag"></textarea>
+        <input type="text" formControlName="hashtag" required>
     </div>
 
   <div>
     <label for="idPoi">Point of Interest Associeted:</label>
-    <select formControlName="idPoi">
+    <select id="idPoi" formControlName="idPoi" required>
       <option value="" disabled selected>Select one Point of Interest...</option>
       <option *ngFor="let poi of pois" [value]="poi.id">{{ poi.name }} - {{ poi.description }}</option>
     </select>

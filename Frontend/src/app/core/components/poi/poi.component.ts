@@ -28,10 +28,8 @@ export class PoiComponent implements OnInit {
     this.poiForm = this.formBuilder.group({
       searchName: [''],
       searchType: [''],
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      authorFirstname: ['', Validators.required],
-      authorLastname: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(5)]],
+      description: ['', [Validators.required, Validators.minLength(10)]],
       latitude: ['', Validators.required],
       longitude: ['', Validators.required], 
       type: ['', Validators.required],
@@ -58,7 +56,7 @@ export class PoiComponent implements OnInit {
   loadPois(): void {
     this.poiService.getAllPointOfInterest().subscribe({
       next: (response) => this.pois = response,
-      error: (err) => console.error('Error during loading user ', err)
+      error: (err) => console.error('Error during loading point of Interest ', err)
     })
   }
 

@@ -85,6 +85,7 @@
       <td> {{ selectedPoi.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
       <td> {{ selectedPoi.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
       <button class="edit" (click)="updatePoi(selectedPoi.id)">Modify</button>
+      <button class="delete" (click)="deletePoi(selectedPoi.id)">Delete</button>
       <button (click)="goBack()">Back</button>
     </tbody>
   </table>
@@ -101,17 +102,7 @@
 
     <div>
       <label>Description:</label>
-      <input type="text" formControlName="description" required>
-    </div>
-
-    <div>
-      <label>Firstname:</label>
-      <input type="text" formControlName="authorFirstname" required>
-    </div>
-
-    <div>
-      <label>Lastname:</label>
-      <input type="text" formControlName="authorLastname" required>
+      <textarea type="text" formControlName="description" required></textarea>
     </div>
 
     <div>

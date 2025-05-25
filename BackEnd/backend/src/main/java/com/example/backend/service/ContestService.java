@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.ContestParticipantRequest;
+import com.example.backend.dto.request.ContestRequest;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.users.User;
 import com.example.backend.entities.contest.Contest;
@@ -12,6 +13,7 @@ import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,10 +39,18 @@ public class ContestService {
 
     }
 
-    public Contest createContest(Contest contest, String authorFirstname, String authorLastname) {
-        User author = userRepository.findByFirstnameAndLastname(authorFirstname, authorLastname).orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        contest.setCreatedAt(new Date());
-        contest.setAuthor(author);
+    public Contest createContest(ContestRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User author = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+        Contest contest = Contest.builder()
+                .name(request.name())
+                .description(request.description())
+                .rules(request.rules())
+                .goal(request.goal())
+                .prize(request.prize())
+                .deadline(request.deadline())
+                .active(request.active())
+                .build().setAuthor(author).setCreatedAt(new Date());
         return contestRepository.save(contest);
     }
 
@@ -93,11 +103,10 @@ public class ContestService {
     @Transactional
     public ContestParticipant participateContest(ContestParticipantRequest request, MultipartFile file) throws IOException {
         Optional<Contest> optionalContest = contestRepository.findById(request.idContest());
-        Optional<User> optionalUser = userRepository.findById(request.idUser());
-
-        if(optionalContest.isPresent() && optionalUser.isPresent()) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User participant = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+        if(optionalContest.isPresent()) {
             Contest contest = optionalContest.get();
-            User user = optionalUser.get();
             if(contest.isActive()) {
                 MediaFile mediaFile = MediaFile.builder()
                         .name(file.getOriginalFilename())
@@ -109,7 +118,7 @@ public class ContestService {
                 QuoteCriterion quoteCriterion = new QuoteCriterion();
                 ContestParticipant participation = ContestParticipant.builder()
                         .contest(contest)
-                        .user(user)
+                        .user(participant)
                         .mediaFile(mediaFile)
                         .quoteCriterion(quoteCriterion)
                         .build();

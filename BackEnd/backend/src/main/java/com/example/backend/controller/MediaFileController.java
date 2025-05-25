@@ -21,7 +21,6 @@ public class MediaFileController {
     @GetMapping("/get/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
         MediaFile mediaFile = mediaFileRepository.findById(id).orElseThrow(() -> new RuntimeException("File not found!"));
-
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.parseMediaType(mediaFile.getType()))
                 .body(mediaFile.getData());

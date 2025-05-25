@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import com.example.backend.dto.request.ContentRequest;
+import com.example.backend.dto.request.StatusRequest;
 import com.example.backend.entities.content.Content;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.content.Status;
@@ -14,6 +15,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +43,8 @@ public class ContentService {
     @Transactional
     public Content createContent(ContentRequest request, MultipartFile file) throws IOException {
         if(contentRepository.existsByTitle(request.title())) throw new EntityExistsException("Content already present!");
-        User author = userRepository.findByFirstnameAndLastname(request.authorFirstname(), request.authorLastname()).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User author = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
         PointOfInterest pointOfInterest = poiRepository.findById(request.idPoi()).orElseThrow(() -> new EntityNotFoundException("POI Not Found"));
         MediaFile mediaFile = MediaFile.builder()
                 .name(file.getOriginalFilename())
@@ -92,22 +95,27 @@ public class ContentService {
         return contentRepository.findAll();
     }
 
+    @Transactional
     public void deleteContentById(Long id) {
         Content content = contentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Content not Found!"));
+
+        MediaFile mediaFile = content.getMediaFile();
+        mediaFileRepository.delete(mediaFile);
+        content.setMediaFile(null);
+
         PointOfInterest pointOfInterest = content.getPoi();
         pointOfInterest.getContents().remove(content);
         poiRepository.save(pointOfInterest);
-        MediaFile mediaFile = content.getMediaFile();
-        mediaFileRepository.delete(mediaFile);
-        contentRepository.deleteById(id);
+
+        contentRepository.delete(content);
     }
 
-    public Content validateContent(Long id, Status status) {
+    public Content validateContent(Long id, StatusRequest status) {
         Content content = contentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Content not Found!"));
-        switch(status) {
+        switch(status.status()) {
             case PENDING -> throw new IllegalArgumentException("You have to APPROVED or REJECTED");
             case APPROVED, REJECTED -> {
-                    content.setStatus(status);
+                    content.setStatus(status.status());
                     contentRepository.save(content);
             }
             default -> throw new RuntimeException("No such state exist!");
@@ -115,13 +123,19 @@ public class ContentService {
         return content;
     }
 
+    @Transactional
     public void deleteAllContentRejected() {
         List<Content> contentList = contentRepository.findByStatus(Status.REJECTED);
-        List<PointOfInterest> pointOfInterestList = poiRepository.findAll();
+
+        List<MediaFile> mediaFileList = contentList.stream().map(Content::getMediaFile).toList();
+        contentList.forEach(content -> content.setMediaFile(null));
+
+        mediaFileRepository.deleteAll(mediaFileList);
+
+        List<PointOfInterest> pointOfInterestList = contentList.stream().map(Content::getPoi).toList();
         pointOfInterestList.forEach(poi -> poi.getContents().removeIf(multimediaContent -> multimediaContent.getStatus().equals(Status.REJECTED)));
         poiRepository.saveAll(pointOfInterestList);
-        List<MediaFile> mediaFileList = contentList.stream().map(Content::getMediaFile).toList();
-        mediaFileRepository.deleteAll(mediaFileList);
+
         contentRepository.deleteAll(contentList);
     }
 

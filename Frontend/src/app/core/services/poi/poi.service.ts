@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PointOfInterest, PointOfInterestType } from '../../interfaces/point.of.interest';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
+import { SessionStorageService } from '../session.storage/session.storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { environment } from '../../../../environments/environment.development';
 export class PoiService {
 private apiURL = environment.baseUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private sessionStorageService: SessionStorageService) { }
 
   getAllPointOfInterest(): Observable<PointOfInterest[]> {
     return this.http.get<PointOfInterest[]>(`${this.apiURL}/poi/all`);
@@ -21,7 +22,10 @@ private apiURL = environment.baseUrl;
   }
 
   createPointOfInterest(pointOfInterest: PointOfInterest): Observable<PointOfInterest> {
-    return this.http.post<PointOfInterest>(`${this.apiURL}/poi/add`, pointOfInterest);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.sessionStorageService.getItem('accessToken')}`
+    })
+    return this.http.post<PointOfInterest>(`${this.apiURL}/poi/add`, pointOfInterest, {headers});
   }
 
   updatePointOfInterest(id: number, pointOfInterest: PointOfInterest): Observable<PointOfInterest> {

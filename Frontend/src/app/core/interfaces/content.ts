@@ -14,10 +14,10 @@ export interface Content {
     createdAt: Date,
     updatedAt: Date,
 }
-
-
 export enum Status {
-    PENDING,
-    APPROVED,
-    REJECTED
+    PENDING = "PENDING",
+    APPROVED = "APPROVED" ,
+    REJECTED = "REJECTED"
 }
+
+    

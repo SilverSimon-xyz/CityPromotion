@@ -52,7 +52,7 @@ public class Content {
     @JoinColumn(name = "poi_id")
     private PointOfInterest poi;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "file_id")
     private MediaFile mediaFile;
 }
