@@ -59,7 +59,7 @@
     </tr>
     </tbody>
     </table>
-    <button class="footer-button" (click)="goToDashboard()">Return to Dashboard</button>
+    <button (click)="goToDashboard()">Return to Dashboard</button>
 </div>
 
 <div *ngIf="selectedContest && !isEditing">
@@ -94,8 +94,10 @@
         <td>  {{ selectedContest.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
         <td>  {{ selectedContest.numberOfParticipant }} </td>
         <td>
-            <button class="edit" (click)="updateContest(selectedContest.id)">Modify</button>
-            <button (click)="goBack()">Back</button>
+          <button class="edit" (click)="updateContest(selectedContest.id)">Modify</button>
+          <button (click)="participateToContest()">Participate</button>
+          <button (click)="goToParticipants()">Show Participants</button>
+          <button (click)="goBack()">Back</button>
         </td>
         </tr>
     </tbody>
@@ -137,13 +139,11 @@
       <div>
         <label>Active:</label>
           <div>
-            <label>
+            <label>Yes</label>
             <input type="radio" formControlName="active" [value]="true" required>
-            </label>
-        
-            <label>
+            
+            <label>No</label>
             <input type="radio" formControlName="active" [value]="false" required>
-            </label>
           </div>
       </div>
       <div>

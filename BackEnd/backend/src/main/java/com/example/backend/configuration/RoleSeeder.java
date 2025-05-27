@@ -36,11 +36,11 @@ public class RoleSeeder implements ApplicationListener<ContextRefreshedEvent> {
         };
 
         Map<String, String> roleDescriptionMap = Map.of(
-                "TOURIST", "Default user role, have permission to read Elements (POI, TOUR, CONTEST, EVENT), report Contents and participate to Contest or Event",
-                "CONTRIBUTOR", "Contributor role, have permission to create POI and TOUR, loading Contents to POI",
-                "ANIMATOR", "Animator role, have permission to create, update and/or delete Contest, managing Contest for declaring a winner and Validate the Contents of the Contest",
-                "CURATOR", "Curator role, have permission to load Contents to POI or Tour, validate pending or reported Contents",
-                "ADMIN", "Administrator role, is the SUPERVISOR, could do everything and managing the users"
+                "TOURIST", "Default user role, have permission to read Point of Interest, Contest e Content and can participate to Contest.",
+                "CONTRIBUTOR", "Contributor role, have permission to create Point of Interest and loading Contents to Point of Interest",
+                "ANIMATOR", "Animator role, have permission to create, update and/or delete Contest, managing Contest for declaring a winner and Validate the Participants of the Contest",
+                "CURATOR", "Curator role, have permission to load Contents to Point of Interest, validate Contents that are in pending state",
+                "ADMIN", "Administrator role, can create, read, update and delete Point of Interest, Contents and Contest plus manage the Users and Roles"
         );
 
         Arrays.stream(roleNames).forEach(roleName -> {

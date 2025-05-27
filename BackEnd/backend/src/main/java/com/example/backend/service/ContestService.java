@@ -1,7 +1,7 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.request.ContestParticipantRequest;
 import com.example.backend.dto.request.ContestRequest;
+import com.example.backend.dto.request.QuoteCriterionRequest;
 import com.example.backend.entities.content.MediaFile;
 import com.example.backend.entities.users.User;
 import com.example.backend.entities.contest.Contest;
@@ -11,6 +11,7 @@ import com.example.backend.repository.ContestParticipantRepository;
 import com.example.backend.repository.ContestRepository;
 import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.repository.UserRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,100 +87,106 @@ public class ContestService {
                 contestRepository.findAll();
     }
 
+    @Transactional
     public void deleteContest(Long id) {
-        List<Long> participantsIds = contestParticipantRepository
-                .findByContestId(id)
-                .stream()
-                .map(ContestParticipant::getId)
-                .toList();
-        contestParticipantRepository.deleteAllById(participantsIds);
+        List<ContestParticipant> participants = contestParticipantRepository.findByContestId(id);
+        for(ContestParticipant participant: participants) {
+            if(participant.getMediaFile() != null) {
+                mediaFileRepository.deleteById(participant.getMediaFile().getId());
+            }
+            contestParticipantRepository.deleteById(participant.getId());
+        }
         contestRepository.deleteById(id);
     }
 
-    public List<ContestParticipant> getAllContestParticipant() {
-        return contestParticipantRepository.findAll();
+    @Transactional
+    public List<ContestParticipant> getAllContestParticipant(Long idContest) {
+        Contest contest = contestRepository.findById(idContest).orElseThrow(() -> new EntityNotFoundException("Contest not Found!"));
+        return contest.getParticipationContestList();
     }
 
     @Transactional
-    public ContestParticipant participateContest(ContestParticipantRequest request, MultipartFile file) throws IOException {
-        Optional<Contest> optionalContest = contestRepository.findById(request.idContest());
+    public ContestParticipant participateContest(Long idContest, MultipartFile file) throws IOException {
+        Contest contest = contestRepository.findById(idContest).orElseThrow(() -> new EntityNotFoundException("Contest not Fount."));
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User participant = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
-        if(optionalContest.isPresent()) {
-            Contest contest = optionalContest.get();
-            if(contest.isActive()) {
-                MediaFile mediaFile = MediaFile.builder()
-                        .name(file.getOriginalFilename())
-                        .type(file.getContentType())
-                        .size(file.getSize())
-                        .data(file.getBytes())
-                        .build();
-                mediaFileRepository.save(mediaFile);
-                QuoteCriterion quoteCriterion = new QuoteCriterion();
-                ContestParticipant participation = ContestParticipant.builder()
-                        .contest(contest)
-                        .user(participant)
-                        .mediaFile(mediaFile)
-                        .quoteCriterion(quoteCriterion)
-                        .build();
-                contestParticipantRepository.save(participation);
-                contest.getParticipationContestList().add(participation);
-                contest.setNumberOfParticipant(contest.getNumberOfParticipant()+1);
-                contestRepository.save(contest);
-                return participation;
-            }
-            return null;
-        } else {
-            throw new RuntimeException("Contest or User not Fount.");
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
+        if(contestParticipantRepository.existsByContestAndUser(contest, user)) throw new EntityExistsException("User already sign up in this Contest!");
+        if(contest.isActive()) {
+            MediaFile mediaFile = MediaFile.builder()
+                    .name(file.getOriginalFilename())
+                    .type(file.getContentType())
+                    .size(file.getSize())
+                    .data(file.getBytes())
+                    .build();
+            mediaFileRepository.save(mediaFile);
+            QuoteCriterion quoteCriterion = new QuoteCriterion();
+            ContestParticipant participant = ContestParticipant.builder()
+                    .contest(contest)
+                    .user(user)
+                    .mediaFile(mediaFile)
+                    .quoteCriterion(quoteCriterion)
+                    .build();
+            contest.getParticipationContestList().add(participant);
+            contest.setNumberOfParticipant(contest.getNumberOfParticipant()+1);
+            contestParticipantRepository.save(participant);
+            contestRepository.save(contest);
+            return participant;
         }
+        return null;
     }
 
-    public ContestParticipant evaluateParticipant(Long idParticipant, QuoteCriterion quoteCriterionDetails) {
-        Optional<ContestParticipant> optionalContestParticipation = contestParticipantRepository.findById(idParticipant);
-        if(optionalContestParticipation.isPresent()) {
-            ContestParticipant participant = optionalContestParticipation.get();
-            if (!participant.getQuoteCriterion().isQuote()) {
-                QuoteCriterion quoteCriterion = QuoteCriterion.builder()
-                        .vote(quoteCriterionDetails.getVote())
-                        .description(quoteCriterionDetails.getDescription())
-                        .isQuote(true)
-                        .build();
-                participant.setQuoteCriterion(quoteCriterion);
-                contestParticipantRepository.save(participant);
-                return participant;
-            }
-            return null;
-        } else {
-            throw new RuntimeException("Participant non found.");
-        }
+    public ContestParticipant getParticipant(Long idParticipant) {
+        return contestParticipantRepository.findById(idParticipant).orElseThrow(() -> new EntityNotFoundException("Participant not found!"));
     }
 
-    public void deleteParticipant(Long idParticipant) {
-        Optional<ContestParticipant> optionalContestParticipation = contestParticipantRepository.findById(idParticipant);
-        if(optionalContestParticipation.isPresent()) {
-            ContestParticipant participant = optionalContestParticipation.get();
-            Contest contest = participant.getContest();
-            contest.setNumberOfParticipant(contest.getNumberOfParticipant()-1);
-            MediaFile mediaFile = participant.getMediaFile();
-            mediaFileRepository.delete(mediaFile);
-            contestParticipantRepository.delete(participant);
-
-        } else {
-            throw new RuntimeException("Participant non found.");
-        }
+    @Transactional
+    public ContestParticipant evaluateParticipant(Long idContest, Long idParticipant, QuoteCriterionRequest request) {
+        Contest contest = contestRepository.findById(idContest).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
+        ContestParticipant participant = contestParticipantRepository.findById(idParticipant).orElseThrow(() -> new EntityNotFoundException("Participant not Found!"));
+        if (!participant.getContest().getId().equals(contest.getId()))  throw new RuntimeException("Participant isn't sign up in this Contest!");
+        if (participant.getQuoteCriterion().isQuote())  throw new RuntimeException("Participant already valuated!");
+        QuoteCriterion quoteCriterion = QuoteCriterion.builder()
+                .vote(request.vote())
+                .description(request.description())
+                .isQuote(true)
+                .build();
+        participant.setQuoteCriterion(quoteCriterion);
+        contestParticipantRepository.save(participant);
+        return participant;
     }
 
-    public List<User> declareWinners(Long id) {
+    @Transactional
+    public void deleteParticipant(Long idContest, Long idParticipant) {
+        Contest contest = contestRepository.findById(idContest).orElseThrow(() -> new EntityNotFoundException("Contest Not Found!"));
+        ContestParticipant participant = contestParticipantRepository.findById(idParticipant).orElseThrow(() -> new EntityNotFoundException("Participant not found!"));
+        if (!participant.getContest().getId().equals(contest.getId()))  throw new RuntimeException("Participant isn't sign up in this Contest!");
+
+        MediaFile mediaFile = participant.getMediaFile();
+        participant.setMediaFile(null);
+        mediaFileRepository.deleteById(mediaFile.getId());
+
+        contest.getParticipationContestList().remove(participant);
+        contest.setNumberOfParticipant(contest.getNumberOfParticipant()-1);
+        contestRepository.save(contest);
+
+        contestParticipantRepository.deleteById(idParticipant);
+
+    }
+
+    @Transactional
+    public List<ContestParticipant> declareWinners(Long id) {
         Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest not Found!"));
+        //if(contest.getDeadline().before(new Date())) throw new RuntimeException("The Contest is not expired");
+        if(!contest.getParticipationContestList().stream().map(ContestParticipant::getQuoteCriterion).allMatch(QuoteCriterion::isQuote)) throw new RuntimeException("There are missing participants that weren't valuated!");
+
         int maxScore = contest.getParticipationContestList()
                 .stream()
                 .mapToInt(participateContest -> participateContest.getQuoteCriterion().getVote())
                 .max()
                 .orElse(0);
-        List<User> winners = contest.getParticipationContestList()
+        List<ContestParticipant> winners = contest.getParticipationContestList()
                 .stream()
                 .filter(participateContest -> participateContest.getQuoteCriterion().getVote()==maxScore)
-                .map(ContestParticipant::getUser)
                 .toList();
         contest.setActive(false);
         contestRepository.save(contest);

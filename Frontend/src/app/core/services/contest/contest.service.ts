@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { Contest } from '../../interfaces/contest';
-import { ContestParticipation, QuoteCritirion } from '../../interfaces/contest.participation';
-import { User } from '../../interfaces/user';
-import { MediaFile } from '../../interfaces/media.file';
+import { ContestParticipant, QuoteCriterion } from '../../interfaces/contest.participant';
 import { SessionStorageService } from '../session.storage/session.storage.service';
 
 @Injectable({
@@ -44,23 +42,33 @@ export class ContestService {
     return this.http.get<Contest[]>(`${this.apiURL}/contest/search?name=${name}`);
   }
 
-  getAllParticipantsContest(): Observable<ContestParticipation[]> {
-    return this.http.get<ContestParticipation[]>(`${this.apiURL}/contest/participant/all`);
+  getAllParticipantsContest(id: number): Observable<ContestParticipant[]> {
+    return this.http.get<ContestParticipant[]>(`${this.apiURL}/contest/participant/${id}/all`);
   }
 
-  participateContest(idContest: number, idUser: number, mediaFile: MediaFile): Observable<ContestParticipation> {
-    return this.http.post<ContestParticipation>(`${this.apiURL}/contest/participant/participate/${idContest}/idUser`, {idUser, mediaFile});
+  participateContest(idContest: number, file: File): Observable<ContestParticipant> {
+    const formData = new FormData();
+    formData.append('idContest', idContest.toString());
+    formData.append('file', file);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.sessionStorageService.getItem('accessToken')}`
+    })
+    return this.http.post<ContestParticipant>(`${this.apiURL}/contest/participant/participate`, formData, {headers});
   }
 
-  deleteParticipation(idParticipant: number): Observable<Object> {
-    return this.http.delete<Contest>(`${this.apiURL}/contest/participant/delete/${idParticipant}`);
+  deleteParticipation(idContest: number, idParticipant: number): Observable<Object> {
+    return this.http.delete<Contest>(`${this.apiURL}/contest/participant/delete/${idContest}/${idParticipant}`);
   }
 
-  evaluateParticipant(idParticipant: number, quoteCritirion: QuoteCritirion): Observable<Contest> {
-    return this.http.patch<Contest>(`${this.apiURL}/contest/participant/validate/${idParticipant}`, quoteCritirion);
+  getParticipant(id: number): Observable<ContestParticipant> {
+    return this.http.get<ContestParticipant>(`${this.apiURL}/contest/participant/${id}`);
   }
 
-  declareWinners(id: number): Observable<User[]>{
-    return this.http.get<User[]>(`${this.apiURL}/contest/participant/winners/${id}`);
+  evaluateParticipant(idContest: number, idParticipant: number, request: {vote: number, description: string}): Observable<ContestParticipant> {
+    return this.http.patch<ContestParticipant>(`${this.apiURL}/contest/participant/${idContest}/${idParticipant}/validate`, request);
+  }
+
+  declareWinners(id: number): Observable<ContestParticipant[]>{
+    return this.http.get<ContestParticipant[]>(`${this.apiURL}/contest/participant/winners/${id}`);
   }
 }

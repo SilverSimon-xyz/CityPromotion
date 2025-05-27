@@ -19,7 +19,6 @@ export class ContestComponent {
   isAdding: boolean = false;
   filteredContestList: Contest[] = [];
   
-  
   constructor(
     private contestService: ContestService,
     private formBuilder: FormBuilder, 
@@ -37,6 +36,7 @@ export class ContestComponent {
       deadline: ['', Validators.required], 
       active: [false, Validators.required],
     });
+
   }
 
   ngOnInit(): void {
@@ -73,6 +73,12 @@ export class ContestComponent {
     });
   }
 
+  goToParticipants() {
+    if(this.selectedContest) {
+      this.router.navigate(['/participants', this.selectedContest?.id]);
+    }
+  }
+  
   searchContest(): void {
     const name = this.contestForm.value.searchName?.toLowerCase();
     this.contestService.searchContest(name).subscribe({
@@ -95,14 +101,6 @@ export class ContestComponent {
     this.router.navigate(['/contest', id, 'edit'])
   }
 
-  deleteContest(id: number) {
-    if (confirm(`Sei sicuro di voler eliminare questo contest?`)) {
-      this.contestService.deleteContest(id).subscribe(() => {
-        this.loadContests();
-      })
-    }
-  }
-
   saveChanges() {
     if(this.contestForm.valid) {
       if(this.isAdding) {
@@ -120,6 +118,18 @@ export class ContestComponent {
         });
       }
     }
+  }
+
+  deleteContest(id: number) {
+    if (confirm(`Sei sicuro di voler eliminare questo contest?`)) {
+      this.contestService.deleteContest(id).subscribe(() => {
+        this.loadContests();
+      })
+    }
+  }
+
+  participateToContest() {
+    this.router.navigate(['/participants', this.selectedContest?.id, 'sign-up']);
   }
 
   goBack() {

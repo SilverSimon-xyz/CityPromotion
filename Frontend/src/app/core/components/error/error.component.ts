@@ -1,17 +1,25 @@
-import { Component, Input } from '@angular/core';
-import { Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-error',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './error.component.html',
   styleUrl: './error.component.scss'
 })
-export class ErrorComponent {
-  @Input() errorMessage = ''; 
+export class ErrorComponent implements OnInit {
+  errorMessage = ''; 
 
-  constructor(private location: Location) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.errorMessage = params['message'] || 'Error';
+    })
+  }
 
   goBack() {
-    this.location.back(); 
+    this.router.navigate(['/'])
   }
 }

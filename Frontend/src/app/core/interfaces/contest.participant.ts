@@ -2,16 +2,16 @@ import { Contest } from "./contest"
 import { MediaFile } from "./media.file"
 import { User } from "./user"
 
-export interface ContestParticipation {
+export interface ContestParticipant {
     id: number
     participant: User,
     contest: Contest,
     mediaFile?: MediaFile, 
-    quoteCriterion: QuoteCritirion
+    quoteCriterion: QuoteCriterion
 }
 
-export interface QuoteCritirion {
+export interface QuoteCriterion {
     vote: number,
     description: string,
-    isQuoted: boolean
+    isQuote: boolean
 }

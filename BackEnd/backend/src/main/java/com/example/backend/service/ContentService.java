@@ -100,7 +100,7 @@ public class ContentService {
         Content content = contentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Content not Found!"));
 
         MediaFile mediaFile = content.getMediaFile();
-        mediaFileRepository.delete(mediaFile);
+        mediaFileRepository.deleteById(mediaFile.getId());
         content.setMediaFile(null);
 
         PointOfInterest pointOfInterest = content.getPoi();

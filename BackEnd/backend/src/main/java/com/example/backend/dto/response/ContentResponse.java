@@ -29,6 +29,7 @@ public record ContentResponse(Long id, String title, String content, String hash
                 .mediaFile(mediaFileResponse)
                 .createdAt(content.getCreatedAt())
                 .updatedAt(content.getUpdatedAt())
+
                 .build();
     }
 

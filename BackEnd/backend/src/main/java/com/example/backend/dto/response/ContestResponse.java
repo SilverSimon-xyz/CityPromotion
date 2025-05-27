@@ -1,6 +1,7 @@
 package com.example.backend.dto.response;
 
 import com.example.backend.entities.contest.Contest;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 
 import java.util.Date;
@@ -8,8 +9,8 @@ import java.util.Date;
 @Builder
 public record ContestResponse(Long id, String name, String description, AccountResponse author, String rules,
                               String goal, String prize,
-                              Date deadline, boolean active,
-                              Date createdAt, Date updatedAt, int numberOfParticipant) {
+                              @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date deadline, boolean active,
+                              @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date createdAt, @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Rome")Date updatedAt, int numberOfParticipant) {
 
     public static ContestResponse mapToResponse(Contest contest) {
         AccountResponse authorResponse = AccountResponse.mapToResponse(contest.getAuthor());
@@ -25,6 +26,7 @@ public record ContestResponse(Long id, String name, String description, AccountR
                 .active(contest.isActive())
                 .createdAt(contest.getCreatedAt())
                 .updatedAt(contest.getUpdatedAt())
+                .numberOfParticipant(contest.getNumberOfParticipant())
                 .build();
     }
 }

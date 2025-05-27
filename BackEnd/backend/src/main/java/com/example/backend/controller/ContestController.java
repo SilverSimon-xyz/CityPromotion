@@ -1,14 +1,11 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.request.ContestParticipantRequest;
-import com.example.backend.dto.response.AccountResponse;
+import com.example.backend.dto.request.QuoteCriterionRequest;
 import com.example.backend.dto.response.ContestParticipantResponse;
 import com.example.backend.dto.response.ContestResponse;
 import com.example.backend.dto.request.ContestRequest;
 import com.example.backend.entities.contest.Contest;
 import com.example.backend.entities.contest.ContestParticipant;
-import com.example.backend.entities.contest.QuoteCriterion;
-import com.example.backend.entities.users.User;
 import com.example.backend.service.ContestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,41 +69,52 @@ public class ContestController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/participant/all")
-    public ResponseEntity<List<ContestParticipantResponse>> getAllParticipants() {
+    @GetMapping("/participant/{idContest}/all")
+    public ResponseEntity<List<ContestParticipantResponse>> getAllParticipants(@PathVariable Long idContest) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                contestService.getAllContestParticipant()
+                contestService.getAllContestParticipant(idContest)
                         .stream()
                         .map(ContestParticipantResponse::mapToResponse)
                         .toList());
     }
 
     @PostMapping("/participant/participate")
-    public ResponseEntity<ContestParticipantResponse> participateContest(@RequestPart("data") ContestParticipantRequest request,  @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
-        ContestParticipant participant = contestService.participateContest(request, file);
+    public ResponseEntity<ContestParticipantResponse> participateContest(@RequestParam Long idContest,  @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        ContestParticipant participant = contestService.participateContest(idContest, file);
         ContestParticipantResponse response = ContestParticipantResponse.mapToResponse(participant);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/participant/delete/{idParticipant}")
-    public ResponseEntity<Void> deleteParticipant(@PathVariable Long idParticipant) {
-        contestService.deleteParticipant(idParticipant);
+    @DeleteMapping("/participant/delete/{idContest}/{idParticipant}")
+    public ResponseEntity<Void> deleteParticipant(@PathVariable Long idContest, @PathVariable Long idParticipant) {
+        contestService.deleteParticipant(idContest, idParticipant);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PatchMapping("/participant/validate/{idParticipant}")
-    public ResponseEntity<ContestParticipantResponse> evaluateParticipant(@PathVariable Long idParticipant, @RequestBody QuoteCriterion quoteCriterionDetails) {
-        ContestParticipant participant = contestService.evaluateParticipant(idParticipant, quoteCriterionDetails);
+    @GetMapping("/participant/{idParticipant}")
+    public ResponseEntity<ContestParticipantResponse> getParticipant(@PathVariable Long idParticipant)  {
+        ContestParticipant participant = contestService.getParticipant(idParticipant);
+        ContestParticipantResponse response = ContestParticipantResponse.mapToResponse(participant);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/participant/{idContest}/{idParticipant}/validate")
+    public ResponseEntity<ContestParticipantResponse> evaluateParticipant(
+            @PathVariable Long idContest,
+            @PathVariable Long idParticipant,
+            @RequestBody QuoteCriterionRequest request) {
+
+        ContestParticipant participant = contestService.evaluateParticipant(idContest, idParticipant, request);
         ContestParticipantResponse response = ContestParticipantResponse.mapToResponse(participant);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/participant/winners/{id}")
-    public ResponseEntity<List<AccountResponse>> declareWinners(@PathVariable Long id) {
-        List<User> winners = contestService.declareWinners(id);
-        List<AccountResponse> winnersAccountResponses = winners
+    public ResponseEntity<List<ContestParticipantResponse>> declareWinners(@PathVariable Long id) {
+        List<ContestParticipant> winners = contestService.declareWinners(id);
+        List<ContestParticipantResponse> winnersAccountResponses = winners
                 .stream()
-                .map(AccountResponse::mapToResponse)
+                .map(ContestParticipantResponse::mapToResponse)
                 .toList();
         return ResponseEntity.status(HttpStatus.OK).body(winnersAccountResponses);
     }

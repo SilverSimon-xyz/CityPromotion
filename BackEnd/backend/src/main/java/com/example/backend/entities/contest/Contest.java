@@ -52,10 +52,10 @@ public class Contest {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "contest", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<ContestParticipant> participationContestList = new ArrayList<>();
 
-    @Column(name = "number_participants", updatable = false)
+    @Column(name = "number_participants")
     private int numberOfParticipant = 0;
 
 }

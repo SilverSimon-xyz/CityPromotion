@@ -13,7 +13,6 @@ public class QuoteCriterion {
 
     private int vote;
     private String description;
-    private boolean isQuote = false;
-
+    private boolean isQuote;
 
 }

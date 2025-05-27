@@ -10,6 +10,8 @@ import { ContestComponent } from './core/components/contest/contest.component';
 import { ContentComponent } from './core/components/content/content.component';
 import { roleGuard } from './role.guard/role.guard';
 import { AdminDashboardComponent } from './core/components/admin.dashboard/admin.dashboard.component';
+import { ContestParticipantComponent } from './core/components/contest.participant/contest.participant.component';
+import { ErrorComponent } from './core/components/error/error.component';
 
 export const routes: Routes = [
     {path: '', pathMatch: 'full', redirectTo: '/home'},
@@ -28,16 +30,21 @@ export const routes: Routes = [
     {path: 'poi/:id', component: PoiComponent},
     {path: 'poi/:id/edit', component: PoiComponent},
 
-    {path: 'contest', component: ContestComponent},
-    {path: 'contest/:id', component: ContestComponent},
-    {path: 'contest/add', component: ContestComponent},
-    {path: 'contest/:id/edit', component: ContestComponent},
-
     {path: 'contents', component: ContentComponent},
     {path: 'contents/:id', component: ContentComponent},
     {path: 'contents/add', component: ContentComponent},
     {path: 'contents/:id/edit', component: ContentComponent},
 
+    {path: 'contest', component: ContestComponent},
+    {path: 'contest/:id', component: ContestComponent},
+    {path: 'contest/add', component: ContestComponent},
+    {path: 'contest/:id/edit', component: ContestComponent},
+
+    {path: 'participants/:id', component: ContestParticipantComponent},
+    {path: 'participants/:id/sign-up', component: ContestParticipantComponent},
+    {path: '', redirectTo:'/contest', pathMatch: 'full'},
+
+    {path: 'error',component: ErrorComponent},
     {path: '**', redirectTo:'dashboard'},
     
 ];
