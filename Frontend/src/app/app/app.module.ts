@@ -20,7 +20,8 @@ import { ContestComponent } from '../core/components/contest/contest.component';
 import { ContestService } from '../core/services/contest/contest.service';
 import { ContentComponent } from '../core/components/content/content.component';
 import { ContentService } from '../core/services/content/content.service';
-import { MediaFileComponent } from '../core/components/media.file/media.file.component';
+import { RolePermissionService } from '../core/services/role.permission/role.permission.service';
+import { ContestParticipantComponent } from '../core/components/contest.participant/contest.participant.component';
 
 @NgModule({
   declarations: [
@@ -28,9 +29,9 @@ import { MediaFileComponent } from '../core/components/media.file/media.file.com
     LoginComponent,
     DashboardComponent,
     UsersComponent,
-    MediaFileComponent,
     PoiComponent,
     ContestComponent,
+    ContestParticipantComponent,
     ContentComponent,
     HomeComponent
   ],
@@ -47,6 +48,7 @@ import { MediaFileComponent } from '../core/components/media.file/media.file.com
     PoiService,
     ContestService,
     ContentService,
+    RolePermissionService,
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, tokenInterceptor]))
   ],
   bootstrap: [AppComponent]

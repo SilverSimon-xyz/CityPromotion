@@ -176,7 +176,7 @@ public class ContestService {
     @Transactional
     public List<ContestParticipant> declareWinners(Long id) {
         Contest contest = contestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Contest not Found!"));
-        //if(contest.getDeadline().before(new Date())) throw new RuntimeException("The Contest is not expired");
+        if(contest.getDeadline().before(new Date())) throw new RuntimeException("The Contest is not expired");
         if(!contest.getParticipationContestList().stream().map(ContestParticipant::getQuoteCriterion).allMatch(QuoteCriterion::isQuote)) throw new RuntimeException("There are missing participants that weren't valuated!");
 
         int maxScore = contest.getParticipationContestList()

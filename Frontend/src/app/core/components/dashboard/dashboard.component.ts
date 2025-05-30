@@ -1,23 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth/auth.service';
-import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
 
-  userRole: string = '';
+  userRole!: string;
 
-  constructor(private authService: AuthService, private userService: UserService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    //this.userService.getUserRoles().subscribe(role => {this.userRole = role;});
+    this.authService.fetchUserRole().subscribe({
+      next: (response) => {
+        this.userRole = response['role'];
+        console.log('Ruolo recuperato:', this.userRole);
+      }, 
+        error: (err: string) => console.error('Error while retrieving role, ', err) 
+      })
+    
   }
 
   logout() {

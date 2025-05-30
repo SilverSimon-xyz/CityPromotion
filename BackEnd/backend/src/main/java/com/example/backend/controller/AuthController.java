@@ -18,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -37,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> loginHandler(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> loginHandler(@RequestBody AuthRequest authRequest) {
         try {
             User authenticatedUser = authService.login(authRequest);
             String refreshToken = refreshTokenService.generateRefreshToken(authRequest.email());
@@ -47,8 +50,16 @@ public class AuthController {
                     jwtService.getExpirationTime());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/user-role")
+    public ResponseEntity<Map<String, String>> getUserRole(@RequestHeader("Authorization") String token) {
+        String role = jwtService.extractRole(token.replace("Bearer ", ""));
+        Map<String, String> response = new HashMap<>();
+        response.put("role", role);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/refresh-token")
@@ -61,7 +72,6 @@ public class AuthController {
                     return JwtResponse.mapToResponse(accessToken, request.getRefreshToken(), jwtService.getExpirationTime());
                 }).orElseThrow(() -> new RuntimeException("Refresh Token is not in DB..!!"));
     }
-
 
     @PostMapping("/logout")
     public ResponseEntity<?> logoutHandler(@RequestHeader("Authorization") String token) {

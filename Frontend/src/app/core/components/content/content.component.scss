@@ -1,15 +1,23 @@
 .post-list {
-    max-width: 600px;
-    margin: auto;
+    display: flex;
+    gap: 20px;
+}
+
+.post-list ul {
+    max-width: 300px;
+    border-radius: 10px;
     padding: 20px;
     font-family: 'Arial', sans-serif;
+    flex: 1;
+    text-align: center;
 }
 
 .post-container {
-    max-width: 400px;
+    max-width: 500px;
+    height: 400px;
     background: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 20px;
     font-family: 'Arial', sans-serif;
     text-align: center;
@@ -18,8 +26,8 @@
 .post-card {
     background: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
     margin-bottom: 15px;
 }
 
@@ -66,12 +74,47 @@
     display: inline-block;
 }
 
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: space-evenly; 
+  padding: 10px;
+}
+
+button {
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  margin: 10px;
+}
+
+.new-btn {
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    margin: 10px;
+}
+
+.view-btn {
+    background: #45be08;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    margin: 10px;
+}
+
 .edit-btn {
     background: #007bff;
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
     border: none;
+    margin: 10px;
 }
 
 .delete-btn {
@@ -80,4 +123,23 @@
     padding: 5px 10px;
     border-radius: 5px;
     border: none;
+    margin: 10px;
+}
+
+.dashboard-btn {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 10px;
+}
+
+.return-btn {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 10px;
 }

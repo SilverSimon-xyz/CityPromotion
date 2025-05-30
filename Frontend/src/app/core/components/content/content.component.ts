@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PoiService } from '../../services/poi/poi.service';
 import { MediaFileService } from '../../services/media.file/media.file.service';
 import { PointOfInterest } from '../../interfaces/point.of.interest';
+import { RolePermissionService } from '../../services/role.permission/role.permission.service';
 
 @Component({
   selector: 'app-content',
@@ -31,7 +32,8 @@ export class ContentComponent implements OnInit {
     private mediaFileService: MediaFileService,
     private formBuilder: FormBuilder, 
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public rolePermission: RolePermissionService
   ) {
     this.initForm();
   }

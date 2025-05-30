@@ -6,6 +6,7 @@ import { MediaFile } from '../../interfaces/media.file';
 import { ContestService } from '../../services/contest/contest.service';
 import { MediaFileService } from '../../services/media.file/media.file.service';
 import { CommonModule } from '@angular/common';
+import { RolePermissionService } from '../../services/role.permission/role.permission.service';
 
 @Component({
   selector: 'app-contest.participant',
@@ -29,7 +30,9 @@ export class ContestParticipantComponent implements OnInit{
     private mediaFileService: MediaFileService,
     private formBuilder: FormBuilder, 
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    public rolePermission: RolePermissionService
+  ) {
 
     this.quoteCriterionForm = this.formBuilder.group({
       vote: ['', [Validators.required, Validators.min(1), Validators.max(10)]],
@@ -46,8 +49,17 @@ export class ContestParticipantComponent implements OnInit{
 
   loadAllParticipant() {
     this.contestService.getAllParticipantsContest(this.idContest).subscribe(
-      response => this.participantList = response
-    );
+      (response) => {
+        this.participantList = response;
+        this.participantList.forEach(participant => {
+          if(participant?.mediaFile) {
+            this.mediaFileService.getFile(participant?.mediaFile?.id).subscribe(
+              blob => {
+                this.previewUrl = URL.createObjectURL(blob);
+            });
+          }
+        });
+      });
   }
 
   getParticipant(id: number) {
@@ -73,10 +85,6 @@ export class ContestParticipantComponent implements OnInit{
     reader.readAsDataURL(this.selectedFile);
   }
 
-  getMediaFile(mediaFile: MediaFile) {
-    this.mediaFileService.getFile(mediaFile.id).subscribe(blob => this.previewUrl = URL.createObjectURL(blob));
-  }
-
   signUpParticipant() {
     if(this.selectedFile) {
       this.contestService.participateContest(this.idContest, this.selectedFile).subscribe(() => {
@@ -86,7 +94,7 @@ export class ContestParticipantComponent implements OnInit{
     }
   }
 
-  deleteContest(idParticipant: number) {
+  deleteParticipant(idParticipant: number) {
     if (confirm(`Sei sicuro?`)) {
       this.contestService.deleteParticipation(this?.idContest, idParticipant).subscribe(() => {
         this.router.navigate(['/contest', this?.idContest])

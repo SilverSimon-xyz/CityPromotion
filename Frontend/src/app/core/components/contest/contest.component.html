@@ -2,6 +2,7 @@
   <form [formGroup]="contestForm">
     <input type="text" formControlName="searchName" placeholder="Insert name..." (input)="searchContest()">
   </form>
+  <button class="dashboard-btn" (click)="goToDashboard()">Return to Dashboard</button>
 </div>
 <table border="1" *ngIf="filteredContestList.length > 0; else allContest">
     <thead>
@@ -32,7 +33,7 @@
 <div *ngIf="!selectedContest && !isAdding && !isEditing">
     <h2>Contest List</h2>
     <div class="button-container">
-        <button (click)="addContest()">Add new Contest</button>
+        <button *ngIf="rolePermission.isAnimator()" (click)="addContest()">Add new Contest</button>
     </div>
     <table border="1">
     <thead>
@@ -53,13 +54,12 @@
         <td>  {{ contest.deadline | date:'dd/MM/yyyy HH:mm:ss' }} </td>
         <td>
           <button class="view" (click)="viewContestDetails(contest.id)">View</button>
-          <button class="edit" (click)="updateContest(contest.id)">Modify</button>
-          <button class="delete" (click)="deleteContest(contest.id)">Delete</button>
+          <button *ngIf="rolePermission.isAnimator() || rolePermission.isAdmin()" class="edit" (click)="updateContest(contest.id)">Modify</button>
+          <button *ngIf="rolePermission.isAnimator() || rolePermission.isAdmin()" class="delete" (click)="deleteContest(contest.id)">Delete</button>
         </td>
     </tr>
     </tbody>
     </table>
-    <button (click)="goToDashboard()">Return to Dashboard</button>
 </div>
 
 <div *ngIf="selectedContest && !isEditing">
@@ -94,9 +94,9 @@
         <td>  {{ selectedContest.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
         <td>  {{ selectedContest.numberOfParticipant }} </td>
         <td>
-          <button class="edit" (click)="updateContest(selectedContest.id)">Modify</button>
-          <button (click)="participateToContest()">Participate</button>
-          <button (click)="goToParticipants()">Show Participants</button>
+          <button *ngIf="rolePermission.isAnimator() || rolePermission.isAdmin()" class="edit" (click)="updateContest(selectedContest.id)">Modify</button>
+          <button *ngIf="!rolePermission.isAnimator() && !rolePermission.isAdmin()" (click)="participateToContest()">Participate</button>
+          <button *ngIf="rolePermission.isAnimator() || rolePermission.isAdmin()" (click)="goToParticipants()">Show Participants</button>
           <button (click)="goBack()">Back</button>
         </td>
         </tr>

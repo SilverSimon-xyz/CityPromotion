@@ -36,8 +36,7 @@ public class PointOfInterestService {
     @Transactional
     public PointOfInterest createPOI(PointOfInterestRequest request) {
 
-        if(poiRepository.existsByNameAndLatitudeAndLongitude(request.name(), request.latitude(), request.longitude()))
-            throw new EntityExistsException("Point of Interest already existing!\n" + request);
+        if(poiRepository.existsByNameAndLatitudeAndLongitude(request.name(), request.latitude(), request.longitude())) throw new EntityExistsException("Point of Interest already existing!\n" + request);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User author = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User Not Found"));

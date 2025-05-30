@@ -10,6 +10,7 @@ import com.example.backend.service.ContestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ public class ContestController {
     private ContestService contestService;
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ANIMATOR')")
     public ResponseEntity<ContestResponse> addContest(@RequestBody ContestRequest request) {
         Contest contest = contestService.createContest(request);
         ContestResponse response = ContestResponse.mapToResponse(contest);
@@ -31,6 +33,7 @@ public class ContestController {
     }
 
     @PutMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ANIMATOR') or hasRole('ADMIN')")
     public ResponseEntity<ContestResponse> updateContest(@PathVariable Long id, @RequestBody Contest contestDetails) {
         Contest contest = contestService.updateContest(id, contestDetails);
         ContestResponse response = ContestResponse.mapToResponse(contest);
@@ -64,6 +67,7 @@ public class ContestController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ANIMATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteContest(@PathVariable Long id) {
         contestService.deleteContest(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -86,6 +90,7 @@ public class ContestController {
     }
 
     @DeleteMapping("/participant/delete/{idContest}/{idParticipant}")
+    @PreAuthorize("hasRole('ANIMATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteParticipant(@PathVariable Long idContest, @PathVariable Long idParticipant) {
         contestService.deleteParticipant(idContest, idParticipant);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -99,6 +104,7 @@ public class ContestController {
     }
 
     @PatchMapping("/participant/{idContest}/{idParticipant}/validate")
+    @PreAuthorize("hasRole('ANIMATOR') or hasRole('ADMIN')")
     public ResponseEntity<ContestParticipantResponse> evaluateParticipant(
             @PathVariable Long idContest,
             @PathVariable Long idParticipant,
@@ -110,6 +116,7 @@ public class ContestController {
     }
 
     @GetMapping("/participant/winners/{id}")
+    @PreAuthorize("hasRole('ANIMATOR')")
     public ResponseEntity<List<ContestParticipantResponse>> declareWinners(@PathVariable Long id) {
         List<ContestParticipant> winners = contestService.declareWinners(id);
         List<ContestParticipantResponse> winnersAccountResponses = winners

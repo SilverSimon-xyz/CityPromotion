@@ -8,6 +8,7 @@ import com.example.backend.service.PointOfInterestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class PointOfInterestController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('CONTRIBUTOR')")
     public ResponseEntity<PointOfInterestResponse> createPOI(@RequestBody PointOfInterestRequest request) {
         PointOfInterest pointOfInterestCreated = pointOfInterestService.createPOI(request);//request.authorFirstname(), request.authorLastname());
         PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(pointOfInterestCreated);
@@ -53,6 +55,7 @@ public class PointOfInterestController {
     }
 
     @PutMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PointOfInterestResponse> editPOI(@PathVariable Long id, @RequestBody PointOfInterest pointOfInterest) {
         PointOfInterest updatedPOI = pointOfInterestService.updatePOI(id, pointOfInterest);
         PointOfInterestResponse response = PointOfInterestResponse.mapToResponse(updatedPOI);
@@ -60,6 +63,7 @@ public class PointOfInterestController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletePOI(@PathVariable Long id) {
         pointOfInterestService.deletePOI(id);
         return ResponseEntity.noContent().build();

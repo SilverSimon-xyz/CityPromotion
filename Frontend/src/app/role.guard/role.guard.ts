@@ -1,19 +1,26 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { UserService } from '../core/services/user/user.service';
+import { AuthService } from '../core/services/auth/auth.service';
 
 export const roleGuard: CanActivateFn = (route, state) => {
 
   const router = inject(Router);
-  const userService = inject(UserService);
+  const authService = inject(AuthService);
 
-  const requiredRole = route.data['role'];
+  const role = authService.getUserRole();
 
-  if(userService.hasRole(requiredRole)) {
-    return true;
-  } else {
-    router.navigate(['/dashboard']);
+  const allowedRoles: string[] = route.data['roles'] || [];
+
+  const notAllowedRoles: string[] = route.data['blockedRoles'] || [];
+
+  if(notAllowedRoles.includes(role)) {
+    console.error('Access denied for the role: ', role);
+    router.navigate(['/error']);
     return false;
+  } else if(allowedRoles.length > 0 && allowedRoles.includes(role)) {
+    return true;
   }
-
+  
+  router.navigate(['/error']);
+  return false;
 };

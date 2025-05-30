@@ -4,6 +4,7 @@ import { Contest } from '../../interfaces/contest';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RolePermissionService } from '../../services/role.permission/role.permission.service';
 
 @Component({
   selector: 'app-contest',
@@ -23,7 +24,8 @@ export class ContestComponent {
     private contestService: ContestService,
     private formBuilder: FormBuilder, 
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public rolePermission: RolePermissionService,
   ) {
 
     this.contestForm = this.formBuilder.group({

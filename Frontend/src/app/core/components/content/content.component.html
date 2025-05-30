@@ -1,41 +1,39 @@
+<div>
+    <button class="new-btn" *ngIf="rolePermission.isCurator() || rolePermission.isContributor()" (click)="createContent()">New Content</button>
+    <button class="delete-btn" *ngIf="rolePermission.isCurator()" (click)="deleteAllRejectContent()">Delete All Rejected Contents</button>
+    <button class="dashboard-btn" (click)="goToDashboard()">Return to Dashboard</button>
+</div>
+
 <div *ngIf="!isCreatingContent && !isUpdateContent && !selectedContent" class="post-list">
-  <div>
-    <button (click)="createContent()">New Content</button>
-  </div>
-  <h2>Content List</h2>
-  <ul>
-    <li class="post-card" *ngFor="let content of contents">
+  <ul class="post-card" *ngFor="let content of contents">
       <div *ngIf="content.status !== Status.REJECTED">
-        <h3>{{ content.title }}</h3>
-        <p>{{ content.content }}</p>
-        <button (click)="navigateToContent(content.id)">View</button>
+        <h3 class="post-content"><strong>{{ content.title }}</strong></h3>
+        <p class="post-content">{{ content.content }}</p>
+        <button class="view-btn" (click)="navigateToContent(content.id)">View</button>
       </div>
-    </li>
   </ul>
-  <div>
-    <button (click)="deleteAllRejectContent()">Delete All Rejected Contents</button>
-  </div>
 </div>
 
 <div *ngIf="selectedContent && !isUpdateContent" class="post-container">
-    <h3 class="post-content">{{ selectedContent.title }}</h3>
+    <h3 class="post-content"><strong> {{ selectedContent.title }} </strong></h3>
+    <p class="author-name"> {{ selectedContent.author.firstname }} {{ selectedContent.author.lastname }} </p>
     <div class="post-header" *ngIf="previewUrl">
       <img *ngIf="previewUrl.includes('image')" [src]="previewUrl" class="img-thumbnail" width="200">
       <a *ngIf="!previewUrl.includes('image')" [href]="previewUrl" target="_blank">Open File</a>
     </div>
-    <p class="post-content">{{ selectedContent.content }}</p>
-    <p class="author-name">{{ selectedContent.author.firstname }} {{ selectedContent.author.lastname }}</p>
-    <p>{{ selectedContent.pointOfInterest.name }}</p>
-    <p class="hashtags">{{ selectedContent.hashtag }}</p>
-    <p>{{ selectedContent.status }}</p>
+    <p class="post-content"> {{ selectedContent.content }} </p>
+    <p class="post-content"> {{ selectedContent.pointOfInterest.name }} </p>
+    <p class="hashtags"> <span> {{ selectedContent.hashtag }} </span> </p>
     <div class="post-actions">
-      <div *ngIf="selectedContent.status === Status.PENDING">
+      <div class="button-group" *ngIf="selectedContent.status === Status.PENDING && rolePermission.isCurator()">
         <button (click)="approveContent(selectedContent.id)">Approve</button>
         <button (click)="rejectContent(selectedContent.id)">Reject</button>
       </div>
-      <button (click)="updateContent(selectedContent.id)">Modify</button>
-      <button (click)="deleteContent(selectedContent.id)">Delete</button>
-      <button (click)="goBack()">Return to List</button>
+      <div class="button-group">
+        <button class="edit-btn" *ngIf="rolePermission.isCurator()" (click)="updateContent(selectedContent.id)">Modify</button>
+        <button class="delete-btn" *ngIf="rolePermission.isCurator()" (click)="deleteContent(selectedContent.id)">Delete</button>
+        <button class="return-btn" (click)="goBack()">Return to List</button>
+      </div>
     </div>
 </div>
 
@@ -74,12 +72,7 @@
   <p></p>
   <p></p>
 
-  <button type="submit" [disabled]="contentForm.invalid">Save</button>
-  <button (click)="goBack()">Back</button>
+  <button class="button" type="submit" [disabled]="contentForm.invalid">Save</button>
+  <button class="button" (click)="goBack()">Back</button>
 </form>
 </section>
-
-<p></p>
-<p></p>
-
-<button class="footer-button" (click)="goToDashboard()">Return to Dashboard</button>

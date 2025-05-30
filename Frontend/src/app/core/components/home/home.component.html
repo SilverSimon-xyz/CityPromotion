@@ -1,6 +1,20 @@
 <div class="home-container">
-  <h1>Benvenuto!</h1>
-  <p>Accedi per gestire</p>
-  <button routerLink="/login">Login</button>
-  <button *ngIf="isAutheticated()" (click)="logout()">Logout</button>
+  <section class="content">
+        <h1>Welcome to Home</h1>
+        <h4>The core of this project are:</h4>
+        <p> -Authentication</p>
+        <p> -Point of Interest</p>
+        <p> -Contest and Participants</p>
+        <p> -Contents</p>
+        <p> -Users Management</p>
+
+        <article>This is a project for an Universary Exam for Application Web and Mobile Course.</article>
+        <footer>Realized by Simone Stacchiotti.</footer>
+    </section>
+  
+  <div class="button-group">
+    <button *ngIf="!isAutheticated()" routerLink="/login">Login</button>
+    <button routerLink="/dashboard">Dashboard</button>
+    <button *ngIf="isAutheticated()" (click)="logout()">Logout</button>
+  </div>
 </div>

@@ -35,16 +35,14 @@ button {
     margin: 2px;
     cursor: pointer;
 }
-.footer-button{
+.dashboard-btn {
     display: block;
-    width: 100%;
     padding: 10px;
     background-color: #007BFF;
     color: white;
     text-align: center;
     position: fixed;
-    bottom: 10px;
-    left: 0;
+    right: 16px;
     cursor: pointer;
     border: none;
     font-size: 16px;

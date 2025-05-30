@@ -1,6 +1,5 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.response.AccountResponse;
 import com.example.backend.dto.response.RoleResponse;
 import com.example.backend.entities.users.Role;
 import com.example.backend.entities.users.User;
@@ -8,6 +7,7 @@ import com.example.backend.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -22,6 +22,7 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAllRoles() {
         Set<Role> roles = new HashSet<>(roleService.getAllRole());
         roles.forEach(role -> {
@@ -32,6 +33,7 @@ public class RoleController {
     }
 
     @GetMapping("/find/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoleResponse> getRoleDetails(@PathVariable Long id) {
         Role role = roleService.getRoleById(id);
         Set<User> users = new HashSet<>(roleService.getUsersByRoleName(role.getName()));
@@ -40,32 +42,11 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<RoleResponse> addRole(@RequestBody Role role) {
-        Role newRole = roleService.addRole(role);
-        RoleResponse response = RoleResponse.mapToResponse(newRole);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<RoleResponse> editRole(@PathVariable Long id, @RequestBody Role role) {
-        Role updatedRole = roleService.updateRole(id, role);
-        RoleResponse response = RoleResponse.mapToResponse(updatedRole);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
         roleService.deleteRole(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/assign/{id}/name")
-    public ResponseEntity<AccountResponse> assignRoleToUser(@PathVariable Long id, @RequestParam String name) {
-        User user = this.roleService.assignRoleToUser(id, name);
-        AccountResponse response = AccountResponse.mapToResponse(user);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
 
 }

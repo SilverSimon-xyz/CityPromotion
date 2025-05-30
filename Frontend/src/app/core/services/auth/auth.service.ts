@@ -5,6 +5,7 @@ import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { SessionStorageService } from '../session.storage/session.storage.service';
 import { AuthResponse } from '../../interfaces/auth.response';
+import { error } from 'console';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,24 @@ export class AuthService {
 
   getRefreshToken(): string | null {
     return this.sessionStorage.getItem('refreshToken');
+  }
+
+  getUserRole(): string {
+    const token = this.sessionStorage.getItem('accessToken');
+    if(!token) return 'GUEST';
+    try {
+      const decodeToken = JSON.parse(atob(token.split('.')[1]));
+      return decodeToken.role || 'GUEST';
+    } catch(error) {
+      console.error('Error during retrieving the role,', error);
+      return 'GUEST';
+    }
+  }
+
+  fetchUserRole(): Observable<{ [key: string]: string }>  {
+    return this.http.get<{ [key: string]: string }>(`${this.apiURL}/auth/user-role`, {
+      headers: {Authorization: `Bearer ${this.sessionStorage.getItem('accessToken')}` }
+    });
   }
 
   saveToken(response: AuthResponse): void {

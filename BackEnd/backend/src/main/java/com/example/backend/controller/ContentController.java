@@ -4,11 +4,11 @@ import com.example.backend.dto.request.StatusRequest;
 import com.example.backend.dto.response.ContentResponse;
 import com.example.backend.dto.request.ContentRequest;
 import com.example.backend.entities.content.Content;
-import com.example.backend.repository.MediaFileRepository;
 import com.example.backend.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,10 +21,9 @@ public class ContentController {
 
     @Autowired
     private ContentService contentService;
-    @Autowired
-    private MediaFileRepository mediaFileRepository;
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('CONTRIBUTOR') or hasRole('CURATOR')")
     public ResponseEntity<ContentResponse> createContent(@RequestPart("data") ContentRequest request, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         Content content = contentService.createContent(request, file);
         ContentResponse response = ContentResponse.mapToResponse(content);
@@ -46,6 +45,7 @@ public class ContentController {
     }
 
     @PutMapping("/edit/{idContent}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CURATOR')")
     public ResponseEntity<ContentResponse> updateContent(@PathVariable Long idContent, @RequestBody ContentRequest request) {
         System.out.println("Id content:" + idContent);
         Content content = contentService.updateContent(idContent, request);
@@ -55,6 +55,7 @@ public class ContentController {
 
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CURATOR')")
     public ResponseEntity<Void> deleteContent(@PathVariable Long id)  {
         contentService.deleteContentById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -62,6 +63,7 @@ public class ContentController {
 
 
     @PatchMapping("/validate/{id}/status")
+    @PreAuthorize("hasRole('CURATOR')")
     public ResponseEntity<ContentResponse> validateContent(@PathVariable Long id, @RequestBody StatusRequest status) {
         Content content = contentService.validateContent(id, status);
         ContentResponse response = ContentResponse.mapToResponse(content);
@@ -69,6 +71,7 @@ public class ContentController {
     }
 
     @DeleteMapping("/validate/delete/rejected")
+    @PreAuthorize("hasRole('CURATOR')")
     public ResponseEntity<Void> deleteAllContentRejected() {
         contentService.deleteAllContentRejected();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

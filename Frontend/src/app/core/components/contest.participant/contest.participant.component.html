@@ -1,28 +1,30 @@
-<h2 class="container">Participant List</h2>
-<div *ngFor="let participant of participantList">
-    <div class="participant-card">
-        <h3 class="participant-info">Participant:</h3>
-        <p class="participant-info"> Name: {{ participant.participant.firstname }} {{ participant.participant.lastname }} </p>
-        <p class="participant-info"> Email: {{ participant.participant.email }}  </p>
-        <p class="participant-info"> Contest Name: {{ participant.contest.name }} </p>
-            
-        <p class="participant-info" *ngIf="participant.quoteCriterion.isQuote">  {{ participant.quoteCriterion.vote }} - {{ participant.quoteCriterion.description }} </p>
-        
-        <div class="button-group">
-            <button class="btn-primary" *ngIf="!participant.quoteCriterion.isQuote" (click)="startEvaluation(participant)">Valuate</button>
-            <button class="btn-danger" (click)="deleteContest(participant.id)">Delete Participant</button>
-        </div>
-
-    </div>
-</div>
+<h2 class="title-container"><strong>Participant List</strong></h2>
 
 <div class="navigation-buttons">
-    <button class="btn-primary" (click)="endContest()">End Contest</button>
+    <button *ngIf="rolePermission.isAnimator()" class="btn-primary" (click)="endContest()">End Contest</button>
     <button class="btn-secondary" (click)="goBack()">Back</button>
     <button class="btn-primary" (click)="goToDashboard()">Return to Dashboard</button>
-</div>  
+</div> 
 
-<section>
+<div class="participant-list">
+<ul class="participant-card" *ngFor="let participant of participantList">
+    <div>
+        <h3 class="participant-title"><strong>Participant</strong></h3>
+        <div *ngIf="previewUrl">
+            <img *ngIf="previewUrl.includes('image')" [src]="previewUrl" class="img-thumbnail" width="200">
+            <a *ngIf="!previewUrl.includes('image')" [href]="previewUrl" target="_blank">Open File</a>
+        </div>
+        <p class="participant-info"> {{ participant.participant.firstname }} {{ participant.participant.lastname }} - {{ participant.participant.email }} </p>
+        <p class="participant-info"> This User is sign up to {{ participant.contest.name }} </p>
+        <p class="participant-info" *ngIf="participant.quoteCriterion.isQuote"> Vote: {{ participant.quoteCriterion.vote }} - Description: {{ participant.quoteCriterion.description }} </p>
+        <div class="button-group">
+            <button class="btn-primary" *ngIf="!participant.quoteCriterion.isQuote && rolePermission.isAnimator()" (click)="startEvaluation(participant)">Valuate</button>
+            <button class="btn-danger" *ngIf="rolePermission.isAnimator() || rolePermission.isAdmin()" (click)="deleteParticipant(participant.id)">Delete Participant</button>
+        </div>
+    </div>
+</ul>
+</div>
+<section *ngIf="!rolePermission.isAnimator() && !rolePermission.isAdmin()">
     <h3>Sign Up for Participate at Contest by uploading a File</h3>
     <div>
         <input type="file" (change)="selectFile($event)">

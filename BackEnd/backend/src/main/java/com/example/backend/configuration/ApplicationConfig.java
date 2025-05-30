@@ -15,6 +15,7 @@ public class ApplicationConfig {
     @Autowired
     private UserRepository userRepository;
 
+    @Bean
     UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
     }

@@ -4,6 +4,7 @@ import { PoiService } from '../../services/poi/poi.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RolePermissionService } from '../../services/role.permission/role.permission.service';
 
 @Component({
   selector: 'app-poi',
@@ -23,7 +24,8 @@ export class PoiComponent implements OnInit {
     private poiService: PoiService,
     private formBuilder: FormBuilder, 
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public rolePermission: RolePermissionService,
   ) {
     this.poiForm = this.formBuilder.group({
       searchName: [''],

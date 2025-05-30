@@ -11,19 +11,22 @@
       <option value="OTHER">Other</option>
     </select>
   </form>
+  <button class="dashboard" (click)="goToDashboard()">Return to Dashboard</button>
 </div>
 
 <table border="1" *ngIf="filteredPoiList.length > 0; else allPois">
   <thead>
     <tr>
       <th>Name</th>
+      <th>Description</th>
       <th>Type</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let poi of filteredPoiList">
-      <td>{{ poi.name }}</td>
+      <td> <strong> {{ poi.name }} </strong> </td>
+      <td> {{ poi.description.substring(0,7) }}... </td>
       <td>{{ poi.type }}</td>
       <td>
         <button class="view" (click)="viewPoiDetails(poi.id)">View</button>
@@ -37,27 +40,28 @@
 <div *ngIf="!selectedPoi && !isAdding && !isEditing">
   <h2>Point of Interest List</h2>
   <div class="button-container">
-    <button (click)="addPoi()">Add new Point of Interest</button>
+    <button *ngIf="rolePermission.isContributor()" (click)="addPoi()">Add new Point of Interest</button>
   </div>
   <table border="1">
     <thead>
       <tr>
         <th>Name</th>
+        <th>Description</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let poi of pois"> 
         <td><strong> {{ poi.name }} </strong></td>
+        <td> {{ poi.description.substring(0,7) }}... </td>
         <td>
           <button class="view" (click)="viewPoiDetails(poi.id)">View</button>
-          <button class="edit" (click)="updatePoi(poi.id)">Modify</button>
-          <button class="delete" (click)="deletePoi(poi.id)">Delete</button>
+          <button *ngIf="rolePermission.isAdmin()" class="edit" (click)="updatePoi(poi.id)">Modify</button>
+          <button *ngIf="rolePermission.isAdmin()" class="delete" (click)="deletePoi(poi.id)">Delete</button>
         </td>
     </tr>
     </tbody>
 </table>
-<button (click)="goToDashboard()">Return to Dashboard</button>
 </div>
 
 <div *ngIf="selectedPoi && !isEditing">
@@ -84,8 +88,8 @@
       <td> {{ selectedPoi.openTime }}, {{ selectedPoi.closeTime }} </td>
       <td> {{ selectedPoi.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
       <td> {{ selectedPoi.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-      <button class="edit" (click)="updatePoi(selectedPoi.id)">Modify</button>
-      <button class="delete" (click)="deletePoi(selectedPoi.id)">Delete</button>
+      <button *ngIf="rolePermission.isAdmin()" class="edit" (click)="updatePoi(selectedPoi.id)">Modify</button>
+      <button *ngIf="rolePermission.isAdmin()" class="delete" (click)="deletePoi(selectedPoi.id)">Delete</button>
       <button (click)="goBack()">Back</button>
     </tbody>
   </table>

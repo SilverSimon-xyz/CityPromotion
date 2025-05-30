@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-error',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule],
   templateUrl: './error.component.html',
   styleUrl: './error.component.scss'
 })
@@ -20,6 +19,6 @@ export class ErrorComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/'])
+    this.router.navigate(['/dashboard'])
   }
 }

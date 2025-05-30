@@ -57,7 +57,7 @@ public class User implements UserDetails, Principal {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private Date updatedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private RefreshToken refreshToken;
 
     @Override

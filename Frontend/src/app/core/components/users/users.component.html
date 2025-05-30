@@ -1,5 +1,6 @@
+<button class="dashboard-btn" (click)="goToDashboard()">Return to Dashboard</button>
+<h2>User List</h2>
 <div *ngIf="!selectedUser && !isAdding && !isEditing">
-  <h2>User List</h2>
   <div class="button-container">
     <button (click)="addUser()">Add new User</button>
   </div>
@@ -21,7 +22,6 @@
     </tr>
     </tbody>
 </table>
-<button class="footer-button" (click)="goToDashboard()">Return to Dashboard</button>
 </div>
 
 <div *ngIf="selectedUser && !isEditing">

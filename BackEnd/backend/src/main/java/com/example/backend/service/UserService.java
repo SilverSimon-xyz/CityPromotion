@@ -1,4 +1,5 @@
 package com.example.backend.service;
+import com.example.backend.dto.request.UserRequest;
 import com.example.backend.entities.users.Role;
 import com.example.backend.entities.users.User;
 import com.example.backend.repository.RoleRepository;
@@ -31,14 +32,19 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(User user, String roleName) {
-        Optional<Role> optionalRole = roleRepository.findByName(roleName);
+    public User createUser(UserRequest request) {
+        Optional<Role> optionalRole = roleRepository.findByName(request.roleName());
         if(optionalRole.isEmpty()) throw new EntityNotFoundException("Role not present!");
         Role role = optionalRole.get();
-        user
-                .setPassword(passwordEncoder.encode(user.getPassword()))
+        User user = User.builder()
+                .firstname(request.firstname())
+                .lastname(request.lastname())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .build()
                 .setRole(role)
                 .setCreatedAt(new Date());
+
         return this.userRepository.save(user);
     }
 
@@ -50,14 +56,16 @@ public class UserService implements UserDetailsService {
         return this.userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not Found!"));
     }
 
-    public User updateUser(Long id, User user) {
+    public User updateUser(Long id, UserRequest request) {
         Optional<User> optional = userRepository.findById(id);
         if(optional.isPresent()) {
+            Role role = roleRepository.findByName(request.roleName()).orElseThrow(() -> new RuntimeException("Role not Found!"));
             User updateUser = optional.get()
-                    .setFirstname(user.getFirstname())
-                    .setLastname(user.getLastname())
-                    .setEmail(user.getEmail())
-                    .setPassword(passwordEncoder.encode(user.getPassword()))
+                    .setFirstname(request.firstname())
+                    .setLastname(request.lastname())
+                    .setEmail(request.email())
+                    .setPassword(passwordEncoder.encode(request.password()))
+                    .setRole(role)
                     .setUpdatedAt(new Date());
             return userRepository.save(updateUser);
         } else {

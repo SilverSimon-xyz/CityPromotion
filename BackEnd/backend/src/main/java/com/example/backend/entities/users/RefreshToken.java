@@ -11,7 +11,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "UserToken")
+@Entity
 @Table(name = "tokens")
 public class RefreshToken {
 
@@ -29,8 +29,8 @@ public class RefreshToken {
     private Date issuedAt;
     private Date expiryAt;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, unique = true)
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", unique = true)
     private User user;
 
 }
